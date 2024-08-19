@@ -21,7 +21,7 @@ jobs:
           key: ${{ secrets.REMOTE_PRIVATE_KEY }} # PEM 형식의 개인 SSH 키
           port: ${{ secrets.REMOTE_SSH_PORT }} # SSH 포트 (기본 포트는 22)
           script: |
-            cd /home/ec2-user/app/Nest-Project
+            cd /home/ec2-user/app/baseball-server
             git pull origin main
             pm2 stop all || true  # 모든 프로세스를 중지하고, 중지하지 않은 경우 무시
             npm install --legacy-peer-deps
