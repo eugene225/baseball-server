@@ -22,9 +22,24 @@ jobs:
           port: ${{ secrets.REMOTE_SSH_PORT }} # SSH 포트 (기본 포트는 22)
           script: |
             cd /home/ec2-user/app/baseball-server
+
+            # 디렉토리 생성
+            mkdir -p /home/ec2-user/app/baseball-server/config
+
+            # Pull latest changes from the repository
             git pull origin main
-            pm2 stop all || true  # 모든 프로세스를 중지하고, 중지하지 않은 경우 무시
+
+            # Stop all pm2 processes and ignore errors if there are none
+            pm2 stop all || true
+
+            # Install dependencies
             npm install --legacy-peer-deps
+
+            # Build the application
             npm run build
-            echo "${{ secrets.APPLICATION_YML }}" > /home/ec2-user/app/baseball-server/config/application.yml  
+
+            # Save the YAML configuration file
+            echo "${{ secrets.APPLICATION_YML }}" > /home/ec2-user/app/baseball-server/config/application.yml
+
+            # Start the application
             pm2 start dist/main.js
