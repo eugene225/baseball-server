@@ -16,14 +16,30 @@ jobs:
       - name: Execute remote SSH commands
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: ${{ secrets.REMOTE_IP }} # EC2 인스턴스의 IP 주소
-          username: ${{ secrets.REMOTE_USER }} # EC2 인스턴스의 사용자 이름 (예: ubuntu, ec2-user)
-          key: ${{ secrets.REMOTE_PRIVATE_KEY }} # PEM 형식의 개인 SSH 키
-          port: ${{ secrets.REMOTE_SSH_PORT }} # SSH 포트 (기본 포트는 22)
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.REMOTE_PRIVATE_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
           script: |
-            cd /home/ec2-user/app/Nest-Project
+            cd /home/ec2-user/app/baseball-server
+
+            # 디렉토리 생성
+            mkdir -p /home/ec2-user/app/baseball-server/config
+
+            # Save the YAML configuration file
+            echo "${{ secrets.APPLICATION_YML }}" > /home/ec2-user/app/baseball-server/config/application.yml
+
+            # Pull latest changes from the repository
             git pull origin main
-            pm2 stop all || true  # 모든 프로세스를 중지하고, 중지하지 않은 경우 무시
+
+            # Stop all pm2 processes and ignore errors if there are none
+            pm2 stop all || true
+
+            # Install dependencies
             npm install --legacy-peer-deps
+
+            # Build the application
             npm run build
+
+            # Start the application
             pm2 start dist/main.js
