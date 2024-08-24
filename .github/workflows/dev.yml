@@ -10,17 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Copy React build files to public
-        run: |
-
-          cd /home/ec2-user/app/baseball-server
-
-          # Check if the frontend/build directory exists
-          
-
       - name: Execute remote SSH commands
         uses: appleboy/ssh-action@v0.1.6
         with:
