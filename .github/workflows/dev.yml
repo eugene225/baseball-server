@@ -53,6 +53,10 @@ jobs:
             echo "${{ secrets.APPLICATION_YML }}" > /home/ec2-user/app/baseball-server/config/application.yml
 
             # Pull latest changes from the repository
+            git config --global user.email "${ secrets.GIT_EMAIL }"
+            git config --global user.name "${ secrets.GIT_USERNAME }"
+            git config --global url.https://${{ secrets.GIT_TOKEN }}@github.com/.insteadOf https://github.com/
+
             git reset --hard
             git pull origin main
 
