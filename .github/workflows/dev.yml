@@ -13,6 +13,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Build React frontend
+        run: |
+          cd frontend  # React 앱이 있는 디렉토리로 이동
+          npm install
+          npm run build
+
+      - name: Copy React build files to public
+        run: |
+          # Create a directory to hold the public files if it doesn't exist
+          mkdir -p public
+
+          # Remove existing files in the public directory to avoid conflicts
+          rm -rf public/*
+
+          # Copy build files from React to the public directory
+          cp -r frontend/build/* public/
+
       - name: Execute remote SSH commands
         uses: appleboy/ssh-action@v0.1.6
         with:
