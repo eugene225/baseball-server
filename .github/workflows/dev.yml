@@ -22,6 +22,7 @@ jobs:
       - name: Copy React build files to public
         run: |
           # Create a directory to hold the public files if it doesn't exist
+          cd /home/ec2-user/app/baseball-server
           mkdir -p public
 
           # Remove existing files in the public directory to avoid conflicts
