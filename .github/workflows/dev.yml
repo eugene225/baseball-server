@@ -15,12 +15,14 @@ jobs:
 
       - name: Build React frontend
         run: |
-          cd frontend  # React 앱이 있는 디렉토리로 이동
-          npm install
+          cd /home/ec2-user/app/baseball-server/frontend  # React 앱이 있는 디렉토리로 이동
           npm run build
 
       - name: Copy React build files to public
         run: |
+        
+          cd /home/ec2-user/app/baseball-server
+
           # Check if the frontend/build directory exists
           if [ -d "frontend/build" ]; then
             # Create a directory to hold the public files if it doesn't exist
@@ -62,9 +64,6 @@ jobs:
 
             # Stop all pm2 processes and ignore errors if there are none
             pm2 stop all || true
-
-            # Install dependencies
-            npm install --legacy-peer-deps
 
             # Build the application
             npm run build
