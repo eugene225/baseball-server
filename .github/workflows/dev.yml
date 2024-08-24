@@ -13,30 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Build React frontend
-        run: |
-          cd /home/ec2-user/app/baseball-server/frontend  # React 앱이 있는 디렉토리로 이동
-          npm run build
-
       - name: Copy React build files to public
         run: |
-        
+
           cd /home/ec2-user/app/baseball-server
 
           # Check if the frontend/build directory exists
-          if [ -d "frontend/build" ]; then
-            # Create a directory to hold the public files if it doesn't exist
-            mkdir -p public
-            
-            # Remove existing files in the public directory to avoid conflicts
-            rm -rf public/*
-
-            # Copy build files from React to the public directory
-            cp -r frontend/build/* public/
-          else
-            echo "frontend/build directory does not exist"
-            exit 1
-          fi
+          
 
       - name: Execute remote SSH commands
         uses: appleboy/ssh-action@v0.1.6
@@ -55,12 +38,28 @@ jobs:
             echo "${{ secrets.APPLICATION_YML }}" > /home/ec2-user/app/baseball-server/config/application.yml
 
             # Pull latest changes from the repository
-            git config --global user.email "${ secrets.GIT_EMAIL }"
-            git config --global user.name "${ secrets.GIT_USERNAME }"
             git config --global url.https://${{ secrets.GIT_TOKEN }}@github.com/.insteadOf https://github.com/
 
             git reset --hard
             git pull origin main
+
+            cd frontend
+            npm run build
+            cd ..
+
+            if [ -d "frontend/build" ]; then
+              # Create a directory to hold the public files if it doesn't exist
+              mkdir -p public
+              
+              # Remove existing files in the public directory to avoid conflicts
+              rm -rf public/*
+
+              # Copy build files from React to the public directory
+              cp -r frontend/build/* public/
+            else
+              echo "frontend/build directory does not exist"
+              exit 1
+            fi
 
             # Stop all pm2 processes and ignore errors if there are none
             pm2 stop all || true
