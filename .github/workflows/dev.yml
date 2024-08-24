@@ -21,15 +21,20 @@ jobs:
 
       - name: Copy React build files to public
         run: |
-          # Create a directory to hold the public files if it doesn't exist
-          cd /home/ec2-user/app/baseball-server
-          mkdir -p public
+          # Check if the frontend/build directory exists
+          if [ -d "frontend/build" ]; then
+            # Create a directory to hold the public files if it doesn't exist
+            mkdir -p public
+            
+            # Remove existing files in the public directory to avoid conflicts
+            rm -rf public/*
 
-          # Remove existing files in the public directory to avoid conflicts
-          rm -rf public/*
-
-          # Copy build files from React to the public directory
-          cp -r frontend/build/* public/
+            # Copy build files from React to the public directory
+            cp -r frontend/build/* public/
+          else
+            echo "frontend/build directory does not exist"
+            exit 1
+          fi
 
       - name: Execute remote SSH commands
         uses: appleboy/ssh-action@v0.1.6
