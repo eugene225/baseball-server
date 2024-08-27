@@ -53,6 +53,7 @@ jobs:
 
             # Build the application
             cd backend
+            npm install
             npm run build
 
             # Start the application
