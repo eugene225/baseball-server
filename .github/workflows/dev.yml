@@ -20,9 +20,6 @@ jobs:
           script: |
             cd /home/ec2-user/app/baseball-server
 
-            # 디렉토리 생성
-            mkdir -p /home/ec2-user/app/baseball-server/backend/config
-
             # Save the YAML configuration file
             echo "${{ secrets.ENV }}" > /home/ec2-user/app/baseball-server/backend/.env
 
