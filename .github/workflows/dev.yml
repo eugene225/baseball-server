@@ -21,10 +21,10 @@ jobs:
             cd /home/ec2-user/app/baseball-server
 
             # 디렉토리 생성
-            mkdir -p /home/ec2-user/app/baseball-server/config
+            mkdir -p /home/ec2-user/app/baseball-server/backend/config
 
             # Save the YAML configuration file
-            echo "${{ secrets.APPLICATION_YML }}" > /home/ec2-user/app/baseball-server/config/application.yml
+            echo "${{ secrets.APPLICATION_YML }}" > /home/ec2-user/app/baseball-server/backend/config/application.yml
 
             # Pull latest changes from the repository
             git config --global url.https://${{ secrets.GIT_TOKEN }}@github.com/.insteadOf https://github.com/
@@ -39,13 +39,13 @@ jobs:
 
             if [ -d "frontend/build" ]; then
               # Create a directory to hold the public files if it doesn't exist
-              mkdir -p public
+              mkdir -p backend/public
               
               # Remove existing files in the public directory to avoid conflicts
-              rm -rf public/*
+              rm -rf backend/public/*
 
               # Copy build files from React to the public directory
-              cp -r frontend/build/* public/
+              cp -r frontend/build/* backend/public/
             else
               echo "frontend/build directory does not exist"
               exit 1
@@ -55,6 +55,7 @@ jobs:
             pm2 stop all || true
 
             # Build the application
+            cd backend
             npm run build
 
             # Start the application
