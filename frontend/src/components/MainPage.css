@@ -1,0 +1,18 @@
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 60px);
+  }
+  
+  .logo-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+  }
+  
+  .team-logo {
+    max-width: 100px;
+    max-height: 100px;
+  }
+  
