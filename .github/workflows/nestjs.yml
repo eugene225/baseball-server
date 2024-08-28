@@ -29,5 +29,4 @@ jobs:
 
     - name: Create YAML config file
       run: |
-        mkdir -p config  # 디렉토리 생성
-        echo "${{ secrets.APPLICATION_YML }}" > config/application.yml
+        echo "${{ secrets.ENV }}" > .env
