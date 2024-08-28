@@ -1,18 +1,145 @@
-.main-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100vh - 60px);
+/* src/components/MainPage.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
+/* Importing the Roboto font from Google Fonts */
+
+:root {
+  --burgundy: #800020; /* Main Burgundy color */
+  --light-burgundy: #a03f47; /* Light Burgundy color for hover effects */
+  --dark-burgundy: #4e001d; /* Dark Burgundy color for accents */
+  --white: #fff; /* White color for backgrounds */
+  --light-grey: #f4f4f4; /* Light grey for background */
+}
+
+.main-page {
+  text-align: center;
+  padding: 20px;
+  background-color: var(--light-grey); /* Light grey background */
+  position: relative;
+}
+
+h1 {
+  font-family: 'Roboto', sans-serif; /* Apply the imported font */
+  font-size: 36px;
+  color: var(--dark-burgundy); /* Use Burgundy color */
+  margin-bottom: 20px;
+}
+
+.board-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.board-item {
+  text-decoration: none;
+  color: inherit;
+  flex: 1 1 calc(50% - 20px); /* Default to 2 items per row on smaller screens */
+  max-width: calc(50% - 20px); /* Ensure item does not overflow */
+}
+
+.board-content {
+  background-color: var(--white); /* White background for board items */
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px; /* Fixed height for square shape */
+}
+
+.board-content h2 {
+  margin: 10px 0;
+  font-size: 20px;
+  color: var(--burgundy); /* Use Burgundy color */
+}
+
+.board-content p {
+  font-size: 14px;
+  margin: 0;
+}
+
+.emoji {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.board-item:hover .board-content {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.auth-buttons {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.auth-button {
+  color: var(--white); /* White text color */
+  background-color: var(--burgundy); /* Burgundy background color */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.auth-button:hover {
+  background-color: var(--light-burgundy); /* Light Burgundy on hover */
+}
+
+/* Media Queries for Responsive Design */
+
+@media (max-width: 768px) {
+  .board-item {
+    flex: 1 1 calc(100% - 20px); /* 1 item per row on medium screens */
+    max-width: calc(100% - 20px); /* Ensure item does not overflow */
   }
   
-  .logo-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
+  .auth-buttons {
+    top: 10px;
+    right: 10px;
+    gap: 5px;
   }
-  
-  .team-logo {
-    max-width: 100px;
-    max-height: 100px;
+
+  .auth-button {
+    padding: 8px 16px;
+    font-size: 12px;
   }
-  
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 28px; /* Smaller font size for very small screens */
+  }
+
+  .board-content {
+    height: auto; /* Adjust height for smaller screens */
+    padding: 15px;
+  }
+
+  .emoji {
+    font-size: 30px; /* Smaller emoji size for smaller screens */
+  }
+
+  .auth-buttons {
+    top: 5px;
+    right: 5px;
+    gap: 3px;
+  }
+
+  .auth-button {
+    padding: 6px 12px;
+    font-size: 10px;
+  }
+}
