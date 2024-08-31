@@ -7,26 +7,72 @@ on:
     branches: [ "develop" ]
 
 jobs:
-  build:
-
+  backend-build:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v4
+      # 소스 코드 체크아웃
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+        # npm 캐시 설정
 
-    - name: Create YAML config file
+    - name: Install backend dependencies
+      run: npm ci
+      working-directory: ./baseball-server/backend
+      # baseball-server/backend 디렉토리에서 종속성 설치
+
+    - name: Build backend
+      run: npm run build --if-present
+      working-directory: ./baseball-server/backend
+      # baseball-server/backend 디렉토리에서 빌드
+
+    - name: Test backend
+      run: npm test
+      working-directory: ./baseball-server/backend
+      # baseball-server/backend 디렉토리에서 테스트 실행
+
+    - name: Create ENV config file
       run: |
         echo "${{ secrets.ENV }}" > .env
+      working-directory: ./baseball-server/backend
+      # baseball-server/backend 디렉토리에서 YAML 파일 생성
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - uses: actions/checkout@v4
+      # 소스 코드 체크아웃
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        # npm 캐시 설정
+
+    - name: Install frontend dependencies
+      run: npm ci
+      working-directory: ./baseball-server/frontend
+      # baseball-server/frontend 디렉토리에서 종속성 설치
+
+    - name: Build frontend
+      run: npm run build
+      working-directory: ./baseball-server/frontend
+      # baseball-server/frontend 디렉토리에서 빌드 (React 프로젝트)
+
+    - name: Test frontend
+      run: npm test
+      working-directory: ./baseball-server/frontend
+      # baseball-server/frontend 디렉토리에서 테스트 실행
