@@ -11,70 +11,70 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16]  # Node.js 버전을 16으로 설정
+        node-version: [16.x]
 
     steps:
     - uses: actions/checkout@v4
       # 소스 코드 체크아웃
 
-    - name: Setup Node.js
+    - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: ./baseball-server/backend/package-lock.json
-        # Node.js 및 npm 캐시 설정, package-lock.json을 기준으로 캐시를 관리
+        # 백엔드 Node.js 및 npm 캐시 설정
 
     - name: Install backend dependencies
       run: npm ci
       working-directory: ./baseball-server/backend
-      # baseball-server/backend 디렉토리에서 종속성 설치
+      # 백엔드 종속성 설치
 
     - name: Build backend
       run: npm run build
       working-directory: ./baseball-server/backend
-      # baseball-server/backend 디렉토리에서 빌드
+      # 백엔드 빌드
 
     - name: Test backend
       run: npm test
       working-directory: ./baseball-server/backend
-      # baseball-server/backend 디렉토리에서 테스트 실행
+      # 백엔드 테스트 실행
 
     - name: Create ENV config file
       run: |
         echo "${{ secrets.ENV }}" > .env
       working-directory: ./baseball-server/backend
-      # baseball-server/backend 디렉토리에서 .env 파일 생성
+      # 백엔드 ENV 파일 생성
 
   frontend-build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16]  # Node.js 버전을 16으로 설정
+        node-version: [16.x]
 
     steps:
     - uses: actions/checkout@v4
       # 소스 코드 체크아웃
 
-    - name: Setup Node.js
+    - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: ./baseball-server/frontend/package-lock.json
-        # Node.js 및 npm 캐시 설정, package-lock.json을 기준으로 캐시를 관리
+        # 프론트엔드 Node.js 및 npm 캐시 설정
 
     - name: Install frontend dependencies
       run: npm ci
       working-directory: ./baseball-server/frontend
-      # baseball-server/frontend 디렉토리에서 종속성 설치
+      # 프론트엔드 종속성 설치
 
     - name: Build frontend
       run: npm run build
       working-directory: ./baseball-server/frontend
-      # baseball-server/frontend 디렉토리에서 빌드 (React 프로젝트)
+      # 프론트엔드 빌드 (React 프로젝트)
 
     - name: Test frontend
       run: npm test
       working-directory: ./baseball-server/frontend
-      # baseball-server/frontend 디렉토리에서 테스트 실행
+      # 프론트엔드 테스트 실행
