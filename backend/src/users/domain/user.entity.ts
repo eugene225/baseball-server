@@ -15,6 +15,6 @@ export class User extends BaseEntity {
   @Column()
   password: string;
 
-  @Column()
-  myTeam: Team;
+  @Column({ type: 'enum', enum: Team, nullable: true })
+  myTeam?: Team;
 }
