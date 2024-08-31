@@ -6,7 +6,9 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { CustomRepository } from 'src/global/decorator/custom-repository.decorator';
 
+@CustomRepository(User)
 export class UserRepository extends Repository<User> {
   constructor(dataSource: DataSource) {
     super(User, dataSource.createEntityManager());
@@ -22,10 +24,12 @@ export class UserRepository extends Repository<User> {
     try {
       return await this.save(user);
     } catch (error) {
-      if (error.code === '23505') {
+      console.error('Database error:', error); // 디버깅을 위한 로그 출력
+
+      if (error.code === 'ER_DUP_ENTRY') {
         throw new ConflictException('Existing Email');
       } else {
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException('An unexpected error occurred');
       }
     }
   }
