@@ -24,13 +24,25 @@ jobs:
         cache: 'npm'
         # npm 캐시 설정
 
+    - name: Cache npm modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ./baseball-server/backend/node_modules
+          ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('baseball-server/backend/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+          ${{ runner.os }}-
+        # 캐시를 설정하여 npm 모듈을 캐시하고 재사용합니다.
+
     - name: Install backend dependencies
       run: npm ci
       working-directory: ./baseball-server/backend
       # baseball-server/backend 디렉토리에서 종속성 설치
 
     - name: Build backend
-      run: npm run build --if-present
+      run: npm run build
       working-directory: ./baseball-server/backend
       # baseball-server/backend 디렉토리에서 빌드
 
@@ -43,7 +55,7 @@ jobs:
       run: |
         echo "${{ secrets.ENV }}" > .env
       working-directory: ./baseball-server/backend
-      # baseball-server/backend 디렉토리에서 YAML 파일 생성
+      # baseball-server/backend 디렉토리에서 .env 파일 생성
 
   frontend-build:
     runs-on: ubuntu-latest
@@ -61,6 +73,18 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         # npm 캐시 설정
+
+    - name: Cache npm modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ./baseball-server/frontend/node_modules
+          ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('baseball-server/frontend/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+          ${{ runner.os }}-
+        # 캐시를 설정하여 npm 모듈을 캐시하고 재사용합니다.
 
     - name: Install frontend dependencies
       run: npm ci
