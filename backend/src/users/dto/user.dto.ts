@@ -1,16 +1,13 @@
 import { User } from '../domain/user.entity';
 
 export class UserDto {
-  id: number;
-  nickname: string;
-  email: string;
+  constructor(
+    public readonly id: number,
+    public readonly nickname: string,
+    public readonly email: string,
+  ) {}
 
-  static create(user: User) {
-    const dto = new UserDto();
-    dto.id = user.id;
-    dto.nickname = user.nickname;
-    dto.email = user.email;
-
-    return dto;
+  static create(user: User): UserDto {
+    return new UserDto(user.id, user.nickname, user.email);
   }
 }
