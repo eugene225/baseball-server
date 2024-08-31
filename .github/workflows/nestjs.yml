@@ -11,30 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [16]  # Node.js 버전을 16으로 설정
 
     steps:
     - uses: actions/checkout@v4
       # 소스 코드 체크아웃
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        # npm 캐시 설정
-
-    - name: Cache npm modules
-      uses: actions/cache@v3
-      with:
-        path: |
-          ./baseball-server/backend/node_modules
-          ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('baseball-server/backend/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-          ${{ runner.os }}-
-        # 캐시를 설정하여 npm 모듈을 캐시하고 재사용합니다.
+        cache-dependency-path: ./baseball-server/backend/package-lock.json
+        # Node.js 및 npm 캐시 설정, package-lock.json을 기준으로 캐시를 관리
 
     - name: Install backend dependencies
       run: npm ci
@@ -61,30 +50,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [16]  # Node.js 버전을 16으로 설정
 
     steps:
     - uses: actions/checkout@v4
       # 소스 코드 체크아웃
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        # npm 캐시 설정
-
-    - name: Cache npm modules
-      uses: actions/cache@v3
-      with:
-        path: |
-          ./baseball-server/frontend/node_modules
-          ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('baseball-server/frontend/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-          ${{ runner.os }}-
-        # 캐시를 설정하여 npm 모듈을 캐시하고 재사용합니다.
+        cache-dependency-path: ./baseball-server/frontend/package-lock.json
+        # Node.js 및 npm 캐시 설정, package-lock.json을 기준으로 캐시를 관리
 
     - name: Install frontend dependencies
       run: npm ci
