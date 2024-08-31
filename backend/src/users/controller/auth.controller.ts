@@ -5,7 +5,7 @@ import { UserDto } from '../dto/user.dto';
 import { SignInResponseDto } from '../dto/signIn-response.dto';
 import { SignInRequestDto } from '../dto/signIn-request.dto';
 
-@Controller('auth')
+@Controller('/api/v1/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
