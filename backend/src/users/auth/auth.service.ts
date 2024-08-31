@@ -6,8 +6,9 @@ import { UserDto } from '../dto/user.dto';
 import { SignInRequestDto } from '../dto/signIn-request.dto';
 import { SignInResponseDto } from '../dto/signIn-response.dto';
 import * as bcrypt from 'bcryptjs';
-import { UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 
+@Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UserRepository)
