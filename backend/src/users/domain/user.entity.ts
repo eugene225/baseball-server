@@ -1,3 +1,4 @@
+import { Team } from 'src/teams/team.enum';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('users')
@@ -7,4 +8,13 @@ export class User extends BaseEntity {
 
   @Column()
   nickname: string;
+
+  @Column()
+  email: string;
+
+  @Column()
+  password: string;
+
+  @Column({ type: 'enum', enum: Team, nullable: true })
+  myTeam?: Team;
 }
