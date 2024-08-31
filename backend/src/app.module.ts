@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from './configs/typeorm.config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { UserService } from './users/application/user.service';
 
 @Module({
   imports: [
@@ -17,6 +16,6 @@ import { UserService } from './users/application/user.service';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, UserService],
+  providers: [AppService],
 })
 export class AppModule {}

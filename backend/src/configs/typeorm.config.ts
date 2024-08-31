@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { join } from 'path';
 
 dotenv.config();
 
@@ -14,6 +15,6 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  entities: [__dirname + '/../**/*.entity.{js,ts}'],
+  entities: [join(__dirname, '..', '**', '*.entity.{js,ts}')],
   synchronize: stringToBoolean(process.env.DB_SYNCHRONIZE),
 };
