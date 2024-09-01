@@ -1,52 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './MainPage.css';
-import axios from 'axios'; // axios를 사용해 API 호출
+import { fetchUserInfo } from '../api/user'; // 분리한 API 호출 함수 가져오기
 
+// 사용자 정보를 표시하는 컴포넌트
+const UserInfo = ({ userInfo }) => (
+  <div className="user-info">
+    <p>닉네임: {userInfo.nickname}</p>
+    <p>마이팀: {userInfo.myTeam}</p>
+  </div>
+);
+
+// 인증 버튼 컴포넌트
+const AuthButtons = () => (
+  <div className="auth-buttons">
+    <Link to="/login" className="auth-button">로그인</Link>
+    <Link to="/signup" className="auth-button">회원가입</Link>
+  </div>
+);
+
+// MainPage 컴포넌트
 function MainPage() {
-  // 로그인 상태와 사용자 정보를 관리하는 state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState({ nickname: '', myTeam: '' });
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
+    const fetchAndSetUserInfo = async () => {
       const user = JSON.parse(localStorage.getItem('user')); // 로컬 스토리지에서 유저 정보 가져오기
       if (user) {
         try {
-          const response = await axios.get(`/api/v1/${user.userId}`, {
-            headers: {
-              Authorization: `Bearer ${user.accessToken}`, // 토큰을 헤더에 포함
-            },
-          });
-          setUserInfo({ nickname: response.data.nickname, myTeam: response.data.myTeam });
+          const data = await fetchUserInfo(user.userId, user.accessToken);
+          setUserInfo({ nickname: data.nickname, myTeam: data.myTeam });
           setIsLoggedIn(true);
         } catch (error) {
-          console.error('Failed to fetch user info:', error);
-          // 토큰 만료 등의 이유로 요청 실패 시, 로컬 스토리지 초기화 및 로그아웃 처리 가능
+          // 오류 처리: 로컬 스토리지 초기화 및 로그아웃 처리
           localStorage.removeItem('user');
           setIsLoggedIn(false);
         }
       }
     };
 
-    fetchUserInfo();
-  }, []);
+    fetchAndSetUserInfo();
+  }, []); // 빈 배열로 컴포넌트가 마운트될 때 한 번만 실행
 
   return (
     <div className="main-page">
       <h1>⚾️ Let's BaseBall ⚾️</h1>
       
-      {isLoggedIn ? (
-        <div className="user-info">
-          <p>닉네임: {userInfo.nickname}</p>
-          <p>마이팀: {userInfo.myTeam}</p>
-        </div>
-      ) : (
-        <div className="auth-buttons">
-          <Link to="/login" className="auth-button">로그인</Link>
-          <Link to="/signup" className="auth-button">회원가입</Link>
-        </div>
-      )}
+      {isLoggedIn ? <UserInfo userInfo={userInfo} /> : <AuthButtons />}
 
       <div className="board-container">
         <Link to="/diary" className="board-item">
