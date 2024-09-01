@@ -1,4 +1,3 @@
-/* src/components/MainPage.css */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
 
 /* Importing the Roboto font from Google Fonts */
@@ -11,18 +10,56 @@
   --light-grey: #f4f4f4; /* Light grey for background */
 }
 
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif; /* Apply the imported font globally */
+}
+
 .main-page {
   text-align: center;
   padding: 20px;
   background-color: var(--light-grey); /* Light grey background */
   position: relative;
+  padding-top: 20px; /* Space for the top bar */
 }
 
-h1 {
-  font-family: 'Roboto', sans-serif; /* Apply the imported font */
-  font-size: 36px;
-  color: var(--dark-burgundy); /* Use Burgundy color */
-  margin-bottom: 20px;
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--dark-burgundy); /* Dark Burgundy background */
+  color: var(--white);
+  text-align: center;
+  padding: 10px 0;
+  font-size: 24px;
+  font-weight: bold;
+  z-index: 1000; /* Ensure it is on top of other content */
+}
+
+/* Flexbox layout for aligning auth buttons */
+.auth-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px; /* Space between title and buttons */
+}
+
+.auth-button {
+  color: var(--white); /* White text color */
+  background-color: var(--burgundy); /* Burgundy background color */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.auth-button:hover {
+  background-color: var(--light-burgundy); /* Light Burgundy on hover */
 }
 
 .board-container {
@@ -30,12 +67,13 @@ h1 {
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
+  margin-top: 20px; /* Margin to ensure items are not too close to the top */
 }
 
 .board-item {
   text-decoration: none;
   color: inherit;
-  flex: 1 1 calc(50% - 20px); /* Default to 2 items per row on smaller screens */
+  flex: 1 1 calc(50% - 20px); /* Default to 2 items per row on larger screens */
   max-width: calc(50% - 20px); /* Ensure item does not overflow */
 }
 
@@ -50,7 +88,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 200px; /* Fixed height for square shape */
+  height: 200px; /* Fixed height for a square shape */
 }
 
 .board-content h2 {
@@ -74,30 +112,6 @@ h1 {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-.auth-buttons {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  gap: 10px;
-}
-
-.auth-button {
-  color: var(--white); /* White text color */
-  background-color: var(--burgundy); /* Burgundy background color */
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  text-decoration: none;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.auth-button:hover {
-  background-color: var(--light-burgundy); /* Light Burgundy on hover */
-}
-
 /* Media Queries for Responsive Design */
 
 @media (max-width: 768px) {
@@ -107,9 +121,8 @@ h1 {
   }
   
   .auth-buttons {
-    top: 10px;
-    right: 10px;
     gap: 5px;
+    margin-top: 15px; /* Adjust spacing for medium screens */
   }
 
   .auth-button {
@@ -119,8 +132,8 @@ h1 {
 }
 
 @media (max-width: 480px) {
-  h1 {
-    font-size: 28px; /* Smaller font size for very small screens */
+  .top-bar {
+    font-size: 20px; /* Smaller font size for very small screens */
   }
 
   .board-content {
@@ -133,9 +146,8 @@ h1 {
   }
 
   .auth-buttons {
-    top: 5px;
-    right: 5px;
     gap: 3px;
+    margin-top: 10px; /* Adjust spacing for very small screens */
   }
 
   .auth-button {
