@@ -98,6 +98,23 @@ body {
   cursor: not-allowed; /* Show not-allowed cursor */
 }
 
+.user-info {
+  margin: 20px 0;
+}
+
+.logout-link {
+  color: var(--burgundy);
+  text-decoration: underline;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.logout-link:hover {
+  color: var(--light-burgundy); /* Change color on hover */
+}
+
+
 /* Highlight for authentication buttons */
 .auth-buttons {
   margin-top: 20px; /* Add margin to the auth buttons container */

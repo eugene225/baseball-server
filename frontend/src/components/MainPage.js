@@ -4,10 +4,10 @@ import './MainPage.css';
 import { fetchUserInfo } from '../api/user'; // Import the API call function
 
 // 사용자 정보를 표시하는 컴포넌트
-const UserInfo = ({ userInfo }) => (
+const UserInfo = ({ userInfo, onLogout }) => (
   <div className="user-info">
     <p>닉네임: {userInfo.nickname}</p>
-    <p>마이팀: {userInfo.myTeam}</p>
+    <a href="#" className="logout-link" onClick={onLogout}>로그아웃</a>
   </div>
 );
 
@@ -42,11 +42,18 @@ function MainPage() {
     }
   };
 
+  const handleLogout = (event) => {
+    event.preventDefault(); // Prevent the default link behavior
+    localStorage.removeItem('user');
+    setIsLoggedIn(false);
+    navigate('/'); // Redirect to login page after logout
+  };
+
   return (
     <div className="main-page">
       <h1>⚾️ Let's BaseBall ⚾️</h1>
 
-      {isLoggedIn ? <UserInfo userInfo={userInfo} /> : null}
+      {isLoggedIn ? <UserInfo userInfo={userInfo} onLogout={handleLogout} /> : null}
 
       <div className="board-container">
         {isLoggedIn ? (
