@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './MainPage.css';
-import { fetchUserInfo } from '../api/user'; // Import the API call function
+import { fetchUserInfo } from '../api/user';
 
 // 사용자 정보를 표시하는 컴포넌트
-const UserInfo = ({ userInfo, onLogout }) => (
-  <div className="user-info">
-    <p>닉네임: {userInfo.nickname}</p>
-    <a href="#" className="logout-link" onClick={onLogout}>로그아웃</a>
-  </div>
-);
+const UserInfo = ({ userInfo, onLogout }) => {
+  const handleLogout = (event) => {
+    event.preventDefault(); // Prevent the default link behavior
+    onLogout(); // Call the logout function
+  };
+
+  return (
+    <div className="user-info">
+      <p>닉네임: {userInfo.nickname}</p>
+      <a href="#" className="logout-link" onClick={handleLogout}>로그아웃</a>
+    </div>
+  );
+};
 
 // MainPage 컴포넌트
 function MainPage() {
@@ -42,11 +49,10 @@ function MainPage() {
     }
   };
 
-  const handleLogout = (event) => {
-    event.preventDefault(); // Prevent the default link behavior
+  const handleLogout = () => {
     localStorage.removeItem('user');
     setIsLoggedIn(false);
-    navigate('/'); // Redirect to login page after logout
+    navigate('/'); // Redirect to home page after logout
   };
 
   return (
