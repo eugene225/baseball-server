@@ -1,0 +1,137 @@
+/* General Styles for MyPage */
+.my-page {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--light-grey);
+    min-height: 100vh; /* Ensure full height */
+}
+  
+h1 {
+    color: #333; /* Dark grey for better readability */
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+  
+/* User Info Form Styles */
+.user-info-form {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between elements */
+}
+  
+.user-info-form label {
+    display: flex;
+    flex-direction: column;
+    text-align: left; /* Align text to the left */
+    color: #555; /* Medium grey for text */
+}
+  
+.user-info-form label span {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+  
+.user-info-form input,
+.user-info-form select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box; /* Include padding in width calculation */
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+  
+.user-info-form input:focus,
+.user-info-form select:focus {
+    border-color: #333; /* Dark grey for focus state */
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2); /* Shadow for focus state */
+    outline: none;
+}
+  
+.user-info-form button {
+    background-color: #800020; /* Dark grey for button */
+    color: var(--white);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+  
+.user-info-form button:hover {
+    background-color: #444; /* Slightly lighter grey on hover */
+    transform: scale(1.05);
+}
+  
+/* Private Diaries Block Styles */
+.private-diaries-block {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    width: 80%; /* Adjust width to be responsive */
+    max-width: 600px; /* Maximum width for larger screens */
+    margin-left: auto;
+    margin-right: auto; /* Center the block */
+}
+  
+.private-diaries-block:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.02);
+}
+  
+.private-diaries-block .block-content h2 {
+    margin: 0;
+    font-size: 15px;
+    color: #333; /* Dark grey for text */
+    display: flex;
+    align-items: center;
+}
+  
+.private-diaries-block .block-content h2 span {
+    margin-right: 8px; /* Add spacing between emoji and text */
+    font-size: 1.2em; /* Adjust emoji size */
+}
+  
+/* Responsive Design */
+@media (max-width: 768px) {
+    .user-info-form {
+      max-width: 100%;
+    }
+  
+    .private-diaries-block {
+      width: 90%; /* Wider block on smaller screens */
+    }
+}
+  
+@media (max-width: 480px) {
+    h1 {
+      font-size: 24px;
+    }
+  
+    .user-info-form input,
+    .user-info-form select,
+    .user-info-form button {
+      font-size: 14px;
+      padding: 8px;
+    }
+
+    .private-diaries-block .block-content h2 {
+        font-size: 20px; /* Slightly smaller font for mobile */
+    }
+    
+    .private-diaries-block .block-content p {
+        font-size: 14px; /* Adjust paragraph text size */
+    }
+}
