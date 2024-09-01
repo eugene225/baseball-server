@@ -28,7 +28,7 @@ export class AuthService {
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { email };
       const accessToken = await this.jwtService.sign(payload);
-      return SignInResponseDto.create(email, accessToken);
+      return SignInResponseDto.create(user.id, email, accessToken);
     } else {
       throw new UnauthorizedException('login failed - email {}', email);
     }
