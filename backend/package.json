@@ -29,6 +29,7 @@
     "@nestjs/serve-static": "^4.0.2",
     "@nestjs/typeorm": "^10.0.2",
     "bcryptjs": "^2.4.3",
+    "class-validator": "^0.14.1",
     "config": "^3.3.12",
     "dotenv": "^16.4.5",
     "esutils": "^2.0.3",

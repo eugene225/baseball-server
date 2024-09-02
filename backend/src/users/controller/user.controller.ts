@@ -1,7 +1,17 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { UserService } from '../application/user.service';
 import { UserDto } from '../dto/user.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { UpdateUserInfoRequest } from '../dto/updateInfo-request.dto';
 
 @Controller('/api/v1/users')
 export class UserController {
@@ -11,5 +21,15 @@ export class UserController {
   @UseGuards(AuthGuard())
   async getById(@Param('userId') userId: number): Promise<UserDto> {
     return this.userService.getById(userId);
+  }
+
+  @Patch(':userId')
+  @UseGuards(AuthGuard())
+  @UsePipes(ValidationPipe)
+  async update(
+    @Param('userId') userId: number,
+    @Body() request: UpdateUserInfoRequest,
+  ): Promise<UserDto> {
+    return this.userService.updateInfo(userId, request);
   }
 }
