@@ -5,7 +5,7 @@ export class UserDto {
     public readonly id: number,
     public readonly nickname: string,
     public readonly email: string,
-    public readonly myTema: string,
+    public readonly myTeam: string,
   ) {}
 
   static create(user: User): UserDto {
