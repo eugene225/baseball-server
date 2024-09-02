@@ -12,7 +12,7 @@ const UserInfo = ({ userInfo, onLogout }) => {
 
   return (
     <div className="user-info">
-      <p>닉네임: {userInfo.nickname}</p>
+      <p>닉네임: {userInfo.nickname} / 마이팀: {userInfo.myTeam}</p>
       <a href="#" className="logout-link" onClick={handleLogout}>로그아웃</a>
     </div>
   );

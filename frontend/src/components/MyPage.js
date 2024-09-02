@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MyPage.css';
-import { fetchUserInfo, updateUserInfo } from '../api/user'; // Import necessary API functions
+import { fetchUserInfo, updateUserInfo } from '../api/user';
 
-// MyPage 컴포넌트
 function MyPage() {
   const [userInfo, setUserInfo] = useState({ nickname: '', myTeam: '' });
   const [newNickname, setNewNickname] = useState('');
   const [newMyTeam, setNewMyTeam] = useState('');
-  const navigate = useNavigate(); // For programmatic navigation
+  const [isSaving, setIsSaving] = useState(false); // Button color state
+  const [saveMessage, setSaveMessage] = useState(''); // Save message state
+  const navigate = useNavigate();
 
   const teams = [
     "LG_TWINS",
@@ -24,7 +25,7 @@ function MyPage() {
 
   useEffect(() => {
     const fetchAndSetUserInfo = async () => {
-      const user = JSON.parse(localStorage.getItem('user')); // Fetch user info from localStorage
+      const user = JSON.parse(localStorage.getItem('user'));
       if (user) {
         try {
           const data = await fetchUserInfo(user.userId, user.accessToken);
@@ -32,7 +33,6 @@ function MyPage() {
           setNewNickname(data.nickname);
           setNewMyTeam(data.myTeam);
         } catch (error) {
-          // Handle errors (e.g., redirect to login)
           localStorage.removeItem('user');
           navigate('/login');
         }
@@ -43,20 +43,25 @@ function MyPage() {
   }, [navigate]);
 
   const handleSaveChanges = async () => {
-    const user = JSON.parse(localStorage.getItem('user')); // Fetch user info from localStorage
+    const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
+      setIsSaving(true); // Start saving process
       try {
         await updateUserInfo(user.userId, user.accessToken, { nickname: newNickname, myTeam: newMyTeam });
         setUserInfo({ nickname: newNickname, myTeam: newMyTeam });
+        setSaveMessage('수정되었습니다'); // Set save message
       } catch (error) {
-        // Handle update error
         console.error('Error updating user info:', error);
+        setSaveMessage('수정 실패. 다시 시도해 주세요.'); // Error message
+      } finally {
+        setIsSaving(false); // Reset saving process
+        setTimeout(() => setSaveMessage(''), 3000); // Clear message after 3 seconds
       }
     }
   };
 
   const handleDiaryBlockClick = () => {
-    navigate('/private-diaries'); // Redirect to the private diaries page
+    navigate('/private-diaries');
   };
 
   return (
@@ -86,7 +91,13 @@ function MyPage() {
             ))}
           </select>
         </label>
-        <button onClick={handleSaveChanges}>변경사항 저장</button>
+        <button
+          onClick={handleSaveChanges}
+          className={isSaving ? 'saving' : ''}
+        >
+          {isSaving ? '저장 중...' : '변경사항 저장'}
+        </button>
+        {saveMessage && <p className="save-message">{saveMessage}</p>}
       </div>
       <div className="private-diaries-block" onClick={handleDiaryBlockClick}>
         <div className="block-content">

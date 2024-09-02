@@ -5,9 +5,10 @@ export class UserDto {
     public readonly id: number,
     public readonly nickname: string,
     public readonly email: string,
+    public readonly myTema: string,
   ) {}
 
   static create(user: User): UserDto {
-    return new UserDto(user.id, user.nickname, user.email);
+    return new UserDto(user.id, user.nickname, user.email, user.myTeam);
   }
 }

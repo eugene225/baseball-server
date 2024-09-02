@@ -70,7 +70,21 @@ h1 {
     background-color: #444; /* Slightly lighter grey on hover */
     transform: scale(1.05);
 }
-  
+
+/* Button style when saving */
+.user-info-form button.saving {
+    background-color: #6c757d; /* Gray color to indicate saving state */
+    cursor: not-allowed;
+}
+
+/* Save message style */
+.save-message {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #28a745; /* Green color for success message */
+    font-weight: bold;
+}
+
 /* Private Diaries Block Styles */
 .private-diaries-block {
     background-color: var(--white);
@@ -103,7 +117,7 @@ h1 {
     margin-right: 8px; /* Add spacing between emoji and text */
     font-size: 1.2em; /* Adjust emoji size */
 }
-  
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .user-info-form {
@@ -114,7 +128,7 @@ h1 {
       width: 90%; /* Wider block on smaller screens */
     }
 }
-  
+
 @media (max-width: 480px) {
     h1 {
       font-size: 24px;
