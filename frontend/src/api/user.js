@@ -20,7 +20,7 @@ export const fetchUserInfo = async (userId, accessToken) => {
 // 사용자 정보를 업데이트하는 API 호출 함수
 export const updateUserInfo = async (userId, accessToken, updatedInfo) => {
     try {
-      const response = await axios.put(`${API_URL}/${userId}`, updatedInfo, {
+      const response = await axios.patch(`${API_URL}/${userId}`, updatedInfo, {
         headers: {
           Authorization: `Bearer ${accessToken}`, // 토큰을 헤더에 포함
         },
