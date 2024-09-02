@@ -5,5 +5,6 @@ export class UpdateUserInfoRequest {
   @IsNotEmpty()
   @Min(2)
   nickname: string;
+  @IsNotEmpty()
   myTema: Team;
 }
