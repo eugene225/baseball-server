@@ -22,7 +22,7 @@ export class UserService {
     request: UpdateUserInfoRequest,
   ): Promise<UserDto> {
     const user = await this.userRepository.findOneBy({ id: userId });
-    user.updateInfo(request.nickname, request.myTema);
+    user.updateInfo(request.nickname, request.myTeam);
 
     await this.userRepository.save(user);
 

@@ -16,7 +16,7 @@ export class User extends BaseEntity {
   password: string;
 
   @Column({ type: 'enum', enum: Team, nullable: true })
-  myTeam?: Team;
+  myTeam: Team;
 
   updateInfo(nickname: string, myTeam: Team) {
     this.nickname = nickname;
