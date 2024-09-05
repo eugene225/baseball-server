@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // useHistory 대신 useNavigate 임포트
 import './LoginSignUp.css';
-import { signIn } from '../api/auth'; // API 호출 함수 임포트
+import { signIn } from '../../api/auth'; // API 호출 함수 임포트
 
 function LogInPage() {
   const [email, setEmail] = useState('');
