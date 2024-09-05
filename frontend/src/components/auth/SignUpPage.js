@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './LoginSignUp.css'; // CSS 파일로 스타일링
-import { signUp } from '../api/auth'; // API 호출 함수 임포트
+import { signUp } from '../../api/auth'; // API 호출 함수 임포트
 
 function SignUpPage() {
   const [nickname, setNickname] = useState('');
