@@ -1,5 +1,5 @@
 import { DataSource, Repository } from 'typeorm';
-import { Diary } from './diary.domain';
+import { Diary } from './diary.entity';
 import { CreateDiaryRequestDto } from '../dto/createDiary-request.dto';
 import { CustomRepository } from 'src/global/decorator/custom-repository.decorator';
 import { User } from 'src/users/domain/user.entity';

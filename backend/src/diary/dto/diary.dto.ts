@@ -1,4 +1,4 @@
-import { Diary } from '../domain/diary.domain';
+import { Diary } from '../domain/diary.entity';
 
 export class DiaryDto {
   constructor(
