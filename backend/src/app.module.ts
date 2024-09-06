@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from './configs/typeorm.config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { DiaryModule } from './diary/diary.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { join } from 'path';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
+    DiaryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
