@@ -30,7 +30,7 @@ export class DiaryController {
 
   @Get('/public')
   async getAllPublicDiaries() {
-    const publicDiaries = await this.diaryService.findAllPublicDiaries();
+    const publicDiaries = await this.diaryService.getAllPublicDiaries();
 
     return {
       message: 'Successfully retrieved public diaries',
