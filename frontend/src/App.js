@@ -5,6 +5,7 @@ import LoginPage from './components/auth/LoginPage';
 import SignUpPage from './components/auth/SignUpPage';
 import MyPage from './components/MyPage';
 import PublicDiaryPage from './components/diary/PublicDiaryPage';
+import DiaryCreationPage from './components/diaryEntry/DiaryCreationPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/diary" element={<PublicDiaryPage />} />
+        <Route path='/diaryEntry' element={<DiaryCreationPage />} />
       </Routes>
     </Router>
   );
