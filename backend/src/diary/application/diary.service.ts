@@ -4,6 +4,7 @@ import { CreateDiaryRequestDto } from '../dto/createDiary-request.dto';
 import { UserService } from 'src/users/application/user.service';
 import { User } from 'src/users/domain/user.entity';
 import { DiaryDto } from '../dto/diary.dto';
+import { UnauthorizedException } from '@nestjs/common';
 
 export class DiaryService {
   constructor(
@@ -19,5 +20,17 @@ export class DiaryService {
     const diary = await this.diaryRepository.createDiary(requestDto, user);
 
     return DiaryDto.create(diary);
+  }
+
+  async deleteById(diaryId: number, user: User) {
+    const diary = await this.diaryRepository.findOneBy({ id: diaryId });
+
+    if (diary.creator !== user) {
+      throw new UnauthorizedException(
+        '본인이 만든 일기장만 삭제할 수 있습니다.',
+      );
+    }
+
+    await this.diaryRepository.delete({ id: diary.id });
   }
 }

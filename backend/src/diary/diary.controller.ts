@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateDiaryRequestDto } from './dto/createDiary-request.dto';
 import { DiaryService } from './application/diary.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -10,12 +18,23 @@ export class DiaryController {
 
   @Post()
   @UseGuards(AuthGuard())
-  create(
+  async create(
     @Body() createDiaryRequestDto: CreateDiaryRequestDto,
     @Request() req,
   ): Promise<DiaryDto> {
     const diary = this.diaryService.create(createDiaryRequestDto, req.user);
 
     return diary;
+  }
+
+  @Delete(':diaryId')
+  @UseGuards(AuthGuard())
+  async delete(@Param('diaryId') diaryId: number, @Request() req) {
+    await this.diaryService.deleteById(diaryId, req.user);
+
+    return {
+      message: 'Diary successfully deleted',
+      diaryId: diaryId,
+    };
   }
 }
