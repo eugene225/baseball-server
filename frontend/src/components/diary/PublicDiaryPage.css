@@ -68,7 +68,7 @@ body {
 .diary-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 일기장을 두 개씩 배치 */
-  gap: 60px;
+  column-gap: 60px;
   justify-items: center;
   align-items: start; /* 카드가 수직으로도 잘 정렬되도록 함 */
 }
@@ -109,6 +109,6 @@ body {
 @media (max-width: 768px) {
   .diary-list {
     grid-template-columns: repeat(2, 1fr); /* 모바일에서도 두 개씩 보이도록 함 */
-    gap: 30px; /* 모바일에서 카드 간격을 조금 더 줄임 */
+    column-gap: 30px; /* 모바일에서 카드 간격을 조금 더 줄임 */
   }
 }
