@@ -4,9 +4,10 @@ import { CreateDiaryRequestDto } from '../dto/createDiary-request.dto';
 import { UserService } from 'src/users/application/user.service';
 import { User } from 'src/users/domain/user.entity';
 import { DiaryDto } from '../dto/diary.dto';
-import { UnauthorizedException } from '@nestjs/common';
-import { Diary } from '../domain/diary.domain';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Diary } from '../domain/diary.entity';
 
+@Injectable()
 export class DiaryService {
   constructor(
     @InjectRepository(DiaryRepository)
