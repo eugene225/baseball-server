@@ -29,13 +29,10 @@ export class DiaryController {
   }
 
   @Get('/public')
-  async getAllPublicDiaries() {
+  async getAllPublicDiaries(): Promise<DiaryDto[]> {
     const publicDiaries = await this.diaryService.getAllPublicDiaries();
 
-    return {
-      message: 'Successfully retrieved public diaries',
-      data: publicDiaries,
-    };
+    return publicDiaries;
   }
 
   @Delete(':diaryId')
