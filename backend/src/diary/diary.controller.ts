@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   Request,
@@ -25,6 +26,16 @@ export class DiaryController {
     const diary = this.diaryService.create(createDiaryRequestDto, req.user);
 
     return diary;
+  }
+
+  @Get('/public')
+  async getAllPublicDiaries() {
+    const publicDiaries = await this.diaryService.findAllPublicDiaries();
+
+    return {
+      message: 'Successfully retrieved public diaries',
+      data: publicDiaries,
+    };
   }
 
   @Delete(':diaryId')

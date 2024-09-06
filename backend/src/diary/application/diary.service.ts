@@ -5,6 +5,7 @@ import { UserService } from 'src/users/application/user.service';
 import { User } from 'src/users/domain/user.entity';
 import { DiaryDto } from '../dto/diary.dto';
 import { UnauthorizedException } from '@nestjs/common';
+import { Diary } from '../domain/diary.domain';
 
 export class DiaryService {
   constructor(
@@ -20,6 +21,16 @@ export class DiaryService {
     const diary = await this.diaryRepository.createDiary(requestDto, user);
 
     return DiaryDto.create(diary);
+  }
+
+  async getAllPublicDiaries(): Promise<Diary[]> {
+    const publicDiaries = await this.diaryRepository.find({
+      where: {
+        isPublic: true,
+      },
+    });
+
+    return publicDiaries;
   }
 
   async deleteById(diaryId: number, user: User) {
