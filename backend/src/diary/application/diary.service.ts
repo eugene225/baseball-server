@@ -35,9 +35,12 @@ export class DiaryService {
   }
 
   async deleteById(diaryId: number, user: User) {
-    const diary = await this.diaryRepository.findOneBy({ id: diaryId });
+    const diary = await this.diaryRepository.findOne({
+      where: { id: diaryId },
+      relations: ['creator'],
+    });
 
-    if (diary.creator !== user) {
+    if (diary.creator.id !== user.id) {
       throw new UnauthorizedException(
         '본인이 만든 일기장만 삭제할 수 있습니다.',
       );
