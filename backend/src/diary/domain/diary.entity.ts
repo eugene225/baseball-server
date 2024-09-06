@@ -3,11 +3,13 @@ import {
   BaseEntity,
   Column,
   CreateDateColumn,
+  Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+@Entity('diaries')
 export class Diary extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
