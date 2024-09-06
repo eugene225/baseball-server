@@ -5,7 +5,6 @@ import { UserService } from 'src/users/application/user.service';
 import { User } from 'src/users/domain/user.entity';
 import { DiaryDto } from '../dto/diary.dto';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Diary } from '../domain/diary.entity';
 
 @Injectable()
 export class DiaryService {
@@ -24,14 +23,15 @@ export class DiaryService {
     return DiaryDto.create(diary);
   }
 
-  async getAllPublicDiaries(): Promise<Diary[]> {
+  async getAllPublicDiaries(): Promise<DiaryDto[]> {
     const publicDiaries = await this.diaryRepository.find({
       where: {
         isPublic: true,
       },
+      relations: ['creator'],
     });
 
-    return publicDiaries;
+    return publicDiaries.map((diary) => DiaryDto.create(diary));
   }
 
   async deleteById(diaryId: number, user: User) {

@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
-
 /* General Styles */
 :root {
   --burgundy: #800020;
@@ -7,73 +5,110 @@
   --dark-burgundy: #4e001d;
   --white: #fff;
   --light-grey: #f4f4f4;
-  --emoji-color: #fff; /* Emoji color */
+  --paper-color: #faf8f0; /* 배경을 종이 느낌으로 */
+  --card-bg: #ffffff; /* 카드 배경 색 */
+  --card-shadow: rgba(0, 0, 0, 0.1); /* 카드 그림자 색 */
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Nunito', sans-serif;
+  background-color: var(--paper-color); /* 전체 배경 색 */
 }
 
 .public-diary-page {
   text-align: center;
-  padding: 20px;
-  background-color: var(--light-grey);
+  padding: 30px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .page-title {
-  font-size: 2rem;
+  font-size: 2.0rem;
   color: var(--dark-burgundy);
   margin-bottom: 20px;
 }
 
-/* Button styles for mobile-friendly design with adjusted height */
 .create-diary-button {
-    background-color: var(--burgundy);
-    color: var(--white);
-    border: none;
-    border-radius: 8px;
-    padding: 8px 20px;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    position: relative;
+  background-color: var(--burgundy);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
+  padding: 10px 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  box-shadow: 0 4px 6px var(--card-shadow);
 }
 
 .create-diary-button::before {
-    content: '+';
-    font-size: 1.2rem; /* Adjust emoji size */
-    color: var(--light-grey); /* Set emoji color */
-    margin-right: 2px; /* Space between emoji and text */
-}
-
-.create-diary-button .text {
-    display: inline;
+  content: '+';
+  font-size: 1.4rem; /* 이모지 크기 조정 */
+  color: var(--light-grey);
+  margin-right: 8px; /* 이모지와 텍스트 사이 여백 */
 }
 
 .create-diary-button:hover {
-    background-color: var(--light-burgundy);
-    transform: scale(1.05);
+  background-color: var(--light-burgundy);
+  transform: scale(1.05);
 }
-  
+
 .create-diary-button:active {
-    background-color: var(--dark-burgundy);
-    transform: scale(0.95);
+  background-color: var(--dark-burgundy);
+  transform: scale(0.95);
+}
+
+/* Diary Card Styles */
+.diary-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 일기장을 두 개씩 배치 */
+  gap: 60px;
+  justify-items: center;
+  align-items: start; /* 카드가 수직으로도 잘 정렬되도록 함 */
+}
+
+.diary-card {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 15px; /* 패딩을 줄여서 여백을 조정 */
+  box-shadow: 0 4px 6px var(--card-shadow);
+  text-align: left;
+  font-family: 'Nunito', sans-serif;
+  line-height: 1.3; /* 줄 간격을 줄여 글씨 간격 조정 */
+  width: 100%; /* 카드의 너비를 부모 요소에 맞추도록 조정 */
+}
+
+.diary-card h2 {
+  margin-top: 0;
+  margin-bottom: 2px; /* 제목과 설명 사이의 간격 조정 */
+  font-size: 1.4rem; /* 글씨 크기를 살짝 줄임 */
+  color: var(--dark-burgundy);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+}
+
+.diary-card p {
+  margin: 5px 0; /* 위아래 간격을 줄임 */
+  color: var(--dark-burgundy);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+}
+
+.diary-card strong {
+  color: var(--burgundy);
+  font-weight: bold;
 }
 
 /* Mobile-specific adjustments */
 @media (max-width: 768px) {
-    .create-diary-button {
-        padding: 7px 20px;
-        font-size: 0.875rem;
-    }
-
-    .create-diary-button::before {
-        font-size: 1.2rem; /* Adjust emoji size for smaller screens */
-    }
+  .diary-list {
+    grid-template-columns: repeat(2, 1fr); /* 모바일에서도 두 개씩 보이도록 함 */
+    gap: 30px; /* 모바일에서 카드 간격을 조금 더 줄임 */
+  }
 }
