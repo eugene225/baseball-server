@@ -13,7 +13,7 @@ import { DiaryService } from './application/diary.service';
 import { AuthGuard } from '@nestjs/passport';
 import { DiaryDto } from './dto/diary.dto';
 
-@Controller('diary')
+@Controller('/api/v1/diary')
 export class DiaryController {
   constructor(private readonly diaryService: DiaryService) {}
 
