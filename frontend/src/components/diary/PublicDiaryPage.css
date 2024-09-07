@@ -84,22 +84,6 @@ body {
   width: 100%; /* 카드의 너비를 부모 요소에 맞추도록 조정 */
 }
 
-.diary-card::before {
-  content: "⚾"; /* 야구공 이모티콘 */
-  font-size: 2rem; /* 크기 조정 */
-  opacity: 0.8; /* 투명도 조정 */
-  display: block;
-  margin-bottom: 10px; /* 이모티콘과 텍스트 사이 여백 */
-}
-
-.diary-card::after {
-  content: "⚾"; /* 야구공 이모티콘 */
-  font-size: 2rem; /* 크기 조정 */
-  opacity: 0.8; /* 투명도 조정 */
-  display: block;
-  margin-bottom: 10px; /* 이모티콘과 텍스트 사이 여백 */
-}
-
 .diary-card h2 {
   margin-top: 0;
   margin-bottom: 2px; /* 제목과 설명 사이의 간격 조정 */

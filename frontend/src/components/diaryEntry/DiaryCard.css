@@ -87,6 +87,7 @@
     content: '⚾'; /* 야구공 이모지 */
     position: absolute;
     font-size: 60px;
+    opacity: 0.8;
     color: rgba(0, 0, 0, 0.1); /* 반투명한 색상 */
     pointer-events: none;
 }
