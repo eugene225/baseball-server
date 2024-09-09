@@ -30,6 +30,7 @@ jobs:
             git pull origin main
 
             cd frontend
+            npm cache clean --force
             npm install
             npm run build
             cd ..
