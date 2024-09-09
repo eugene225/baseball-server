@@ -10,13 +10,15 @@ import { PassportModule } from '@nestjs/passport';
 import { DiaryEntry } from './domain/diary-entry.entity';
 import { DiaryEntryRepository } from './domain/diary-entry.repository';
 import { DiaryEntryService } from './application/diary-entry.service';
+import { PlayerRepository } from 'src/player/domain/player.repository';
+import { Player } from 'src/player/domain/player.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Diary, DiaryEntry]),
+    TypeOrmModule.forFeature([Diary, DiaryEntry, Player]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [DiaryController],
-  providers: [DiaryRepository, UserRepository, DiaryService, UserService, DiaryEntryRepository, DiaryEntryService],
+  providers: [DiaryRepository, UserRepository, DiaryService, UserService, DiaryEntryRepository, DiaryEntryService, PlayerRepository],
 })
 export class DiaryModule {}
