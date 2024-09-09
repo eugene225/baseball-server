@@ -1,8 +1,9 @@
 import { Team } from 'src/global/enum/team.enum';
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Weather } from './weather.enum';
 import { Diary } from './diary.entity';
 import { User } from 'src/users/domain/user.entity';
+import { Player } from 'src/player/domain/player.entity';
 
 @Entity()
 export class DiaryEntry extends BaseEntity {
@@ -30,8 +31,9 @@ export class DiaryEntry extends BaseEntity {
     @Column()
     weather: Weather;
 
-    @Column()
-    lineUp: string[];
+    @ManyToMany(() => Player, {cascade: true})
+    @JoinTable({name: 'line_up'})
+    lineUp: Player[];
 
     @ManyToOne(() => Diary)
     diary: Diary;

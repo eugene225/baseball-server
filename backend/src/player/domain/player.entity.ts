@@ -1,3 +1,4 @@
+import { Position } from "src/global/enum/position.enum";
 import { Team } from "src/global/enum/team.enum";
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
@@ -8,6 +9,9 @@ export class Player extends BaseEntity {
 
     @Column()
     name: string;
+
+    @Column()
+    position: Position;
 
     @Column()
     team: Team;
