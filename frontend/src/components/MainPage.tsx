@@ -3,9 +3,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import './MainPage.css';
 import { fetchUserInfo } from '../api/user';
 
+// 사용자 정보를 표시하는 컴포넌트의 Props 타입 정의
+interface UserInfoProps {
+  userInfo: {
+    nickname: string;
+    myTeam: string;
+  };
+  onLogout: () => void;
+}
+
 // 사용자 정보를 표시하는 컴포넌트
-const UserInfo = ({ userInfo, onLogout }) => {
-  const handleLogout = (event) => {
+const UserInfo: React.FC<UserInfoProps> = ({ userInfo, onLogout }) => {
+  const handleLogout = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault(); // Prevent the default link behavior
     onLogout(); // Call the logout function
   };
@@ -18,16 +27,21 @@ const UserInfo = ({ userInfo, onLogout }) => {
   );
 };
 
-// MainPage 컴포넌트
+// MainPage 컴포넌트의 상태 타입 정의
+interface User {
+  nickname: string;
+  myTeam: string;
+}
+
 function MainPage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userInfo, setUserInfo] = useState({ nickname: '', myTeam: '' });
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<User>({ nickname: '', myTeam: '' });
   const navigate = useNavigate(); // For programmatic navigation
 
   useEffect(() => {
     const fetchAndSetUserInfo = async () => {
-      const user = JSON.parse(localStorage.getItem('user')); // Fetch user info from localStorage
-      if (user) {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      if (user && user.userId && user.accessToken) {
         try {
           const data = await fetchUserInfo(user.userId, user.accessToken);
           setUserInfo({ nickname: data.nickname, myTeam: data.myTeam });
@@ -42,12 +56,6 @@ function MainPage() {
 
     fetchAndSetUserInfo();
   }, []); // Empty array means this effect runs only once
-
-  const handleMyPageClick = () => {
-    if (!isLoggedIn) {
-      navigate('/login'); // Redirect to login if not logged in
-    }
-  };
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -70,12 +78,12 @@ function MainPage() {
             </div>
           </Link>
         ) : (
-          <div className="board-item" onClick={handleMyPageClick}>
+          <Link to="/login" className='board-item'>
             <div className="board-content">
               <h2>로그인 / 회원가입</h2>
               <p>로그인을 해야 합니다.</p>
             </div>
-          </div>
+          </Link>
         )}
         <Link to="/diary" className="board-item">
           <div className="board-content">

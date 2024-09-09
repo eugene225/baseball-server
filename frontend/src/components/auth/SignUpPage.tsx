@@ -3,15 +3,23 @@ import { Link } from 'react-router-dom';
 import './LoginSignUp.css'; // CSS 파일로 스타일링
 import { signUp } from '../../api/auth'; // API 호출 함수 임포트
 
-function SignUpPage() {
-  const [nickname, setNickname] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+// 상태와 이벤트 핸들러 타입 정의
+type SignUpFormValues = {
+  nickname: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
 
-  const handleSubmit = async (event) => {
+const SignUpPage: React.FC = () => {
+  const [nickname, setNickname] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // 비밀번호와 비밀번호 확인 필드 일치 여부 확인
@@ -26,7 +34,6 @@ function SignUpPage() {
       // signUp 함수 호출하여 서버로 데이터 전송
       const response = await signUp(signUpData);
       console.log(response);
-      
       setSuccessMessage('회원가입이 완료되었습니다. 로그인 해주세요.');
       setError('');
       // 회원가입 후 로그인 페이지로 리디렉션
@@ -34,7 +41,7 @@ function SignUpPage() {
     } catch (error) {
       // 에러 처리
       console.log(error);
-      setError(error.message);
+      setError((error as Error).message);
     }
   };
 

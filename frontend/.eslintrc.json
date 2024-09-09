@@ -1,0 +1,31 @@
+{
+    "env": {
+      "browser": true,
+      "es2021": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "react-app",
+      "react-app/jest"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "sourceType": "module"
+    },
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "rules": {
+      "eqeqeq": ["error", "always"], // 동등 비교 시 '===' 사용 강제
+      "no-trailing-spaces": "error", // 줄 끝 공백 금지
+      "indent": ["error", 2], // 2칸 들여쓰기 강제
+      "quotes": ["error", "single"], // 단일 따옴표 사용 강제
+      "jsx-a11y/anchor-is-valid": "off",
+      "@typescript-eslint/no-explicit-any": "warn", // 'any' 타입 사용에 대해 경고
+      "@typescript-eslint/explicit-module-boundary-types": "off", // 함수 반환 타입 강제 하지 않음
+      "@typescript-eslint/no-unused-vars": "off"
+    }
+  }
+  

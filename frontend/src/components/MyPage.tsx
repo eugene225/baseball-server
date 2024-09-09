@@ -3,29 +3,34 @@ import { useNavigate } from 'react-router-dom';
 import './MyPage.css';
 import { fetchUserInfo, updateUserInfo } from '../api/user';
 
-function MyPage() {
-  const [userInfo, setUserInfo] = useState({ nickname: '', myTeam: '' });
-  const [newNickname, setNewNickname] = useState('');
-  const [newMyTeam, setNewMyTeam] = useState('');
-  const [isSaving, setIsSaving] = useState(false); // Button color state
-  const [saveMessage, setSaveMessage] = useState(''); // Save message state
-  const navigate = useNavigate();
+interface UserInfo {
+  nickname: string;
+  myTeam: string;
+}
 
-  const teams = [
-    "LG_TWINS",
-    "SAMSUNG_LIONS",
-    "KIWOOM_HEROS",
-    "HANHWA_EAGLES",
-    "KT_WIZ",
-    "DOOSAN_BEARS",
-    "NC_DINOS",
-    "SSG_LANDERS",
-    "KIA_TIGERS",
-  ];
+const teams: Array<string> = [
+  'LG_TWINS',
+  'SAMSUNG_LIONS',
+  'KIWOOM_HEROS',
+  'HANHWA_EAGLES',
+  'KT_WIZ',
+  'DOOSAN_BEARS',
+  'NC_DINOS',
+  'SSG_LANDERS',
+  'KIA_TIGERS',
+];
+
+function MyPage(): JSX.Element {
+  const [userInfo, setUserInfo] = useState<UserInfo>({ nickname: '', myTeam: '' });
+  const [newNickname, setNewNickname] = useState<string>('');
+  const [newMyTeam, setNewMyTeam] = useState<string>('');
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [saveMessage, setSaveMessage] = useState<string>('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAndSetUserInfo = async () => {
-      const user = JSON.parse(localStorage.getItem('user'));
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
       if (user) {
         try {
           const data = await fetchUserInfo(user.userId, user.accessToken);
@@ -43,19 +48,19 @@ function MyPage() {
   }, [navigate]);
 
   const handleSaveChanges = async () => {
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
     if (user) {
-      setIsSaving(true); // Start saving process
+      setIsSaving(true);
       try {
         await updateUserInfo(user.userId, user.accessToken, { nickname: newNickname, myTeam: newMyTeam });
         setUserInfo({ nickname: newNickname, myTeam: newMyTeam });
-        setSaveMessage('수정되었습니다'); // Set save message
+        setSaveMessage('수정되었습니다');
       } catch (error) {
         console.error('Error updating user info:', error);
-        setSaveMessage('수정 실패. 다시 시도해 주세요.'); // Error message
+        setSaveMessage('수정 실패. 다시 시도해 주세요.');
       } finally {
-        setIsSaving(false); // Reset saving process
-        setTimeout(() => setSaveMessage(''), 3000); // Clear message after 3 seconds
+        setIsSaving(false);
+        setTimeout(() => setSaveMessage(''), 3000);
       }
     }
   };
@@ -86,7 +91,7 @@ function MyPage() {
             <option value="">팀을 선택하세요</option>
             {teams.map((team) => (
               <option key={team} value={team}>
-                {team.replace("_", " ")}
+                {team.replace('_', ' ')}
               </option>
             ))}
           </select>

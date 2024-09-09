@@ -1,7 +1,20 @@
 import React from 'react';
 import DiaryCard from './DiaryCard';
 
-const mockDiaries = [
+// 일기 데이터 타입 정의
+interface Diary {
+  date: string;
+  team: string;
+  opponent: string;
+  score: string;
+  weather: string;
+  title: string;
+  entry: string;
+  lineup: string[];
+}
+
+// mockDiaries 데이터 정의
+const mockDiaries: Diary[] = [
   {
     date: '2024-09-01',
     team: 'LG 트윈스',
