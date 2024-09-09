@@ -2,18 +2,11 @@ import React, { useState, useEffect } from 'react';
 import './PublicDiaryPage.css';
 import { fetchPublicDiaries } from '../../api/diary';
 import CreateDiaryModal from './CreateDiaryModal';
+import { Diary } from '../../types/diary';
+import { AxiosError } from 'axios';
+import { ErrorResponse } from 'react-router-dom';
 
-// 일기 데이터의 타입 정의
-interface Diary {
-  id: string;
-  title: string;
-  description: string;
-  creator: string;
-  isPublic: boolean;
-  createdAt: string;
-}
-
-const PublicDiaryPage: React.FC = () => {
+const PublicDiaryPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [diaries, setDiaries] = useState<Diary[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -33,8 +26,9 @@ const PublicDiaryPage: React.FC = () => {
         try {
           const data = await fetchPublicDiaries();
           setDiaries(data || []);
-        } catch (error: any) {
-          setError(error.message);
+        } catch (error) {
+          const errorType = error as AxiosError<ErrorResponse>;
+          setError(errorType.message);
         } finally {
           setLoading(false);
         }

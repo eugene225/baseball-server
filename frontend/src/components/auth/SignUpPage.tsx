@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './LoginSignUp.css'; // CSS 파일로 스타일링
-import { signUp } from '../../api/auth'; // API 호출 함수 임포트
+import './LoginSignUp.css';
+import { signUp } from '../../api/auth';
 
 // 상태와 이벤트 핸들러 타입 정의
 type SignUpFormValues = {
@@ -11,7 +11,7 @@ type SignUpFormValues = {
   confirmPassword: string;
 };
 
-const SignUpPage: React.FC = () => {
+const SignUpPage = () => {
   const [nickname, setNickname] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');

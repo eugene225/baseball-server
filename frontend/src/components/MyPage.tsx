@@ -2,23 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MyPage.css';
 import { fetchUserInfo, updateUserInfo } from '../api/user';
+import { TEAMS } from '../types/teams';
 
 interface UserInfo {
   nickname: string;
   myTeam: string;
 }
-
-const teams: Array<string> = [
-  'LG_TWINS',
-  'SAMSUNG_LIONS',
-  'KIWOOM_HEROS',
-  'HANHWA_EAGLES',
-  'KT_WIZ',
-  'DOOSAN_BEARS',
-  'NC_DINOS',
-  'SSG_LANDERS',
-  'KIA_TIGERS',
-];
 
 function MyPage(): JSX.Element {
   const [userInfo, setUserInfo] = useState<UserInfo>({ nickname: '', myTeam: '' });
@@ -89,9 +78,9 @@ function MyPage(): JSX.Element {
             onChange={(e) => setNewMyTeam(e.target.value)}
           >
             <option value="">팀을 선택하세요</option>
-            {teams.map((team) => (
-              <option key={team} value={team}>
-                {team.replace('_', ' ')}
+            {TEAMS.map((team) => (
+              <option key={team.value} value={team.value}>
+                {team.value.replace('_', ' ')}
               </option>
             ))}
           </select>
