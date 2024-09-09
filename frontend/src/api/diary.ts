@@ -1,22 +1,9 @@
 import axios, { AxiosError } from 'axios';
+import { ErrorResponse } from '../types/global';
+import { CreateDiaryData, Diary } from '../types/diary';
 
 // API URL 상수
 const API_URL = 'http://52.65.47.31:3000/api/v1/diary';
-
-// 공개 일기장 데이터 타입 정의
-interface Diary {
-  id: string;
-  title: string;
-  description: string;
-  creator: string;
-  isPublic: boolean;
-  createdAt: string;
-}
-
-// 에러 응답 데이터의 타입 정의
-interface ErrorResponse {
-  message: string;
-}
 
 // 공개 일기장 목록을 가져오는 API 호출 함수의 반환 타입 정의
 export const fetchPublicDiaries = async (): Promise<Diary[]> => {
@@ -33,13 +20,6 @@ export const fetchPublicDiaries = async (): Promise<Diary[]> => {
     }
   }
 };
-
-// 일기장 생성 데이터 타입 정의
-interface CreateDiaryData {
-  title: string;
-  description: string;
-  isPublic: boolean;
-}
 
 // 일기장을 생성하는 API 호출 함수
 export const createDiary = async (diaryData: CreateDiaryData, accessToken: string): Promise<void> => {

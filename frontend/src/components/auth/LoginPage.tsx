@@ -2,13 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // useHistory 대신 useNavigate 임포트
 import './LoginSignUp.css';
 import { signIn } from '../../api/auth'; // API 호출 함수 임포트
-
-// 응답 데이터 타입 정의
-interface AuthResponse {
-  userId: number,
-  accessToken: string;
-  // 필요한 다른 필드를 여기에 추가하세요
-}
+import { AuthResponse } from '../../types/auth';
 
 // 상태와 이벤트 핸들러 타입 정의
 type SignInFormValues = {
@@ -43,7 +37,7 @@ const LogInPage: React.FC = () => {
 
       // 로그인 성공 후 메인 페이지로 리디렉션
       navigate('/');
-    } catch (error: any) {
+    } catch (error) {
       setError((error as Error).message);
     }
   };

@@ -1,33 +1,9 @@
 import axios, { AxiosError } from 'axios';
+import { AuthResponse, SignInData, SignUpData } from '../types/auth';
+import { ErrorResponse } from '../types/global';
 
 // API URL 상수 정의
 const API_URL = 'http://52.65.47.31:3000/api/v1/auth';
-
-// 회원가입 데이터 타입 정의
-interface SignUpData {
-  email: string;
-  password: string;
-  nickname: string;
-  // 필요한 다른 필드를 여기에 추가하세요
-}
-
-// 로그인 데이터 타입 정의
-interface SignInData {
-  email: string;
-  password: string;
-}
-
-// 응답 데이터 타입 정의
-interface AuthResponse {
-  userId: number,
-  accessToken: string;
-  // 필요한 다른 필드를 여기에 추가하세요
-}
-
-// 에러 응답 데이터 타입 정의
-interface ErrorResponse {
-  message: string;
-}
 
 // 회원가입 API 호출 함수
 export const signUp = async (signUpData: SignUpData): Promise<AuthResponse> => {
