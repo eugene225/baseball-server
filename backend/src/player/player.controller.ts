@@ -8,7 +8,7 @@ export class PlayerController {
         private readonly playerService: PlayerService
     ){}
 
-    @Get()
+    @Get('/:team')
     async getAllPlayersByTeam(
         @Param('team') team: Team
     ){
