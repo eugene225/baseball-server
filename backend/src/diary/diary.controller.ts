@@ -16,7 +16,7 @@ import { DiaryEntryService } from './application/diary-entry.service';
 import { DiaryEntryDto } from './dto/diary-entry.dto';
 import { CreateDiaryEntryRequestDto } from './dto/create-diary-entry-request.dto';
 
-@Controller('/api/v1/diary')
+@Controller('/api/v1/diarys')
 export class DiaryController {
   constructor(
     private readonly diaryService: DiaryService,
