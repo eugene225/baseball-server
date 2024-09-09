@@ -34,6 +34,19 @@ export class DiaryService {
     return publicDiaries.map((diary) => DiaryDto.create(diary));
   }
 
+  async getAllPrivateDiaries(user: User): Promise<DiaryDto[]> {
+
+    const publicDiaries = await this.diaryRepository.find({
+      where: {
+        creator: user,
+        isPublic: false,
+      },
+      relations: ['creator'],
+    });
+
+    return publicDiaries.map((diary) => DiaryDto.create(diary));
+  }
+
   async deleteById(diaryId: number, user: User) {
     const diary = await this.diaryRepository.findOne({
       where: { id: diaryId },

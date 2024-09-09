@@ -35,6 +35,14 @@ export class DiaryController {
     return publicDiaries;
   }
 
+  @Get('/private')
+  @UseGuards(AuthGuard())
+  async getAllPrivateDiaries(@Request() req): Promise<DiaryDto[]> {
+    const publicDiaries = await this.diaryService.getAllPrivateDiaries(req.user);
+
+    return publicDiaries;
+  }
+
   @Delete(':diaryId')
   @UseGuards(AuthGuard())
   async delete(@Param('diaryId') diaryId: number, @Request() req) {
