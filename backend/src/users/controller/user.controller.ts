@@ -11,7 +11,7 @@ import {
 import { UserService } from '../application/user.service';
 import { UserDto } from '../dto/user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { UpdateUserInfoRequest } from '../dto/updateInfo-request.dto';
+import { UpdateUserInfoRequest } from '../dto/update-info-request.dto';
 
 @Controller('/api/v1/users')
 export class UserController {

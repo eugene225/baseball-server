@@ -1,5 +1,5 @@
 import { DataSource, Repository } from "typeorm";
-import { DiaryEntry } from "./diaryEntry.entity";
+import { DiaryEntry } from "./diary-entry.entity";
 import { CustomRepository } from "src/global/decorator/custom-repository.decorator";
 
 @CustomRepository(DiaryEntry)

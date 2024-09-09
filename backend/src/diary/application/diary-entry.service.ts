@@ -1,6 +1,6 @@
 import { InjectRepository } from "@nestjs/typeorm";
-import { DiaryEntry } from "../domain/diaryEntry.entity";
-import { DiaryEntryRepository } from "../domain/diaryEntry.repository";
+import { DiaryEntry } from "../domain/diary-entry.entity";
+import { DiaryEntryRepository } from "../domain/diary-entry.repository";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()

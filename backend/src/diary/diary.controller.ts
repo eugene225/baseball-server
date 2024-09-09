@@ -8,7 +8,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { CreateDiaryRequestDto } from './dto/createDiary-request.dto';
+import { CreateDiaryRequestDto } from './dto/create-diary-request.dto';
 import { DiaryService } from './application/diary.service';
 import { AuthGuard } from '@nestjs/passport';
 import { DiaryDto } from './dto/diary.dto';
