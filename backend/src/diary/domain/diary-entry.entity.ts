@@ -1,4 +1,4 @@
-import { Team } from 'src/teams/team.enum';
+import { Team } from 'src/global/enum/team.enum';
 import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Weather } from './weather.enum';
 import { Diary } from './diary.entity';
