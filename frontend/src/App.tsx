@@ -8,7 +8,7 @@ import PublicDiaryPage from './components/diary/PublicDiaryPage';
 import DiaryCreationPage from './components/diaryEntry/DiaryCreationPage';
 import DiaryListPage from './components/diaryEntry/DiaryListPage';
 
-function App() {
+const App: React.FC = () => {
   return (
     <Router>
       <Routes>
@@ -17,8 +17,8 @@ function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/diary" element={<PublicDiaryPage />} />
-        <Route path='/diaryEntry' element={<DiaryCreationPage />} />
-        <Route path='/diaryList' element={<DiaryListPage />} />
+        <Route path="/diaryEntry" element={<DiaryCreationPage />} />
+        <Route path="/diaryList" element={<DiaryListPage />} />
       </Routes>
     </Router>
   );

@@ -3,20 +3,33 @@ import { Link, useNavigate } from 'react-router-dom'; // useHistory 대신 useNa
 import './LoginSignUp.css';
 import { signIn } from '../../api/auth'; // API 호출 함수 임포트
 
-function LogInPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+// 응답 데이터 타입 정의
+interface AuthResponse {
+  userId: number,
+  accessToken: string;
+  // 필요한 다른 필드를 여기에 추가하세요
+}
+
+// 상태와 이벤트 핸들러 타입 정의
+type SignInFormValues = {
+  email: string;
+  password: string;
+};
+
+const LogInPage: React.FC = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const navigate = useNavigate(); // useHistory 대신 useNavigate 훅 사용
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
-      const signInData = { email, password };
-      const response = await signIn(signInData);
+      const signInData: SignInFormValues = { email, password };
+      const response: AuthResponse = await signIn(signInData);
       console.log(response);
 
       // 로그인 성공 시, 사용자 정보를 로컬 스토리지에 저장
@@ -30,8 +43,8 @@ function LogInPage() {
 
       // 로그인 성공 후 메인 페이지로 리디렉션
       navigate('/');
-    } catch (error) {
-      setError(error.message);
+    } catch (error: any) {
+      setError((error as Error).message);
     }
   };
 

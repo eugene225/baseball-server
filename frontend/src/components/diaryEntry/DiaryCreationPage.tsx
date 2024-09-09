@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import './DiaryCreationPage.css';
 
+// 팀 목록 타입 정의
+interface Team {
+  value: string;
+  label: string;
+}
+
 // 팀 목록 정의
-const TEAMS = [
+const TEAMS: Team[] = [
   { value: 'LG_TWINS', label: 'LG 트윈스' },
   { value: 'SAMSUNG_LIONS', label: '삼성 라이온즈' },
   { value: 'KIWOOM_HEROS', label: '키움 히어로즈' },
@@ -15,27 +21,27 @@ const TEAMS = [
 ];
 
 const DiaryCreationPage = () => {
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTeam, setSelectedTeam] = useState('');
-  const [opponentTeam, setOpponentTeam] = useState('');
-  const [homeScore, setHomeScore] = useState('');
-  const [awayScore, setAwayScore] = useState('');
-  const [title, setTitle] = useState('');
-  const [weather, setWeather] = useState('');
-  const [entry, setEntry] = useState('');
-  const [lineup, setLineup] = useState(Array(9).fill(''));
-  const [startingPitcher, setStartingPitcher] = useState('');
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [selectedTeam, setSelectedTeam] = useState<string>('');
+  const [opponentTeam, setOpponentTeam] = useState<string>('');
+  const [homeScore, setHomeScore] = useState<string>('');
+  const [awayScore, setAwayScore] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
+  const [weather, setWeather] = useState<string>('');
+  const [entry, setEntry] = useState<string>('');
+  const [lineup, setLineup] = useState<string[]>(Array(9).fill(''));
+  const [startingPitcher, setStartingPitcher] = useState<string>('');
 
-  const handleDateChange = (event) => setSelectedDate(event.target.value);
-  const handleTeamChange = (event) => setSelectedTeam(event.target.value);
-  const handleOpponentTeamChange = (event) => setOpponentTeam(event.target.value);
-  const handleHomeScoreChange = (event) => setHomeScore(event.target.value);
-  const handleAwayScoreChange = (event) => setAwayScore(event.target.value);
-  const handleTitleChange = (event) => setTitle(event.target.value);
-  const handleWeatherChange = (event) => setWeather(event.target.value);
-  const handleEntryChange = (event) => setEntry(event.target.value);
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => setSelectedDate(event.target.value);
+  const handleTeamChange = (event: React.ChangeEvent<HTMLSelectElement>) => setSelectedTeam(event.target.value);
+  const handleOpponentTeamChange = (event: React.ChangeEvent<HTMLSelectElement>) => setOpponentTeam(event.target.value);
+  const handleHomeScoreChange = (event: React.ChangeEvent<HTMLInputElement>) => setHomeScore(event.target.value);
+  const handleAwayScoreChange = (event: React.ChangeEvent<HTMLInputElement>) => setAwayScore(event.target.value);
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => setTitle(event.target.value);
+  const handleWeatherChange = (event: React.ChangeEvent<HTMLInputElement>) => setWeather(event.target.value);
+  const handleEntryChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => setEntry(event.target.value);
 
-  const handleLineupChange = (index, value) => {
+  const handleLineupChange = (index: number, value: string) => {
     const newLineup = [...lineup];
     newLineup[index] = value;
     setLineup(newLineup);
@@ -66,7 +72,7 @@ const DiaryCreationPage = () => {
       </div>
       <div className="input-group">
         <div className="input-label">상대 팀</div>
-        <select value={opponentTeam} onChange={handleOpponentTeamChange}>
+        <select value={opponentTeam} onChange={(e) => handleOpponentTeamChange}>
           <option value="">팀 선택</option>
           {TEAMS.filter(team => team.value !== selectedTeam).map((team) => (
             <option key={team.value} value={team.value}>

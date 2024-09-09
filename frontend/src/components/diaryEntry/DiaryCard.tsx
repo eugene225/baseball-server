@@ -2,11 +2,32 @@ import React from 'react';
 import html2canvas from 'html2canvas';
 import './DiaryCard.css';
 
-const DiaryCard = ({ date, team, opponent, score, weather, title, entry, lineup }) => {
+// Props 타입 정의
+interface DiaryCardProps {
+  date: string;
+  team: string;
+  opponent: string;
+  score: string;
+  weather: string;
+  title: string;
+  entry: string;
+  lineup: string[];
+}
+
+const DiaryCard: React.FC<DiaryCardProps> = ({
+  date,
+  team,
+  opponent,
+  score,
+  weather,
+  title,
+  entry,
+  lineup
+}) => {
 
   const handleSaveAsImage = () => {
-    const element = document.querySelector('.diary-card'); // 카드 엘리먼트를 선택합니다.
-    const button = document.querySelector('.save-button'); // 버튼을 선택합니다.
+    const element = document.querySelector('.diary-card') as HTMLElement; // 카드 엘리먼트를 선택합니다.
+    const button = document.querySelector('.save-button') as HTMLElement; // 버튼을 선택합니다.
 
     // 버튼을 숨깁니다.
     if (button) button.style.display = 'none';
