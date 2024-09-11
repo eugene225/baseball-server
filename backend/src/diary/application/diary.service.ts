@@ -5,11 +5,12 @@ import { UserService } from 'src/users/application/user.service';
 import { User } from 'src/users/domain/user.entity';
 import { DiaryDto } from '../dto/diary.dto';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Diary } from '../domain/diary.entity';
 
 @Injectable()
 export class DiaryService {
   constructor(
-    @InjectRepository(DiaryRepository)
+    @InjectRepository(Diary)
     private readonly diaryRepository: DiaryRepository,
     private readonly userService: UserService,
   ) {}
