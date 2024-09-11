@@ -20,7 +20,11 @@ export class DiaryEntryDto {
     public readonly updatedAt?: Date,
   ) {}
 
-  static create(diaryEntry: DiaryEntry, lineUp: PlayerDto[]): DiaryEntryDto {
+  static create(
+    diaryId: number,
+    diaryEntry: DiaryEntry,
+    lineUp: PlayerDto[],
+  ): DiaryEntryDto {
     return new DiaryEntryDto(
       diaryEntry.id,
       diaryEntry.title,
@@ -31,7 +35,7 @@ export class DiaryEntryDto {
       diaryEntry.homeTeamScore,
       diaryEntry.weather,
       lineUp,
-      diaryEntry.diary.id,
+      diaryId,
       diaryEntry.author.nickname,
       diaryEntry.createdAt,
       diaryEntry.updatedAt,
