@@ -7,7 +7,7 @@ export interface CreateDiaryData {
 
 // 일기장 반환타입
 export interface Diary {
-  id: string;
+  id: number;
   title: string;
   description: string;
   creator: string;
@@ -26,3 +26,27 @@ export interface DiaryCardContent {
     entry: string;
     lineup: string[];
   }
+
+// 플레이어 DTO
+export interface PlayerDto {
+  id: number;
+  name: string;
+  position: string;
+  // 추가 정보 필요 시 필드 추가 가능
+}
+
+export interface DiaryEntry {
+  id: number;
+  title: string;
+  content: string;
+  myTeam: string;
+  opponent: string;
+  awayTeamScore: number;
+  homeTeamScore: number;
+  weather: string;
+  lineUp: PlayerDto[];
+  diaryId: number;
+  authorNickname: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

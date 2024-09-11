@@ -17,8 +17,8 @@ const App: React.FC = () => {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/diary" element={<PublicDiaryPage />} />
-        <Route path="/diaryEntry" element={<DiaryCreationPage />} />
-        <Route path="/diaryList" element={<DiaryListPage />} />
+        <Route path="/diary-entry-create" element={<DiaryCreationPage />} />
+        <Route path="/diary-list/:diaryId" element={<DiaryListPage />} />
       </Routes>
     </Router>
   );
