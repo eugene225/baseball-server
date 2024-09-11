@@ -1,38 +1,38 @@
 .diary-card {
     padding: 20px;
-    max-width: 600px;
-    margin: 20px auto;
+    width: 100%; /* 화면 너비를 100%로 설정 */
+    max-width: 600px; /* 최대 너비 */
+    margin: 20px auto; /* 중앙 정렬 */
     background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     font-family: 'Comic Sans MS', cursive, sans-serif;
-    display: flex;
-    flex-direction: column;
-    position: relative; /* 이모지 위치를 위해 추가 */
-    margin-left: 10px; /* 좌우 여백 추가 */
-    margin-right: 10px; /* 좌우 여백 추가 */
+    display: block; /* 각 카드를 블록으로 표시 */
+    position: relative;
+    border: 1px solid #d9534f; /* 버건디 색상 테두리 */
 }
 
 .diary-card-header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .diary-card-header h2 {
     margin: 0;
     font-size: 18px;
-    color: #333;
+    color: #d9534f; /* 버건디 색상 */
 }
 
 .diary-card-date {
     font-size: 14px;
-    color: #666;
+    color: #888;
 }
 
 .diary-card-body {
     display: flex;
     border-top: 2px solid #eee;
     padding-top: 10px;
+    text-align: center;
 }
 
 .diary-card-left {
@@ -64,7 +64,7 @@
 .diary-card-right h3 {
     margin: 0 0 10px;
     font-size: 14px;
-    color: #333;
+    color: #d9534f; /* 버건디 색상 */
 }
 
 .diary-card-right table {
@@ -87,7 +87,7 @@
     content: '⚾'; /* 야구공 이모지 */
     position: absolute;
     font-size: 60px;
-    opacity: 0.2;
+    opacity: 0.1;
     color: rgba(0, 0, 0, 0.1); /* 반투명한 색상 */
     pointer-events: none;
 }
@@ -106,30 +106,30 @@
 
 .save-button {
     align-self: center;
-    background-color: #f4f4f4; /* 카드 배경색과 비슷한 색상 */
-    color: #8b8888; /* 카드 텍스트 색상과 유사한 색상 */
-    border: 1px solid #ddd; /* 카드 테두리 색상과 비슷한 색상 */
+    background-color: #d9534f; /* 버건디 색상 */
+    color: #fff; /* 버튼 텍스트 색상 */
+    border: 1px solid #d9534f; /* 버건디 색상 테두리 */
     border-radius: 6px;
-    padding: 10px 10px;
+    padding: 10px 20px;
     font-size: 12px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
 }
 
 .save-button:hover {
-    background-color: #ddd; /* 버튼 호버 색상 */
-    color: #000; /* 버튼 호버 시 텍스트 색상 */
+    background-color: #c9302c; /* 호버 시 더 진한 버건디 색상 */
+    color: #fff; /* 버튼 호버 시 텍스트 색상 유지 */
 }
 
 @media (max-width: 600px) {
     .diary-card {
-        padding: 20px 10px; /* 좌우 여백 추가 */
-        margin-left: 15px; /* 좌우 여백 추가 */
-        margin-right: 15px; /* 좌우 여백 추가 */
+        padding: 20px;
+        margin: 10px 0;
+        width: 100%; /* 카드가 화면을 꽉 채우게 설정 */
     }
-    
+
     .diary-card-body {
-        flex-direction: column;
+        flex-direction: row; /* 가로 배치를 유지 */
         border-top: none;
     }
 
@@ -144,12 +144,26 @@
         border-bottom: none;
     }
 
-    .diary-card-info div,
-    .diary-card-entry {
-        font-size: 14px;
+    .diary-card-right table {
+        width: 100%; /* 테이블이 가로로 최대한 늘어나도록 설정 */
+        border-collapse: collapse; /* 테두리 간격 없애기 */
     }
 
-    .diary-card-right table {
-        font-size: 12px;
+    .diary-card-right th, 
+    .diary-card-right td {
+        white-space: nowrap; /* 글자가 줄바꿈되지 않도록 설정 */
+        text-overflow: ellipsis; /* 글자가 너무 길 경우 말줄임표 적용 */
+        overflow: hidden; /* 넘치는 글자 숨김 */
+        font-size: 12px; /* 글자 크기 조정 */
+    }
+
+    /* 칸 비율을 1:3으로 설정 */
+    .diary-card-right th:nth-child(1) {
+        width: 25%; /* 첫 번째 열은 1의 비율 */
+    }
+
+    .diary-card-right th:nth-child(2){
+        width: 75%; /* 두 번째 열은 3의 비율 */
     }
 }
+

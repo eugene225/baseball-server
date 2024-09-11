@@ -8,10 +8,10 @@ interface DiaryEntryProps {
   diaryEntry: DiaryEntryType;
 }
 
-const DiaryEntry: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
+const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
 
   const handleSaveAsImage = () => {
-    const element = document.querySelector('.diary-entry') as HTMLElement;
+    const element = document.querySelector('.diary-card') as HTMLElement;
     const button = document.querySelector('.save-button') as HTMLElement;
 
     if (button) button.style.display = 'none';
@@ -28,30 +28,29 @@ const DiaryEntry: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
   };
 
   return (
-    <div className="diary-entry">
-      <div className="diary-entry-header">
+    <div className="diary-card">
+      <div className="diary-card-header">
         <h2>{diaryEntry.title}</h2>
-        <div className="diary-entry-date">{diaryEntry.createdAt?.toLocaleDateString()}</div>
+        <div className="diary-card-date">{new Date(diaryEntry.createdAt).toLocaleDateString()}</div>
+        <div>작성자: {diaryEntry.authorNickname}</div>
       </div>
-      <div className="diary-entry-body">
-        <div className="diary-entry-left">
-          <div className="diary-entry-info">
-            <div>우리 팀: {diaryEntry.myTeam}</div>
-            <div>상대 팀: {diaryEntry.opponent}</div>
-            <div>스코어: {diaryEntry.homeTeamScore} : {diaryEntry.awayTeamScore}</div>
-            <div>날씨: {diaryEntry.weather}</div>
-            <div>작성자: {diaryEntry.authorNickname}</div>
+      <div className="diary-card-body">
+        <div className="diary-card-left">
+          <div className="diary-card-info">
+            <div>우리 팀 {diaryEntry.myTeam}</div>
+            <div>상대 팀 {diaryEntry.opponent}</div>
+            <div>스코어 {diaryEntry.homeTeamScore} : {diaryEntry.awayTeamScore}</div>
+            <div>날씨 {diaryEntry.weather}</div>
           </div>
-          <div className="diary-entry-content">{diaryEntry.content}</div>
+          <div className="diary-card-entry">{diaryEntry.content}</div>
         </div>
-        <div className="diary-entry-right">
+        <div className="diary-card-right">
           <h3>선발 라인업</h3>
           <table>
             <thead>
               <tr>
                 <th>타자 번호</th>
                 <th>선수 이름</th>
-                <th>포지션</th>
               </tr>
             </thead>
             <tbody>
@@ -59,7 +58,6 @@ const DiaryEntry: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{player.name}</td>
-                  <td>{player.position}</td>
                 </tr>
               ))}
             </tbody>
@@ -71,4 +69,4 @@ const DiaryEntry: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
   );
 };
 
-export default DiaryEntry;
+export default DiaryEntryCard;
