@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { DiaryRepository } from '../domain/diary.repository';
-import { CreateDiaryRequestDto } from '../dto/createDiary-request.dto';
+import { CreateDiaryRequestDto } from '../dto/create-diary-request.dto';
 import { UserService } from 'src/users/application/user.service';
 import { User } from 'src/users/domain/user.entity';
 import { DiaryDto } from '../dto/diary.dto';
@@ -27,6 +27,18 @@ export class DiaryService {
     const publicDiaries = await this.diaryRepository.find({
       where: {
         isPublic: true,
+      },
+      relations: ['creator'],
+    });
+
+    return publicDiaries.map((diary) => DiaryDto.create(diary));
+  }
+
+  async getAllPrivateDiaries(user: User): Promise<DiaryDto[]> {
+    const publicDiaries = await this.diaryRepository.find({
+      where: {
+        creator: user,
+        isPublic: false,
       },
       relations: ['creator'],
     });
