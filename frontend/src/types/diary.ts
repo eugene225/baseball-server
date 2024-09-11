@@ -1,4 +1,3 @@
-// 일기장 생성 데이터 타입 정의
 export interface CreateDiaryData {
     title: string;
     description: string;
@@ -7,7 +6,7 @@ export interface CreateDiaryData {
 
 // 일기장 반환타입
 export interface Diary {
-  id: string;
+  id: number;
   title: string;
   description: string;
   creator: string;
@@ -26,3 +25,26 @@ export interface DiaryCardContent {
     entry: string;
     lineup: string[];
   }
+
+export interface DiaryEntry {
+    id: number;
+    title: string;
+    content: string;
+    myTeam: string;
+    opponent: string;
+    awayTeamScore: number;
+    homeTeamScore: number;
+    weather: string;
+    lineUp: PlayerDto[];
+    diaryId: number;
+    authorNickname: string;
+    createdAt: string;
+    updatedAt?: string;
+}
+
+export interface PlayerDto {
+  id: number;
+  name: string;
+  position: string;
+  team: string;
+}
