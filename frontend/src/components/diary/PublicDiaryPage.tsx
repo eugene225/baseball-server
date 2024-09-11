@@ -41,8 +41,8 @@ const PublicDiaryPage = () => {
     fetchAccessToken();
   }, []);
 
-  const handleCardClick = (diaryId: number) => {
-    navigate(`/diary-list/${diaryId}`); // 클릭한 일기장의 ID를 기반으로 라우팅
+  const handleCardClick = (diary: Diary) => {
+    navigate(`/diary-list/${diary.id}`, { state: { diary } }); // 클릭한 일기장 정보를 상태로 전달
   };
 
   return (
@@ -59,7 +59,7 @@ const PublicDiaryPage = () => {
       {!loading && !error && diaries.length === 0 && <p>일기장이 없습니다.</p>}
       <div className="diary-list">
         {diaries.map((diary) => (
-          <div key={diary.id} className="diary-card" onClick={() => handleCardClick(diary.id)}>
+          <div key={diary.id} className="diary-card" onClick={() => handleCardClick(diary)}>
             <h2>{diary.title}</h2>
             <p>{diary.description}</p>
             <p><strong>작성자:</strong> {diary.creator}</p>
