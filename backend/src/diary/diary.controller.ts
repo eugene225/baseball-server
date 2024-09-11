@@ -23,6 +23,23 @@ export class DiaryController {
     private readonly diaryEntryService: DiaryEntryService,
   ) {}
 
+  @Get('/public')
+  async getAllPublicDiaries(): Promise<DiaryDto[]> {
+    const publicDiaries = await this.diaryService.getAllPublicDiaries();
+
+    return publicDiaries;
+  }
+
+  @Get('/private')
+  @UseGuards(AuthGuard())
+  async getAllPrivateDiaries(@Request() req): Promise<DiaryDto[]> {
+    const publicDiaries = await this.diaryService.getAllPrivateDiaries(
+      req.user,
+    );
+
+    return publicDiaries;
+  }
+
   @Post()
   @UseGuards(AuthGuard())
   async create(
@@ -61,24 +78,7 @@ export class DiaryController {
     return entries;
   }
 
-  @Get('/public')
-  async getAllPublicDiaries(): Promise<DiaryDto[]> {
-    const publicDiaries = await this.diaryService.getAllPublicDiaries();
-
-    return publicDiaries;
-  }
-
-  @Get('/private')
-  @UseGuards(AuthGuard())
-  async getAllPrivateDiaries(@Request() req): Promise<DiaryDto[]> {
-    const publicDiaries = await this.diaryService.getAllPrivateDiaries(
-      req.user,
-    );
-
-    return publicDiaries;
-  }
-
-  @Delete(':diaryId')
+  @Delete('/:diaryId')
   @UseGuards(AuthGuard())
   async delete(@Param('diaryId') diaryId: number, @Request() req) {
     await this.diaryService.deleteById(diaryId, req.user);
