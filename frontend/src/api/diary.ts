@@ -39,3 +39,10 @@ export const createDiary = async (diaryData: CreateDiaryData, accessToken: strin
     }
   }
 };
+
+export const fetchDiaryEntries = async (diaryId: number, accessToken: string) => {
+  const response = await axios.get(`/api/v1/diarys/${diaryId}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return response.data;
+};
