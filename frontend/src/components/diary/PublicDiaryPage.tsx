@@ -4,14 +4,15 @@ import { fetchPublicDiaries } from '../../api/diary';
 import CreateDiaryModal from './CreateDiaryModal';
 import { Diary } from '../../types/diary';
 import { AxiosError } from 'axios';
-import { ErrorResponse } from 'react-router-dom';
+import { ErrorResponse, useNavigate } from 'react-router-dom';
 
 const PublicDiaryPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [diaries, setDiaries] = useState<Diary[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [accessToken, setAccessToken] = useState<string>(''); // accessToken 상태 추가
+  const [accessToken, setAccessToken] = useState<string>('');
+  const navigate = useNavigate(); // useNavigate 훅 사용
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -24,7 +25,7 @@ const PublicDiaryPage = () => {
 
       const loadDiaries = async () => {
         try {
-          const data = await fetchPublicDiaries();
+          const data = await fetchPublicDiaries(token);
           setDiaries(data || []);
         } catch (error) {
           const errorType = error as AxiosError<ErrorResponse>;
@@ -40,6 +41,10 @@ const PublicDiaryPage = () => {
     fetchAccessToken();
   }, []);
 
+  const handleCardClick = (diaryId: number) => {
+    navigate(`/diary-list/${diaryId}`); // 클릭한 일기장의 ID를 기반으로 라우팅
+  };
+
   return (
     <div className="public-diary-page">
       <h1 className="page-title">공개 일기장</h1>
@@ -54,7 +59,7 @@ const PublicDiaryPage = () => {
       {!loading && !error && diaries.length === 0 && <p>일기장이 없습니다.</p>}
       <div className="diary-list">
         {diaries.map((diary) => (
-          <div key={diary.id} className="diary-card">
+          <div key={diary.id} className="diary-card" onClick={() => handleCardClick(diary.id)}>
             <h2>{diary.title}</h2>
             <p>{diary.description}</p>
             <p><strong>작성자:</strong> {diary.creator}</p>
