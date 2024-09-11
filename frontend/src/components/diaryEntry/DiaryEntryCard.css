@@ -1,0 +1,155 @@
+.diary-card {
+    padding: 20px;
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* 이모지 위치를 위해 추가 */
+    margin-left: 10px; /* 좌우 여백 추가 */
+    margin-right: 10px; /* 좌우 여백 추가 */
+}
+
+.diary-card-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.diary-card-header h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.diary-card-date {
+    font-size: 14px;
+    color: #666;
+}
+
+.diary-card-body {
+    display: flex;
+    border-top: 2px solid #eee;
+    padding-top: 10px;
+}
+
+.diary-card-left {
+    flex: 2;
+    padding-right: 20px;
+    border-right: 2px solid #eee;
+}
+
+.diary-card-right {
+    flex: 1;
+    padding-left: 20px;
+}
+
+.diary-card-info {
+    margin-bottom: 20px;
+}
+
+.diary-card-info div {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #555;
+}
+
+.diary-card-entry {
+    font-size: 14px;
+    color: #555;
+}
+
+.diary-card-right h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.diary-card-right table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.diary-card-right th, .diary-card-right td {
+    border: 1px solid #ddd;
+    padding: 6px 8px;
+    text-align: center;
+}
+
+.diary-card-right th {
+    background-color: #f4f4f4;
+}
+
+.diary-card::before, .diary-card::after {
+    content: '⚾'; /* 야구공 이모지 */
+    position: absolute;
+    font-size: 60px;
+    opacity: 0.2;
+    color: rgba(0, 0, 0, 0.1); /* 반투명한 색상 */
+    pointer-events: none;
+}
+
+.diary-card::before {
+    top: 10px;
+    left: 10px;
+    transform: rotate(-30deg);
+}
+
+.diary-card::after {
+    bottom: 10px;
+    right: 10px;
+    transform: rotate(30deg);
+}
+
+.save-button {
+    align-self: center;
+    background-color: #f4f4f4; /* 카드 배경색과 비슷한 색상 */
+    color: #8b8888; /* 카드 텍스트 색상과 유사한 색상 */
+    border: 1px solid #ddd; /* 카드 테두리 색상과 비슷한 색상 */
+    border-radius: 6px;
+    padding: 10px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.save-button:hover {
+    background-color: #ddd; /* 버튼 호버 색상 */
+    color: #000; /* 버튼 호버 시 텍스트 색상 */
+}
+
+@media (max-width: 600px) {
+    .diary-card {
+        padding: 20px 10px; /* 좌우 여백 추가 */
+        margin-left: 15px; /* 좌우 여백 추가 */
+        margin-right: 15px; /* 좌우 여백 추가 */
+    }
+    
+    .diary-card-body {
+        flex-direction: column;
+        border-top: none;
+    }
+
+    .diary-card-left,
+    .diary-card-right {
+        padding: 10px;
+        border-right: none;
+        border-bottom: 2px solid #eee;
+    }
+
+    .diary-card-right {
+        border-bottom: none;
+    }
+
+    .diary-card-info div,
+    .diary-card-entry {
+        font-size: 14px;
+    }
+
+    .diary-card-right table {
+        font-size: 12px;
+    }
+}
