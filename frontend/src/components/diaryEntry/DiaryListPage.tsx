@@ -12,7 +12,8 @@ const DiaryListPage: React.FC = () => {
   useEffect(() => {
     const loadDiaryEntries = async () => {
       try {
-        const entries = await fetchDiaryEntries(Number(diaryId));
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const entries = await fetchDiaryEntries(Number(diaryId), user.accessToken);
         setDiaryEntries(entries);
       } catch (error) {
         console.error('Failed to fetch diary entries:', error);
