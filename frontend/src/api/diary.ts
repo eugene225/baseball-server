@@ -6,14 +6,10 @@ import { CreateDiaryData, Diary, DiaryCardContent, DiaryEntry } from '../types/d
 const API_URL = 'http://52.65.47.31:3000/api/v1/diarys';
 
 // 공개 일기장 목록을 가져오는 API 호출 함수의 반환 타입 정의
-export const fetchPublicDiaries = async (token: string): Promise<Diary[]> => {
+export const fetchPublicDiaries = async (): Promise<Diary[]> => {
   try {
     // 요청 헤더에 인증 토큰 추가
-    const response = await axios.get<Diary[]>(`${API_URL}/public`, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
-      },
-    });
+    const response = await axios.get<Diary[]>(`${API_URL}/public`, {});
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -47,7 +43,21 @@ export const createDiary = async (diaryData: CreateDiaryData, accessToken: strin
   }
 };
 
-export const fetchDiaryEntries = async (diaryId: number): Promise<DiaryEntry[]> => {
-  const response = await axios.get<DiaryEntry[]>(`${API_URL}/${diaryId}`);
-  return response.data;
+export const fetchDiaryEntries = async (diaryId: number, token: string): Promise<DiaryEntry[]> => {
+  try {
+    const response = await axios.get<DiaryEntry[]>(`${API_URL}/${diaryId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError<ErrorResponse>;
+      const errorMessage = axiosError.message || '일기장 항목을 가져오는 데 실패했습니다.';
+      throw new Error(errorMessage);
+    } else {
+      throw new Error('일기장 항목을 가져오는 데 실패했습니다.');
+    }
+  }
 };

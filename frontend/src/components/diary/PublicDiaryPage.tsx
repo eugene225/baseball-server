@@ -25,7 +25,7 @@ const PublicDiaryPage = () => {
 
       const loadDiaries = async () => {
         try {
-          const data = await fetchPublicDiaries(token);
+          const data = await fetchPublicDiaries();
           setDiaries(data || []);
         } catch (error) {
           const errorType = error as AxiosError<ErrorResponse>;
