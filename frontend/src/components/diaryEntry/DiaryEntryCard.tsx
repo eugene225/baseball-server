@@ -11,7 +11,7 @@ interface DiaryEntryProps {
 const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
 
   const handleSaveAsImage = () => {
-    const element = document.querySelector('.diary-card') as HTMLElement;
+    const element = document.querySelector('.diary-entry-card') as HTMLElement;
     const button = document.querySelector('.save-button') as HTMLElement;
 
     if (button) button.style.display = 'none';
@@ -28,23 +28,23 @@ const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
   };
 
   return (
-    <div className="diary-card">
-      <div className="diary-card-header">
+    <div className="diary-entry-card">
+      <div className="diary-entry-card-header">
         <h2>{diaryEntry.title}</h2>
-        <div className="diary-card-date">{new Date(diaryEntry.createdAt).toLocaleDateString()}</div>
+        <div className="diary-entry-card-date">{new Date(diaryEntry.createdAt).toLocaleDateString()}</div>
         <div>작성자: {diaryEntry.authorNickname}</div>
       </div>
-      <div className="diary-card-body">
-        <div className="diary-card-left">
-          <div className="diary-card-info">
+      <div className="diary-entry-card-body">
+        <div className="diary-entry-card-left">
+          <div className="diary-entry-card-info">
             <div>우리 팀 {diaryEntry.myTeam}</div>
             <div>상대 팀 {diaryEntry.opponent}</div>
             <div>스코어 {diaryEntry.homeTeamScore} : {diaryEntry.awayTeamScore}</div>
             <div>날씨 {diaryEntry.weather}</div>
           </div>
-          <div className="diary-card-entry">{diaryEntry.content}</div>
+          <div className="diary-entry-card-entry">{diaryEntry.content}</div>
         </div>
-        <div className="diary-card-right">
+        <div className="diary-entry-card-right">
           <h3>선발 라인업</h3>
           <table>
             <thead>

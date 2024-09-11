@@ -1,6 +1,6 @@
 /* General Styles */
-  
-  body {
+
+body {
     margin: 0;
     padding: 0;
     font-family: 'Nunito', sans-serif;
@@ -60,7 +60,7 @@
     justify-items: center;
   }
   
-  .diary-card {
+  .diary-entry-card {
     background-color: var(--card-bg);
     border-radius: 8px;
     padding: 15px;
@@ -72,7 +72,7 @@
     cursor: pointer;
   }
   
-  .diary-card h2 {
+  .diary-entry-card h2 {
     margin-top: 0;
     margin-bottom: 2px;
     font-size: 1.4rem;
@@ -80,13 +80,13 @@
     font-weight: 600;
   }
   
-  .diary-card p {
+  .diary-entry-card p {
     margin: 5px 0;
     color: var(--dark-burgundy);
     font-size: 0.9rem;
   }
   
-  .diary-card strong {
+  .diary-entry-card strong {
     color: var(--burgundy);
     font-weight: bold;
   }

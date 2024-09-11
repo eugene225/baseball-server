@@ -27,13 +27,14 @@ body {
 .page-title {
   font-size: 2.0rem;
   color: var(--dark-burgundy);
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .create-diary-button {
   background-color: var(--burgundy);
   color: var(--white);
   border: none;
+  margin-bottom: 20px;
   border-radius: 12px;
   padding: 10px 25px;
   font-size: 1rem;
@@ -68,7 +69,7 @@ body {
 .diary-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 일기장을 두 개씩 배치 */
-  column-gap: 60px;
+  column-gap: 50px;
   justify-items: center;
   align-items: start; /* 카드가 수직으로도 잘 정렬되도록 함 */
 }
@@ -77,6 +78,7 @@ body {
   background-color: var(--card-bg);
   border-radius: 8px;
   padding: 15px; /* 패딩을 줄여서 여백을 조정 */
+  margin: 10px;
   box-shadow: 0 4px 6px var(--card-shadow);
   text-align: left;
   font-family: 'Nunito', sans-serif;
@@ -109,6 +111,10 @@ body {
 @media (max-width: 768px) {
   .diary-list {
     grid-template-columns: repeat(2, 1fr); /* 모바일에서도 두 개씩 보이도록 함 */
-    column-gap: 30px; /* 모바일에서 카드 간격을 조금 더 줄임 */
+    column-gap: 40px; /* 모바일에서 카드 간격을 조금 더 줄임 */
+  }
+
+  .diary-card {
+    margin: 10px
   }
 }
