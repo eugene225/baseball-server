@@ -47,6 +47,6 @@ export interface DiaryEntry {
   lineUp: PlayerDto[];
   diaryId: number;
   authorNickname: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
