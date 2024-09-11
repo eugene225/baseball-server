@@ -35,7 +35,6 @@ export class DiaryService {
   }
 
   async getAllPrivateDiaries(user: User): Promise<DiaryDto[]> {
-
     const publicDiaries = await this.diaryRepository.find({
       where: {
         creator: user,

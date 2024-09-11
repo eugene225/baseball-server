@@ -39,9 +39,13 @@ export class DiaryController {
   async createEntry(
     @Param('diaryId') diaryId: number,
     @Body() createDiaryEntryRequestDto: CreateDiaryEntryRequestDto,
-    @Request() req
+    @Request() req,
   ) {
-    const diaryEntry = this.diaryEntryService.create(createDiaryEntryRequestDto, req.user, diaryId);
+    const diaryEntry = this.diaryEntryService.create(
+      createDiaryEntryRequestDto,
+      req.user,
+      diaryId,
+    );
 
     return diaryEntry;
   }
@@ -51,7 +55,7 @@ export class DiaryController {
   async getAllEntries(
     @Param('diaryId') diaryId: number,
     @Request() req,
-  ): Promise<DiaryEntryDto[]>{
+  ): Promise<DiaryEntryDto[]> {
     const entries = this.diaryEntryService.getAllEntriesBy(diaryId, req.user);
 
     return entries;
@@ -67,7 +71,9 @@ export class DiaryController {
   @Get('/private')
   @UseGuards(AuthGuard())
   async getAllPrivateDiaries(@Request() req): Promise<DiaryDto[]> {
-    const publicDiaries = await this.diaryService.getAllPrivateDiaries(req.user);
+    const publicDiaries = await this.diaryService.getAllPrivateDiaries(
+      req.user,
+    );
 
     return publicDiaries;
   }
