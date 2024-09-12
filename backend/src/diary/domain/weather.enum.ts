@@ -1,5 +1,5 @@
-export enum Weather{
-    SUNNY = '☀️',
-    CLOUDY = '🌥️',
-    RAINY = '🌧️'
+export enum Weather {
+  SUNNY = '☀️',
+  CLOUDY = '🌥️',
+  RAINY = '🌧️',
 }
