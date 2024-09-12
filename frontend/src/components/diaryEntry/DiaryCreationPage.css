@@ -33,19 +33,10 @@
 h1 {
     text-align: center;
     margin-bottom: 20px;
-    font-size: 22px;
-    color: #333;
+    font-size: 24px;
+    color: #4d0000; /* Burgundy color for the title */
     position: relative;
-}
-
-h1::before {
-    content: ''; /* 야구공 아이콘 */
-    position: absolute;
-    left: -50px;
-    top: 0;
-    width: 50px;
-    height: 50px;
-    font-size: 50px;
+    padding-bottom: 10px;
 }
 
 .input-group {
@@ -54,13 +45,14 @@ h1::before {
 
 .input-label {
     font-size: 15px;
-    color: #555;
+    color: #4d0000; /* Burgundy color for labels */
     margin-bottom: 8px;
 }
 
 .input-group input,
 .input-group select,
-.input-group textarea {
+.input-group textarea,
+.lineup-group select {
     width: 100%;
     padding: 12px;
     box-sizing: border-box;
@@ -72,9 +64,10 @@ h1::before {
 
 .input-group input:focus,
 .input-group select:focus,
-.input-group textarea:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+.input-group textarea:focus,
+.lineup-group select:focus {
+    border-color: #4d0000; /* Burgundy border on focus */
+    box-shadow: 0 0 8px rgba(77, 0, 0, 0.5); /* Burgundy shadow on focus */
     outline: none;
 }
 
@@ -86,12 +79,14 @@ h1::before {
 .score-group {
     display: flex;
     align-items: center;
-    gap: 10px; /* 요소 간 간격 조절 */
+    justify-content: space-between; /* Space between score inputs */
     margin-bottom: 20px;
 }
 
 .score-group .input-label {
     flex-shrink: 0; /* 레이블이 축소되지 않도록 설정 */
+    font-size: 16px;
+    color: #4d0000; /* Burgundy color for the label */
 }
 
 .score-group input {
@@ -100,12 +95,13 @@ h1::before {
     border-radius: 6px;
     border: 2px solid #ddd;
     padding: 8px; /* 패딩 조정 */
+    font-size: 16px;
 }
 
 .score-separator {
-    margin: 0 10px;
-    font-size: 20px;
-    color: #007bff;
+    margin: 0 15px; /* More spacing between score fields */
+    font-size: 24px;
+    color: #4d0000; /* Burgundy color for separator */
 }
 
 .weather-group {
@@ -136,6 +132,7 @@ h1::before {
 .lineup-item .input-label {
     margin-right: 10px;
     font-size: 16px;
+    color: #4d0000; /* Burgundy color for the label */
 }
 
 .diary-data {
@@ -149,7 +146,7 @@ h1::before {
 button {
     margin-top: 15px;
     padding: 12px 24px;
-    background-color: #007bff;
+    background-color: #4d0000; /* Burgundy button background */
     color: #fff;
     border: none;
     cursor: pointer;
@@ -159,7 +156,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #330000; /* Darker burgundy on hover */
     transform: scale(1.05); /* 버튼 클릭 시 애니메이션 효과 */
 }
 
