@@ -19,6 +19,7 @@ const App: React.FC = () => {
         <Route path="/diary" element={<PublicDiaryPage />} />
         <Route path="/diary-entry-create" element={<DiaryCreationPage />} />
         <Route path="/diary-list/:diaryId" element={<DiaryListPage />} />
+        <Route path="/diaries/:diaryId/new-entry" Component={DiaryCreationPage} />
       </Routes>
     </Router>
   );
