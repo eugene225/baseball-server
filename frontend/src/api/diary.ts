@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { ErrorResponse } from '../types/global';
-import { CreateDiaryData, Diary, DiaryCardContent, DiaryEntry } from '../types/diary';
+import { CreateDiaryData, CreateDiaryEntryRequestDto, Diary, DiaryEntry } from '../types/diary';
 
 // API URL 상수
 const API_URL = 'http://52.65.47.31:3000/api/v1/diarys';
@@ -39,6 +39,29 @@ export const createDiary = async (diaryData: CreateDiaryData, accessToken: strin
       throw new Error(errorMessage);
     } else {
       throw new Error('일기장을 생성하는 데 실패했습니다.');
+    }
+  }
+};
+
+// 일기를 생성하는 API 호출 함수
+export const createDiaryEntry = async (
+  diaryId: number,
+  entryData: CreateDiaryEntryRequestDto,
+  accessToken: string
+): Promise<void> => {
+  try {
+    await axios.post(`${API_URL}/${diaryId}`, entryData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`, // 토큰을 헤더에 포함
+      },
+    });
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError<ErrorResponse>;
+      const errorMessage = axiosError.response?.data?.message || '일기를 생성하는 데 실패했습니다.';
+      throw new Error(errorMessage);
+    } else {
+      throw new Error('일기를 생성하는 데 실패했습니다.');
     }
   }
 };
