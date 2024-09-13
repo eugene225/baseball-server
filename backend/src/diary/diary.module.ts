@@ -19,6 +19,14 @@ import { Player } from 'src/player/domain/player.entity';
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [DiaryController],
-  providers: [DiaryRepository, UserRepository, DiaryService, UserService, DiaryEntryRepository, DiaryEntryService, PlayerRepository],
+  providers: [
+    DiaryRepository,
+    UserRepository,
+    DiaryService,
+    UserService,
+    DiaryEntryRepository,
+    DiaryEntryService,
+    PlayerRepository,
+  ],
 })
 export class DiaryModule {}

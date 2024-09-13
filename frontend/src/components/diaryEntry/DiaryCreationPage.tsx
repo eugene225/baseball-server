@@ -99,7 +99,7 @@ const DiaryCreationPage = () => {
     try {
       await createDiaryEntry(Number(diaryId), newEntry, accessToken);
       console.log('Diary entry saved successfully');
-      navigate('/diaries'); // Navigate to the diary list page after saving
+      navigate(`/diaries/${diaryId}}`); // Navigate to the diary list page after saving
     } catch (error) {
       console.error('Failed to save diary entry:', error);
     }
