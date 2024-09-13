@@ -20,7 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "postbuild": "rimraf ../backend/public/* && cp -r build/* ../backend/public/",
+    "postbuild": "rimraf ../backend/public/* && mkdir -p ../backend/public && cp -r build/* ../backend/public/",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
