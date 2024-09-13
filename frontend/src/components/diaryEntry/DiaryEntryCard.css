@@ -104,6 +104,19 @@
     transform: rotate(30deg);
 }
 
+.starting-pitcher-info {
+  margin-bottom: 10px;
+}
+
+.starting-pitcher-info h4 {
+  margin: 0;
+}
+
+.starting-pitcher-info p {
+  font-size: 40px;
+  font-weight: bold;
+}
+
 .save-button {
     align-self: center;
     background-color: #f4f4f4; /* 카드 배경색과 비슷한 색상 */

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom'; // Import useNavigate
 import './DiaryCreationPage.css';
 import { Team, TEAMS } from '../../types/teams';
 import { fetchPlayersByTeam } from '../../api/player';
-import { DiaryEntry, PlayerDto } from '../../types/diary';
+import { CreateDiaryEntryRequestDto, PlayerDto } from '../../types/diary';
 import { Weather } from '../../types/global';
+import { createDiaryEntry } from '../../api/diary';
 
 const DiaryCreationPage = () => {
   const [selectedDate, setSelectedDate] = useState<string>('');
@@ -12,7 +14,7 @@ const DiaryCreationPage = () => {
   const [homeScore, setHomeScore] = useState<string>('');
   const [awayScore, setAwayScore] = useState<string>('');
   const [title, setTitle] = useState<string>('');
-  const [weather, setWeather] = useState<Weather | ''>('');
+  const [weather, setWeather] = useState<Weather>(Weather.SUNNY);
   const [entry, setEntry] = useState<string>('');
   const [lineup, setLineup] = useState<PlayerDto[]>(
     Array(10).fill({ id: 0, name: '', position: '' }).map(() => ({ id: 0, name: '', position: '' }))
@@ -21,9 +23,8 @@ const DiaryCreationPage = () => {
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [playerSearchResults, setPlayerSearchResults] = useState<{ [key: string]: PlayerDto[] }>({});
 
-  useEffect(() => {
-    // 팀 데이터 가져오기 및 초기 상태 설정 (필요시)
-  }, []);
+  const navigate = useNavigate(); // Initialize useNavigate
+  const { diaryId } = useParams<{ diaryId: string }>();
 
   const handleTeamChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const team = event.target.value;
@@ -69,25 +70,39 @@ const DiaryCreationPage = () => {
     }
   };
 
-  const handleSaveEntry = () => {
-    const newEntry: DiaryEntry = {
-      id: Date.now(),
-      title,
-      content: entry,
+  const handleSaveEntry = async () => {
+    const user = localStorage.getItem('user');
+    if (!user) {
+      throw new Error('User Not Found : Local Storage');
+    }
+
+    const accessToken = JSON.parse(user).accessToken;
+    if (!diaryId || !accessToken) {
+      console.error('Diary ID or access token is missing');
+      return;
+    }
+
+    const lineUpIds = lineup.map(player => player.id);
+
+    const newEntry: CreateDiaryEntryRequestDto = {
+      date: selectedDate,
       myTeam: selectedTeam,
       opponent: opponentTeam,
-      awayTeamScore: parseInt(awayScore, 10),
       homeTeamScore: parseInt(homeScore, 10),
-      weather,
-      lineUp: lineup,
-      diaryId: Date.now(),
-      authorNickname: 'currentUserNickname',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      awayTeamScore: parseInt(awayScore, 10),
+      weather: weather as Weather,
+      title,
+      content: entry,
+      lineUp: lineUpIds,
     };
 
-    console.log('Saving diary entry:', newEntry);
-    // 일기 저장 로직 (예: API에 POST 요청)
+    try {
+      await createDiaryEntry(Number(diaryId), newEntry, accessToken);
+      console.log('Diary entry saved successfully');
+      navigate('/diaries'); // Navigate to the diary list page after saving
+    } catch (error) {
+      console.error('Failed to save diary entry:', error);
+    }
   };
 
   return (
@@ -202,4 +217,4 @@ const DiaryCreationPage = () => {
   );
 };
 
-export default DiaryCreationPage;
+export default DiaryCreationPage
