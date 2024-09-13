@@ -14,15 +14,17 @@ const DiaryCreationPage = () => {
   const [title, setTitle] = useState<string>('');
   const [weather, setWeather] = useState<Weather | ''>('');
   const [entry, setEntry] = useState<string>('');
-  const [lineup, setLineup] = useState<PlayerDto[]>(Array(9).fill({ id: 0, name: '', position: '' }));
-  const [startingPitcher, setStartingPitcher] = useState<string>('');
+  const [lineup, setLineup] = useState<PlayerDto[]>(
+    Array(10).fill({ id: 0, name: '', position: '' }).map(() => ({ id: 0, name: '', position: '' }))
+  );
   const [players, setPlayers] = useState<PlayerDto[]>([]);
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+  const [playerSearchResults, setPlayerSearchResults] = useState<{ [key: string]: PlayerDto[] }>({});
 
   useEffect(() => {
-    // Fetch teams and set initial state if needed
+    // 팀 데이터 가져오기 및 초기 상태 설정 (필요시)
   }, []);
 
-  // Handle team selection and fetch players
   const handleTeamChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const team = event.target.value;
     setSelectedTeam(team);
@@ -34,20 +36,42 @@ const DiaryCreationPage = () => {
     }
   };
 
-  // Update lineup for each position
-  const handleLineupChange = (index: number, playerId: string) => {
-    const selectedPlayer = players.find((player) => player.name === playerId);
+  const handleLineupChange = (index: number, playerName: string) => {
+    const selectedPlayer = players.find((player) => player.name === playerName);
     if (selectedPlayer) {
       const newLineup = [...lineup];
       newLineup[index] = selectedPlayer;
       setLineup(newLineup);
+      setFocusedIndex(null);
+      setPlayerSearchResults(prev => ({ ...prev, [index.toString()]: [] }));
     }
   };
 
-  // Save the diary entry logic
+  const handlePlayerSearch = (searchTerm: string, index: number | null) => {
+    if (searchTerm === '') {
+      setPlayerSearchResults(prev => ({ ...prev, [index === null ? 'startingPitcher' : index.toString()]: [] }));
+      setFocusedIndex(null);
+    } else {
+      const filtered = players.filter((player) =>
+        player.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setPlayerSearchResults(prev => ({ ...prev, [index === null ? 'startingPitcher' : index.toString()]: filtered }));
+      setFocusedIndex(index);
+    }
+  };
+
+  const handleSelectPlayer = (playerName: string, index: number | null) => {
+    if (index !== null) {
+      handleLineupChange(index, playerName);
+    } else {
+      setFocusedIndex(null);
+      setPlayerSearchResults(prev => ({ ...prev, 'startingPitcher': [] }));
+    }
+  };
+
   const handleSaveEntry = () => {
     const newEntry: DiaryEntry = {
-      id: Date.now(), // Temporary ID, will be replaced by backend
+      id: Date.now(),
       title,
       content: entry,
       myTeam: selectedTeam,
@@ -56,14 +80,14 @@ const DiaryCreationPage = () => {
       homeTeamScore: parseInt(homeScore, 10),
       weather,
       lineUp: lineup,
-      diaryId: Date.now(), // Temporary diaryId, will be replaced by backend
-      authorNickname: 'currentUserNickname', // Placeholder for the current user's nickname
+      diaryId: Date.now(),
+      authorNickname: 'currentUserNickname',
       createdAt: new Date(),
       updatedAt: new Date(),
     };
 
     console.log('Saving diary entry:', newEntry);
-    // Logic to save the entry, e.g., POST request to API
+    // 일기 저장 로직 (예: API에 POST 요청)
   };
 
   return (
@@ -136,37 +160,44 @@ const DiaryCreationPage = () => {
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
-      <div className="input-group">
-        <div className="input-label">선발 투수</div>
-        <select value={startingPitcher} onChange={(e) => setStartingPitcher(e.target.value)}>
-          <option value="">선발 투수 선택</option>
-          {players.map((player) => (
-            <option key={player.id} value={player.name}>
-              {player.name} ({player.position})
-            </option>
-          ))}
-        </select>
-      </div>
       <div className="lineup-group">
         {lineup.map((player, index) => (
           <div key={index} className="lineup-item">
-            <div className="input-label">{index + 1}번 타자</div>
-            <select value={player.name} onChange={(e) => handleLineupChange(index, e.target.value)}>
-              <option value="">선수 선택</option>
-              {players.map((p) => (
-                <option key={p.id} value={p.name}>
-                  {p.name} ({p.position})
-                </option>
-              ))}
-            </select>
+            <div className="input-label">
+              {index === 0 ? '선발 투수' : `${index}번 타자`}
+            </div>
+            <input
+              type="text"
+              value={player.name}
+              placeholder="선수 이름을 입력하세요"
+              onChange={(e) => {
+                const newLineup = [...lineup];
+                newLineup[index] = { ...newLineup[index], name: e.target.value };
+                setLineup(newLineup);
+                handlePlayerSearch(e.target.value, index);
+              }}
+              onFocus={() => setFocusedIndex(index)}
+            />
+            {focusedIndex === index && playerSearchResults[index.toString()]?.length > 0 && (
+              <ul className="autocomplete-list">
+                {playerSearchResults[index.toString()].map((p) => (
+                  <li key={p.id} onClick={() => handleSelectPlayer(p.name, index)}>
+                    {p.name} ({p.position})
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         ))}
       </div>
       <div className="input-group">
         <div className="input-label">일기 내용</div>
-        <textarea value={entry} onChange={(e) => setEntry(e.target.value)}></textarea>
+        <textarea
+          value={entry}
+          onChange={(e) => setEntry(e.target.value)}
+        />
       </div>
-      <button onClick={handleSaveEntry}>일기 저장하기</button>
+      <button onClick={handleSaveEntry}>저장</button>
     </div>
   );
 };
