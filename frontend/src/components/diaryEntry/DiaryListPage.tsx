@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, useNavigate } from 'react-router-dom'; // Replaced useHistory with useNavigate
 import DiaryEntryCard from './\bDiaryEntryCard';
 import { DiaryEntry as DiaryEntryType } from '../../types/diary';
 import { fetchDiaryEntries } from '../../api/diary';
@@ -8,10 +8,11 @@ import './DiaryListPage.css';
 const DiaryListPage: React.FC = () => {
   const { diaryId } = useParams<{ diaryId: string }>();
   const location = useLocation();
+  const navigate = useNavigate(); // useNavigate hook from react-router-dom v6
   const [diaryEntries, setDiaryEntries] = React.useState<DiaryEntryType[]>([]);
   const [loading, setLoading] = React.useState(true);
 
-  const diary = location.state?.diary; // 전달된 일기장 정보
+  const diary = location.state?.diary;
 
   React.useEffect(() => {
     const loadDiaryEntries = async () => {
@@ -29,6 +30,10 @@ const DiaryListPage: React.FC = () => {
     loadDiaryEntries();
   }, [diaryId]);
 
+  const handleWriteDiaryClick = () => {
+    navigate(`/diaries/${diaryId}/new-entry`, { state: { diary } }); // Navigate using useNavigate and passing state
+  };
+
   if (loading) {
     return <div className="loading">Loading...</div>;
   }
@@ -43,7 +48,9 @@ const DiaryListPage: React.FC = () => {
             <p className="diary-meta"><strong>공개 여부:</strong> {diary.isPublic ? '공개' : '비공개'}</p>
           </>
         )}
-        <button className="write-diary-button">일기 쓰기</button>
+        <button className="write-diary-button" onClick={handleWriteDiaryClick}>
+          일기 쓰기
+        </button>
       </header>
       <div className="diary-entries-container">
         {diaryEntries.map((entry) => (

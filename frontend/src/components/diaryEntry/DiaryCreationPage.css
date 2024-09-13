@@ -5,7 +5,7 @@
     background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    font-family: 'Comic Sans MS', cursive, sans-serif; /* 귀여운 폰트 */
+    font-family: 'Nunito', sans-serif; /* 귀여운 폰트 */
     position: relative;
 }
 
@@ -13,172 +13,131 @@
 .diary-creation-page::after {
     content: '⚾'; /* 야구공 이모지 */
     position: absolute;
-    font-size: 80px;
-    color: rgba(0, 0, 0, 0.1); /* 반투명한 색상 */
-    pointer-events: none; /* 클릭 방지 */
+    font-size: 60px; /* 크기 줄임 */
+    color: rgba(0, 0, 0, 0.08); /* 더 은은한 색상 */
+    z-index: -1;
 }
 
 .diary-creation-page::before {
-    top: 10px;
-    left: 10px;
-    transform: rotate(-30deg);
+    top: -20px; /* 위치 조정 */
+    left: -20px;
 }
 
 .diary-creation-page::after {
-    bottom: 10px;
-    right: 10px;
-    transform: rotate(30deg);
+    bottom: -20px;
+    right: -20px;
 }
 
 h1 {
-    text-align: center;
+    font-size: 24px;
     margin-bottom: 20px;
-    font-size: 22px;
-    color: #333;
-    position: relative;
-}
-
-h1::before {
-    content: ''; /* 야구공 아이콘 */
-    position: absolute;
-    left: -50px;
-    top: 0;
-    width: 50px;
-    height: 50px;
-    font-size: 50px;
+    text-align: center;
+    font-weight: 700; /* 좀 더 굵게 */
 }
 
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .input-label {
-    font-size: 15px;
-    color: #555;
-    margin-bottom: 8px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
 }
 
 .input-group input,
 .input-group select,
 .input-group textarea {
     width: 100%;
-    padding: 12px;
-    box-sizing: border-box;
+    padding: 12px; /* 패딩을 조금 더 여유롭게 */
     font-size: 16px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.input-group input:focus,
-.input-group select:focus,
-.input-group textarea:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-    outline: none;
+    border-radius: 8px; /* 모서리를 더 둥글게 */
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
 }
 
 .input-group textarea {
-    height: 150px;
-    resize: vertical;
+    height: 120px; /* 높이 조정 */
+    box-sizing: border-box;
 }
 
 .score-group {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px; /* 요소 간 간격 조절 */
-    margin-bottom: 20px;
-}
-
-.score-group .input-label {
-    flex-shrink: 0; /* 레이블이 축소되지 않도록 설정 */
 }
 
 .score-group input {
-    flex: 1; /* 입력 필드가 남는 공간을 차지하도록 설정 */
-    margin: 0; /* 마진 제거 */
-    border-radius: 6px;
-    border: 2px solid #ddd;
-    padding: 8px; /* 패딩 조정 */
+    width: 45%;
+    text-align: center;
 }
 
 .score-separator {
-    margin: 0 10px;
-    font-size: 20px;
-    color: #007bff;
-}
-
-.weather-group {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.weather-item {
-    display: flex;
-    align-items: center;
-    margin-right: 10px;
-}
-
-.weather-item input[type="radio"] {
-    margin-right: 8px;
-    transform: scale(1.2); /* 라디오 버튼을 조금 더 크게 */
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .lineup-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .lineup-item {
-    margin-bottom: 10px;
+    margin-bottom: 10px; /* 간격을 좀 더 여유롭게 */
 }
 
-.lineup-item .input-label {
-    margin-right: 10px;
-    font-size: 16px;
-}
-
-.diary-data {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #fff;
+.autocomplete-list {
+    background: #fff;
+    border: 1px solid #ccc;
     border-radius: 8px;
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute;
+    width: 80%;
+    z-index: 10;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 4px;
+}
+
+.autocomplete-list li {
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.autocomplete-list li:hover {
+    background: #f0f0f0;
 }
 
 button {
-    margin-top: 15px;
-    padding: 12px 24px;
-    background-color: #007bff;
-    color: #fff;
+    background-color: var(--burgundy); /* 좀 더 밝은 색상 */
+    color: white;
+    padding: 12px 20px;
+    font-size: 18px;
     border: none;
-    cursor: pointer;
-    font-size: 16px;
     border-radius: 8px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+    width: 100%;
 }
 
 button:hover {
-    background-color: #0056b3;
-    transform: scale(1.05); /* 버튼 클릭 시 애니메이션 효과 */
-}
-
-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+    background-color: #ff4500;
 }
 
 @media (max-width: 600px) {
     .diary-creation-page {
         padding: 15px;
+        max-width: 100%;
+        box-shadow: none;
     }
 
-    .input-group .input-label, .input-group input, .input-group select, .input-group textarea {
-        font-size: 13px;
-    }
-
-    button {
-        padding: 10px 20px;
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
         font-size: 14px;
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 22px;
     }
 }

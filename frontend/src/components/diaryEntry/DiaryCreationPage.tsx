@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom'; // Import useNavigate
 import './DiaryCreationPage.css';
 import { Team, TEAMS } from '../../types/teams';
+import { fetchPlayersByTeam } from '../../api/player';
+import { CreateDiaryEntryRequestDto, PlayerDto } from '../../types/diary';
+import { Weather } from '../../types/global';
+import { createDiaryEntry } from '../../api/diary';
 
 const DiaryCreationPage = () => {
   const [selectedDate, setSelectedDate] = useState<string>('');
@@ -9,29 +14,95 @@ const DiaryCreationPage = () => {
   const [homeScore, setHomeScore] = useState<string>('');
   const [awayScore, setAwayScore] = useState<string>('');
   const [title, setTitle] = useState<string>('');
-  const [weather, setWeather] = useState<string>('');
+  const [weather, setWeather] = useState<Weather>(Weather.SUNNY);
   const [entry, setEntry] = useState<string>('');
-  const [lineup, setLineup] = useState<string[]>(Array(9).fill(''));
-  const [startingPitcher, setStartingPitcher] = useState<string>('');
+  const [lineup, setLineup] = useState<PlayerDto[]>(
+    Array(10).fill({ id: 0, name: '', position: '' }).map(() => ({ id: 0, name: '', position: '' }))
+  );
+  const [players, setPlayers] = useState<PlayerDto[]>([]);
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+  const [playerSearchResults, setPlayerSearchResults] = useState<{ [key: string]: PlayerDto[] }>({});
 
-  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => setSelectedDate(event.target.value);
-  const handleTeamChange = (event: React.ChangeEvent<HTMLSelectElement>) => setSelectedTeam(event.target.value);
-  const handleOpponentTeamChange = (event: React.ChangeEvent<HTMLSelectElement>) => setOpponentTeam(event.target.value);
-  const handleHomeScoreChange = (event: React.ChangeEvent<HTMLInputElement>) => setHomeScore(event.target.value);
-  const handleAwayScoreChange = (event: React.ChangeEvent<HTMLInputElement>) => setAwayScore(event.target.value);
-  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => setTitle(event.target.value);
-  const handleWeatherChange = (event: React.ChangeEvent<HTMLInputElement>) => setWeather(event.target.value);
-  const handleEntryChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => setEntry(event.target.value);
+  const navigate = useNavigate(); // Initialize useNavigate
+  const { diaryId } = useParams<{ diaryId: string }>();
 
-  const handleLineupChange = (index: number, value: string) => {
-    const newLineup = [...lineup];
-    newLineup[index] = value;
-    setLineup(newLineup);
+  const handleTeamChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const team = event.target.value;
+    setSelectedTeam(team);
+    try {
+      const fetchedPlayers = await fetchPlayersByTeam(team);
+      setPlayers(fetchedPlayers);
+    } catch (error) {
+      console.error('Failed to fetch players:', error);
+    }
   };
 
-  const handleSaveEntry = () => {
-    // 일기 저장 로직 구현
-    console.log('Saving diary entry:', { title, weather, entry, selectedDate, selectedTeam, opponentTeam, homeScore, awayScore, lineup, startingPitcher });
+  const handleLineupChange = (index: number, playerName: string) => {
+    const selectedPlayer = players.find((player) => player.name === playerName);
+    if (selectedPlayer) {
+      const newLineup = [...lineup];
+      newLineup[index] = selectedPlayer;
+      setLineup(newLineup);
+      setFocusedIndex(null);
+      setPlayerSearchResults(prev => ({ ...prev, [index.toString()]: [] }));
+    }
+  };
+
+  const handlePlayerSearch = (searchTerm: string, index: number | null) => {
+    if (searchTerm === '') {
+      setPlayerSearchResults(prev => ({ ...prev, [index === null ? 'startingPitcher' : index.toString()]: [] }));
+      setFocusedIndex(null);
+    } else {
+      const filtered = players.filter((player) =>
+        player.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setPlayerSearchResults(prev => ({ ...prev, [index === null ? 'startingPitcher' : index.toString()]: filtered }));
+      setFocusedIndex(index);
+    }
+  };
+
+  const handleSelectPlayer = (playerName: string, index: number | null) => {
+    if (index !== null) {
+      handleLineupChange(index, playerName);
+    } else {
+      setFocusedIndex(null);
+      setPlayerSearchResults(prev => ({ ...prev, 'startingPitcher': [] }));
+    }
+  };
+
+  const handleSaveEntry = async () => {
+    const user = localStorage.getItem('user');
+    if (!user) {
+      throw new Error('User Not Found : Local Storage');
+    }
+
+    const accessToken = JSON.parse(user).accessToken;
+    if (!diaryId || !accessToken) {
+      console.error('Diary ID or access token is missing');
+      return;
+    }
+
+    const lineUpIds = lineup.map(player => player.id);
+
+    const newEntry: CreateDiaryEntryRequestDto = {
+      date: selectedDate,
+      myTeam: selectedTeam,
+      opponent: opponentTeam,
+      homeTeamScore: parseInt(homeScore, 10),
+      awayTeamScore: parseInt(awayScore, 10),
+      weather: weather as Weather,
+      title,
+      content: entry,
+      lineUp: lineUpIds,
+    };
+
+    try {
+      await createDiaryEntry(Number(diaryId), newEntry, accessToken);
+      console.log('Diary entry saved successfully');
+      navigate('/diaries'); // Navigate to the diary list page after saving
+    } catch (error) {
+      console.error('Failed to save diary entry:', error);
+    }
   };
 
   return (
@@ -39,7 +110,11 @@ const DiaryCreationPage = () => {
       <h1>일기 작성하기</h1>
       <div className="input-group">
         <div className="input-label">경기 날짜</div>
-        <input type="date" value={selectedDate} onChange={handleDateChange} />
+        <input
+          type="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+        />
       </div>
       <div className="input-group">
         <div className="input-label">우리 팀</div>
@@ -54,64 +129,92 @@ const DiaryCreationPage = () => {
       </div>
       <div className="input-group">
         <div className="input-label">상대 팀</div>
-        <select value={opponentTeam} onChange={(e) => handleOpponentTeamChange}>
-          <option value="">팀 선택</option>
-          {TEAMS.filter(team => team.value !== selectedTeam).map((team) => (
+        <select value={opponentTeam} onChange={(e) => setOpponentTeam(e.target.value)}>
+          <option value="">상대 팀 선택</option>
+          {TEAMS.filter((team) => team.value !== selectedTeam).map((team) => (
             <option key={team.value} value={team.value}>
               {team.label}
             </option>
           ))}
         </select>
       </div>
-      <div className="score-group">
+      <div className="input-group">
         <div className="input-label">최종 스코어</div>
-        <input type="number" value={awayScore} onChange={handleAwayScoreChange} placeholder="원정팀" />
-        <span className="score-separator">:</span>
-        <input type="number" value={homeScore} onChange={handleHomeScoreChange} placeholder="홈팀" />
+        <div className="score-group">
+          <input
+            type="number"
+            value={awayScore}
+            onChange={(e) => setAwayScore(e.target.value)}
+            placeholder="원정팀"
+          />
+          <span className="score-separator">:</span>
+          <input
+            type="number"
+            value={homeScore}
+            onChange={(e) => setHomeScore(e.target.value)}
+            placeholder="홈팀"
+          />
+        </div>
       </div>
-      <div className="weather-group">
+      <div className="input-group">
         <div className="input-label">날씨</div>
-        <div className="weather-item">
-          <input type="radio" id="sunny" name="weather" value="☀️" checked={weather === '☀️'} onChange={handleWeatherChange} />
-          <label htmlFor="sunny">☀️</label>
-        </div>
-        <div className="weather-item">
-          <input type="radio" id="cloudy" name="weather" value="🌥️" checked={weather === '🌥️'} onChange={handleWeatherChange} />
-          <label htmlFor="cloudy">🌥️</label>
-        </div>
-        <div className="weather-item">
-          <input type="radio" id="rainy" name="weather" value="🌧️" checked={weather === '🌧️'} onChange={handleWeatherChange} />
-          <label htmlFor="rainy">🌧️</label>
-        </div>
+        <select value={weather} onChange={(e) => setWeather(e.target.value as Weather)}>
+          <option value="">날씨 선택</option>
+          {Object.keys(Weather).map((key) => (
+            <option key={key} value={Weather[key as keyof typeof Weather]}>
+              {Weather[key as keyof typeof Weather]}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="input-group">
         <div className="input-label">제목</div>
-        <input type="text" value={title} onChange={handleTitleChange} />
-      </div>
-      <div className="input-group">
-        <div className="input-label">선발 투수</div>
-        <input type="text" value={startingPitcher} onChange={(e) => setStartingPitcher(e.target.value)} placeholder="선발 투수 이름" />
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
       </div>
       <div className="lineup-group">
         {lineup.map((player, index) => (
           <div key={index} className="lineup-item">
-            <div className="input-label">{index + 1}번 타자</div>
+            <div className="input-label">
+              {index === 0 ? '선발 투수' : `${index}번 타자`}
+            </div>
             <input
               type="text"
-              value={player}
-              onChange={(e) => handleLineupChange(index, e.target.value)}
-              placeholder={`타자 ${index + 1}`}
+              value={player.name}
+              placeholder="선수 이름을 입력하세요"
+              onChange={(e) => {
+                const newLineup = [...lineup];
+                newLineup[index] = { ...newLineup[index], name: e.target.value };
+                setLineup(newLineup);
+                handlePlayerSearch(e.target.value, index);
+              }}
+              onFocus={() => setFocusedIndex(index)}
             />
+            {focusedIndex === index && playerSearchResults[index.toString()]?.length > 0 && (
+              <ul className="autocomplete-list">
+                {playerSearchResults[index.toString()].map((p) => (
+                  <li key={p.id} onClick={() => handleSelectPlayer(p.name, index)}>
+                    {p.name} ({p.position})
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         ))}
       </div>
       <div className="input-group">
         <div className="input-label">일기 내용</div>
-        <textarea value={entry} onChange={handleEntryChange}></textarea>
+        <textarea
+          value={entry}
+          onChange={(e) => setEntry(e.target.value)}
+        />
       </div>
-      <button onClick={handleSaveEntry}>일기 저장하기</button>
+      <button onClick={handleSaveEntry}>저장</button>
     </div>
   );
 };
 
-export default DiaryCreationPage;
+export default DiaryCreationPage

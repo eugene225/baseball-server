@@ -39,13 +39,20 @@ const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
           <div className="diary-entry-card-info">
             <div>우리 팀 {diaryEntry.myTeam}</div>
             <div>상대 팀 {diaryEntry.opponent}</div>
-            <div>스코어 {diaryEntry.homeTeamScore} : {diaryEntry.awayTeamScore}</div>
+            <div>스코어 {diaryEntry.awayTeamScore} : {diaryEntry.homeTeamScore}</div>
             <div>날씨 {diaryEntry.weather}</div>
           </div>
           <div className="diary-entry-card-entry">{diaryEntry.content}</div>
         </div>
         <div className="diary-entry-card-right">
           <h3>선발 라인업</h3>
+
+          <div className="starting-pitcher-info">
+            <h4>
+              선발 투수: {diaryEntry.lineUp[0] ? diaryEntry.lineUp[0].name : '선발 투수 정보가 없습니다.'}
+            </h4>
+          </div>
+
           <table>
             <thead>
               <tr>
@@ -54,7 +61,7 @@ const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
               </tr>
             </thead>
             <tbody>
-              {diaryEntry.lineUp.map((player, index) => (
+              {diaryEntry.lineUp.slice(1).map((player, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{player.name}</td>
