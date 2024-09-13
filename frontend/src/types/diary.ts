@@ -1,3 +1,4 @@
+import { Weather } from './global';
 // 일기장 생성 데이터 타입 정의
 export interface CreateDiaryData {
     title: string;
@@ -15,24 +16,23 @@ export interface Diary {
   createdAt: string;
 }
 
-// 일기 데이터 타입 정의
-export interface DiaryCardContent {
-    date: string;
-    team: string;
-    opponent: string;
-    score: string;
-    weather: string;
-    title: string;
-    entry: string;
-    lineup: string[];
-  }
-
 // 플레이어 DTO
 export interface PlayerDto {
   id: number;
   name: string;
   position: string;
-  // 추가 정보 필요 시 필드 추가 가능
+}
+
+export interface CreateDiaryEntryRequestDto {
+  date: string;
+  myTeam: string;
+  opponent: string;
+  homeTeamScore: number;
+  awayTeamScore: number;
+  weather: Weather;
+  title: string;
+  content: string;
+  lineUp: number[]; // 선수 ID 리스트
 }
 
 export interface DiaryEntry {
