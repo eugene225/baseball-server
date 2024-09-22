@@ -97,11 +97,13 @@ export class DiaryEntryService {
       .createQueryBuilder()
       .delete()
       .from(DiaryEntry)
-      .where("diaryId = :diaryId", { diaryId })
+      .where('diaryId = :diaryId', { diaryId })
       .execute();
 
     if (result.affected === 0) {
-      throw new NotFoundException(`No diary entries found for diaryId ${diaryId}`);
+      throw new NotFoundException(
+        `No diary entries found for diaryId ${diaryId}`,
+      );
     }
   }
 }
