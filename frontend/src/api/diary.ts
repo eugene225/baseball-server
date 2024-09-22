@@ -84,3 +84,12 @@ export const fetchDiaryEntries = async (diaryId: number, token: string): Promise
     }
   }
 };
+
+export const fetchDeleteDiary = async (diaryId: number, accessToken: string) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+  return await axios.delete(`${API_URL}/${diaryId}`, config);
+};
