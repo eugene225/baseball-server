@@ -3,7 +3,7 @@ import { DiaryRepository } from './../domain/diary.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DiaryEntry } from '../domain/diary-entry.entity';
 import { DiaryEntryRepository } from '../domain/diary-entry.repository';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDiaryEntryRequestDto } from '../dto/create-diary-entry-request.dto';
 import { User } from 'src/users/domain/user.entity';
 import { Diary } from '../domain/diary.entity';
@@ -93,5 +93,18 @@ export class DiaryEntryService {
     );
 
     return entriesDto;
+  }
+
+  async deleteAllByDiaryId(diaryId: number) {
+    const result = await this.diaryEntryRepository
+      .createQueryBuilder()
+      .delete()
+      .from(DiaryEntry)
+      .where("diaryId = :diaryId", { diaryId })
+      .execute();
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`No diary entries found for diaryId ${diaryId}`);
+    }
   }
 }

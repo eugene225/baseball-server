@@ -6,12 +6,14 @@ import { User } from 'src/users/domain/user.entity';
 import { DiaryDto } from '../dto/diary.dto';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Diary } from '../domain/diary.entity';
+import { DiaryEntryService } from './diary-entry.service';
 
 @Injectable()
 export class DiaryService {
   constructor(
     @InjectRepository(Diary)
     private readonly diaryRepository: DiaryRepository,
+    private readonly diaryEntryService: DiaryEntryService,
     private readonly userService: UserService,
   ) {}
 
@@ -59,6 +61,7 @@ export class DiaryService {
       );
     }
 
+    await this.diaryEntryService.deleteAllByDiaryId(diaryId);
     await this.diaryRepository.delete({ id: diary.id });
   }
 }
