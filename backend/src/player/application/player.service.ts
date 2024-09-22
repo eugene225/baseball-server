@@ -1,5 +1,4 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { Player } from '../domain/player.entity';
 import { PlayerRepository } from '../domain/player.repository';
 import { Injectable } from '@nestjs/common';
 import { Team } from 'src/global/enum/team.enum';
@@ -9,7 +8,7 @@ import { Position } from 'src/global/enum/position.enum';
 @Injectable()
 export class PlayerService {
   constructor(
-    @InjectRepository(Player)
+    @InjectRepository(PlayerRepository)
     private readonly playerRepository: PlayerRepository,
   ) {}
 

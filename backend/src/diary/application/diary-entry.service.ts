@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { DiaryRepository } from './../domain/diary.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DiaryEntry } from '../domain/diary-entry.entity';
@@ -6,20 +5,18 @@ import { DiaryEntryRepository } from '../domain/diary-entry.repository';
 import { Injectable } from '@nestjs/common';
 import { CreateDiaryEntryRequestDto } from '../dto/create-diary-entry-request.dto';
 import { User } from 'src/users/domain/user.entity';
-import { Diary } from '../domain/diary.entity';
 import { PlayerRepository } from 'src/player/domain/player.repository';
-import { Player } from 'src/player/domain/player.entity';
 import { DiaryEntryDto } from '../dto/diary-entry.dto';
 import { PlayerDto } from 'src/player/dto/player.dto';
 
 @Injectable()
 export class DiaryEntryService {
   constructor(
-    @InjectRepository(DiaryEntry)
+    @InjectRepository(DiaryEntryRepository)
     private readonly diaryEntryRepository: DiaryEntryRepository,
-    @InjectRepository(Diary)
+    @InjectRepository(DiaryRepository)
     private readonly diaryRepository: DiaryRepository,
-    @InjectRepository(Player)
+    @InjectRepository(PlayerRepository)
     private readonly playerRepository: PlayerRepository,
   ) {}
 

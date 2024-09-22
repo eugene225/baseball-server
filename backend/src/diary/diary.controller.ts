@@ -25,6 +25,7 @@ export class DiaryController {
 
   @Get('/public')
   async getAllPublicDiaries(): Promise<DiaryDto[]> {
+    console.log('Diary Controller : diary create');
     const publicDiaries = await this.diaryService.getAllPublicDiaries();
 
     return publicDiaries;
@@ -33,6 +34,7 @@ export class DiaryController {
   @Get('/private')
   @UseGuards(AuthGuard())
   async getAllPrivateDiaries(@Request() req): Promise<DiaryDto[]> {
+    console.log('Diary Controller : diary create');
     const publicDiaries = await this.diaryService.getAllPrivateDiaries(
       req.user,
     );

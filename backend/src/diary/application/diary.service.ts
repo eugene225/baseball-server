@@ -5,12 +5,11 @@ import { UserService } from 'src/users/application/user.service';
 import { User } from 'src/users/domain/user.entity';
 import { DiaryDto } from '../dto/diary.dto';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Diary } from '../domain/diary.entity';
 
 @Injectable()
 export class DiaryService {
   constructor(
-    @InjectRepository(Diary)
+    @InjectRepository(DiaryRepository)
     private readonly diaryRepository: DiaryRepository,
     private readonly userService: UserService,
   ) {}
@@ -19,6 +18,7 @@ export class DiaryService {
     requestDto: CreateDiaryRequestDto,
     user: User,
   ): Promise<DiaryDto> {
+    console.log('start diary create');
     const diary = await this.diaryRepository.createDiary(requestDto, user);
 
     return DiaryDto.create(diary);
