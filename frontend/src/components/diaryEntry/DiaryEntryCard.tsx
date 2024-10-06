@@ -1,34 +1,38 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import html2canvas from 'html2canvas';
 import './DiaryEntryCard.css';
 import { DiaryEntry as DiaryEntryType } from '../../types/diary';
 
-// Props 타입 정의
 interface DiaryEntryProps {
   diaryEntry: DiaryEntryType;
 }
 
 const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
+  const entryRef = useRef<HTMLDivElement>(null); // 각 일기장 카드를 참조할 ref
 
   const handleSaveAsImage = () => {
-    const element = document.querySelector('.diary-entry-card') as HTMLElement;
+    const element = entryRef.current; // 현재 항목의 ref를 사용
     const button = document.querySelector('.save-button') as HTMLElement;
 
     if (button) button.style.display = 'none';
 
-    html2canvas(element).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.href = imgData;
-      link.download = 'diary-entry.png';
-      link.click();
+    if (element) {
+      html2canvas(element, {
+        useCORS: true,
+      }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = imgData;
+        link.download = 'diary-entry.png';
+        link.click();
 
-      if (button) button.style.display = 'block';
-    });
+        if (button) button.style.display = 'block';
+      });
+    }
   };
 
   return (
-    <div className="diary-entry-card">
+    <div className="diary-entry-card" ref={entryRef}> {/* ref를 추가 */}
       <div className="diary-entry-card-header">
         <h2>{diaryEntry.title}</h2>
         <div className="diary-entry-card-date">{new Date(diaryEntry.createdAt).toLocaleDateString()}</div>
@@ -46,13 +50,11 @@ const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
         </div>
         <div className="diary-entry-card-right">
           <h3>선발 라인업</h3>
-
           <div className="starting-pitcher-info">
             <h4>
               선발 투수: {diaryEntry.lineUp[0] ? diaryEntry.lineUp[0].name : '선발 투수 정보가 없습니다.'}
             </h4>
           </div>
-
           <table>
             <thead>
               <tr>
