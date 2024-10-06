@@ -1,6 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
-
-/* Importing the Roboto font from Google Fonts */
+@font-face {
+  font-family: 'WandohopeR';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/WandohopeR.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 
 :root {
   --burgundy: #800020; /* Main Burgundy color */
@@ -13,7 +16,6 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif; /* Apply the imported font globally */
 }
 
 .main-page {
@@ -21,7 +23,8 @@ body {
   padding: 20px;
   background-color: var(--light-grey); /* Light grey background */
   position: relative;
-  padding-top: 30px; /* Space for the top bar */
+  padding-top: 30px;
+  font-family: 'WandohopeR';
 }
 
 .top-bar {
@@ -35,7 +38,7 @@ body {
   padding: 10px 0;
   font-size: 24px;
   font-weight: bold;
-  z-index: 1000; /* Ensure it is on top of other content */
+  z-index: 1000;
 }
 
 .board-container {
@@ -46,7 +49,6 @@ body {
   margin-top: 20px; /* Margin to ensure items are not too close to the top */
 }
 
-/* Style for board items and contents */
 .board-item {
   text-decoration: none;
   color: inherit;
@@ -69,10 +71,14 @@ body {
   height: 200px; /* Fixed height for a square shape */
 }
 
+h1 {
+  font-family: 'WandohopeR';
+}
+
 .board-content h2 {
   margin: 10px 0;
   font-size: 20px;
-  color: var(--burgundy); /* Use Burgundy color */
+  color: var(--burgundy);
 }
 
 .board-content p {

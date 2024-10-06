@@ -65,7 +65,7 @@ function MainPage() {
 
   return (
     <div className="main-page">
-      <h1>⚾️ Let's BaseBall ⚾️</h1>
+      <h1>🍠 고구마 🍠</h1>
 
       {isLoggedIn ? <UserInfo userInfo={userInfo} onLogout={handleLogout} /> : null}
 
