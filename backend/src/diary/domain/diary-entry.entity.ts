@@ -38,7 +38,7 @@ export class DiaryEntry extends BaseEntity {
   @Column()
   homeTeamScore: number;
 
-  @Column()
+  @Column({ type: 'enum', enum: Weather, nullable: false })
   weather: Weather;
 
   @ManyToMany(() => Player, { cascade: true })

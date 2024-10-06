@@ -10,9 +10,9 @@ export class Player extends BaseEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ type: 'enum', enum: Position, nullable: false })
   position: Position;
 
-  @Column()
+  @Column({ type: 'enum', enum: Team, nullable: false })
   team: Team;
 }
