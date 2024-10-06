@@ -79,6 +79,7 @@ export class DiaryEntryService {
     const entries = await this.diaryEntryRepository.find({
       where: { diary: { id: diary.id } },
       relations: ['author', 'lineUp'],
+      order: { createdAt: 'DESC' },
     });
 
     const entriesDto = entries.map((entry) =>
