@@ -31,23 +31,11 @@ jobs:
           cd backend
           docker build -t backend-image .
 
-      # Frontend Docker 이미지 빌드
-      - name: Build Frontend Docker image
-        run: |
-          cd frontend
-          docker build -t frontend-image .
-
       # Backend Docker 이미지 태그 및 푸시
       - name: Tag and Push Backend Docker image to ECR
         run: |
           docker tag backend-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
-
-      # Frontend Docker 이미지 태그 및 푸시
-      - name: Tag and Push Frontend Docker image to ECR
-        run: |
-          docker tag frontend-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
 
       - name: Execute remote SSH commands on EC2
         uses: appleboy/ssh-action@v0.1.6
@@ -62,16 +50,12 @@ jobs:
             # 1. 기존 Docker 컨테이너 중지 및 삭제 (있으면 삭제)
             docker stop backend-container || true
             docker rm backend-container || true
-            docker stop frontend-container || true
-            docker rm frontend-container || true
 
-            # 2. ECR에서 Backend, Frontend Docker 이미지 풀(pull)
+            # 2. ECR에서 Backend Docker 이미지 풀(pull)
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
-            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
 
-            # 3. 새 컨테이너 실행 (Backend: 포트 3000, Frontend: 포트 5000)
+            # 3. 새 백엔드 컨테이너 실행 (포트 3000)
             docker run -d --name backend-container -p 3000:3000 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
-            docker run -d --name frontend-container -p 5000:5000 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
 
             # 4. 필요 시 환경 변수 설정
             echo "${{ secrets.ENV }}" > /home/ec2-user/app/baseball-server/backend/.env
