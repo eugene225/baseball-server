@@ -29,13 +29,13 @@ jobs:
       - name: Build Backend Docker image
         run: |
           cd backend
-          docker build -t backend-image .
+          docker build -t DockerFile .
 
       # Frontend Docker 이미지 빌드
       - name: Build Frontend Docker image
         run: |
           cd frontend
-          docker build -t frontend-image .
+          docker build -t DockerFile .
 
       # Backend Docker 이미지 태그 및 푸시
       - name: Tag and Push Backend Docker image to ECR
