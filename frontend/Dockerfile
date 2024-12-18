@@ -1,18 +1,18 @@
-# Use Node.js base image for frontend
 FROM node:16
 
-# Set working directory for frontend
+# Set the working directory
 WORKDIR /home/app/baseball-server/frontend
 
-# Copy package.json and install dependencies
-COPY frontend/package*.json ./
+# Copy only package.json and package-lock.json for installing dependencies
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-# Build the frontend app
+# Copy the rest of the application
+COPY . . 
+
+# Build and expose the application
 RUN npm run build
-
-# Expose the port for frontend
-EXPOSE 5000
-
-# Command to serve the app #
-CMD ["serve", "-s", "build"]
+EXPOSE 3000
+CMD ["npm", "start"]

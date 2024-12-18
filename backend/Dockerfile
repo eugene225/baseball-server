@@ -1,21 +1,18 @@
-# Use a Node.js base image
 FROM node:16
 
 # Set the working directory
 WORKDIR /home/app/baseball-server/backend
 
-# Copy package.json and install dependencies
-COPY backend/package*.json ./
+# Copy only package.json and package-lock.json for installing dependencies
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
 # Copy the rest of the application
-COPY backend/ .
+COPY . . 
 
-# Build the application
+# Build and expose the application
 RUN npm run build
-
-# Expose the port the app will run on
 EXPOSE 3000
-
-# Command to run the application #
-CMD ["pm2", "start", "dist/main.js"]
+CMD ["npm", "start"]
