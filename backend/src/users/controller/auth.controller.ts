@@ -23,6 +23,7 @@ export class AuthController {
   }
 
   @Post('signin')
+  @UsePipes(ValidationPipe)
   async signIn(
     @Body() signInRequestDto: SignInRequestDto,
   ): Promise<SignInResponseDto> {

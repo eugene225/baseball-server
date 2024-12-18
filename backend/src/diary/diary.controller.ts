@@ -70,7 +70,7 @@ export class DiaryController {
   }
 
   @Get('/:diaryId')
-  @UseGuards(AuthGuard())
+  //@UseGuards(AuthGuard())
   async getAllEntries(
     @Param('diaryId') diaryId: number,
     @Request() req,

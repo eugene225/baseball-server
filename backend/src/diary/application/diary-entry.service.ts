@@ -7,7 +7,6 @@ import { CreateDiaryEntryRequestDto } from '../dto/create-diary-entry-request.dt
 import { User } from 'src/users/domain/user.entity';
 import { PlayerRepository } from 'src/player/domain/player.repository';
 import { DiaryEntryDto } from '../dto/diary-entry.dto';
-import { PlayerDto } from 'src/player/dto/player.dto';
 
 @Injectable()
 export class DiaryEntryService {
@@ -86,7 +85,7 @@ export class DiaryEntryService {
       DiaryEntryDto.create(
         diaryId,
         entry,
-        entry.lineUp.map((player) => PlayerDto.fromPlayer(player)),
+        entry.lineUp.sort((a, b) => a.order - b.order),
       ),
     );
 
