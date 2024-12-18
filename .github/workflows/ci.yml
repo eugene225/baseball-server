@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to AWS EC2
+    name: Deploy to AWS EC2 with Docker
     runs-on: ubuntu-latest
 
     steps:
@@ -18,29 +18,60 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}  # ECR 리전 지정
 
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
         with:
-          region: ${{ secrets.AWS_REGION }}
+          region: ${{ secrets.AWS_REGION }}  # ECR 리전 지정
 
-      - name: Build Docker image
+      # Backend Docker 이미지 빌드
+      - name: Build Backend Docker image
         run: |
-          docker build -t my-image .  # Dockerfile이 있는 경로에서 빌드
+          cd backend
+          docker build -t backend-image .
 
-      - name: Tag Docker image
+      # Frontend Docker 이미지 빌드
+      - name: Build Frontend Docker image
         run: |
-          docker tag my-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-repository:latest  # ECR 리포지토리 주소로 태그
+          cd frontend
+          docker build -t frontend-image .
 
-      - name: Push Docker image to Amazon ECR
+      # Backend Docker 이미지 태그 및 푸시
+      - name: Tag and Push Backend Docker image to ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-repository:latest  # 이미지 푸시
+          docker tag backend-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-backend-repository:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-backend-repository:latest
 
-      - name: Deploy to EC2 (Optional Step)
+      # Frontend Docker 이미지 태그 및 푸시
+      - name: Tag and Push Frontend Docker image to ECR
         run: |
-          ssh -i ${{ secrets.REMOTE_PRIVATE_KEY }} ec2-user@${{ secrets.REMOTE_IP }} << 'EOF'
-            cd /home/ec2-user/app/baseball-server
-            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-repository:latest
-            docker-compose up -d  # Docker Compose 사용 시
-          EOF
+          docker tag frontend-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-frontend-repository:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-frontend-repository:latest
+
+      - name: Execute remote SSH commands on EC2
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.REMOTE_PRIVATE_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          script: |
+            # EC2에 SSH로 접속하여 Docker 컨테이너 실행
+
+            # 1. 기존 Docker 컨테이너 중지 및 삭제 (있으면 삭제)
+            docker stop backend-container || true
+            docker rm backend-container || true
+            docker stop frontend-container || true
+            docker rm frontend-container || true
+
+            # 2. ECR에서 Backend, Frontend Docker 이미지 풀(pull)
+            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-backend-repository:latest
+            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-frontend-repository:latest
+
+            # 3. 새 컨테이너 실행 (Backend: 포트 5000, Frontend: 포트 80)
+            docker run -d --name backend-container -p 5000:5000 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-backend-repository:latest
+            docker run -d --name frontend-container -p 80:80 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-frontend-repository:latest
+
+            # 4. 필요 시 환경 변수 설정
+            echo "${{ secrets.ENV }}" > /home/ec2-user/app/baseball-server/backend/.env
