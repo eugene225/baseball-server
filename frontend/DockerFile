@@ -2,7 +2,7 @@
 FROM node:16
 
 # Set working directory for frontend
-WORKDIR /home/app/frontend
+WORKDIR /home/app/baseball-server/frontend
 
 # Copy package.json and install dependencies
 COPY frontend/package*.json ./

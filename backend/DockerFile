@@ -2,7 +2,7 @@
 FROM node:16
 
 # Set the working directory
-WORKDIR /home/app/backend
+WORKDIR /home/app/baseball-server/backend
 
 # Copy package.json and install dependencies
 COPY backend/package*.json ./
