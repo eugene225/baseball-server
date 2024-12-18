@@ -1,7 +1,7 @@
 import { Team } from 'src/global/enum/team.enum';
-import { PlayerDto } from 'src/player/dto/player.dto';
 import { DiaryEntry } from '../domain/diary-entry.entity';
 import { Weather } from '../domain/weather.enum';
+import { DiaryEntryLineUp } from '../domain/diary-entry-lineup.entity';
 
 export class DiaryEntryDto {
   constructor(
@@ -13,7 +13,7 @@ export class DiaryEntryDto {
     public readonly awayTeamScore: number,
     public readonly homeTeamScore: number,
     public readonly weather: Weather,
-    public readonly lineUp: PlayerDto[],
+    public readonly lineUp: DiaryEntryLineUp[],
     public readonly diaryId: number,
     public readonly authorNickname: string,
     public readonly createdAt?: Date,
@@ -23,7 +23,7 @@ export class DiaryEntryDto {
   static create(
     diaryId: number,
     diaryEntry: DiaryEntry,
-    lineUp: PlayerDto[],
+    lineUp: DiaryEntryLineUp[],
   ): DiaryEntryDto {
     return new DiaryEntryDto(
       diaryEntry.id,
