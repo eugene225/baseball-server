@@ -14,5 +14,5 @@ RUN npm run build
 # Expose the port for frontend
 EXPOSE 5000
 
-# Command to serve the app
+# Command to serve the app #
 CMD ["serve", "-s", "build"]
