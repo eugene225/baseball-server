@@ -41,13 +41,7 @@ jobs:
       - name: Build Frontend Docker image
         run: |
           cd frontend
-          docker build -t frontend-image .
-
-      # Frontend 빌드 후 정적 파일을 백엔드 public 디렉토리로 이동
-      - name: Move built frontend files to backend public directory
-        run: |
-          # 프론트엔드 빌드 후 생성된 정적 파일을 백엔드의 public 디렉토리로 이동
-          cp -r frontend/build/* backend/public/
+          npm run build
 
       # Frontend Docker 이미지 태그 및 푸시
       - name: Tag and Push Frontend Docker image to ECR
