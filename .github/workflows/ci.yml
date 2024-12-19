@@ -45,17 +45,22 @@ jobs:
           key: ${{ secrets.REMOTE_PRIVATE_KEY }}
           port: ${{ secrets.REMOTE_SSH_PORT }}
           script: |
-            # EC2에 SSH로 접속하여 Docker 컨테이너 실행
+                # EC2에 SSH로 접속하여 Docker 컨테이너 실행
 
-            # 1. 기존 Docker 컨테이너 중지 및 삭제 (있으면 삭제)
-            docker stop backend-container || true
-            docker rm backend-container || true
+                # 1. 기존 Docker 컨테이너 중지 및 삭제 (있으면 삭제)
+                docker stop backend-container || true
+                docker rm backend-container || true
 
-            # 2. ECR에서 Backend Docker 이미지 풀(pull)
-            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
+                # 2. ECR에서 Backend Docker 이미지 풀(pull)
+                docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
 
-            # 3. 새 백엔드 컨테이너 실행 (포트 3000)
-            docker run -d --name backend-container -p 3000:3000 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
+                # 3. .env 파일 생성
+                echo "${{ secrets.ENV }}" > /home/ec2-user/app/baseball-server/backend/.env
 
-            # 4. 필요 시 환경 변수 설정
-            echo "${{ secrets.ENV }}" > /home/ec2-user/app/baseball-server/backend/.env
+                # 4. 새 백엔드 컨테이너 실행 (포트 3000) 및 .env 파일 연결
+                docker run -d \
+                    --name backend-container \
+                    --env-file /home/ec2-user/app/baseball-server/backend/.env \
+                    -p 3000:3000 \
+                    ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
+
