@@ -1,4 +1,4 @@
-name: main branch auto ci process script
+name: Docker Based CI
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to AWS EC2 with Docker
+    name: Deploy to AWS EC2 with Docker Compose
     runs-on: ubuntu-latest
 
     steps:
@@ -18,24 +18,36 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}  # ECR 리전 지정
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
         with:
-          region: ${{ secrets.AWS_REGION }}  # ECR 리전 지정
+          region: ${{ secrets.AWS_REGION }}
 
       # Backend Docker 이미지 빌드
       - name: Build Backend Docker image
         run: |
           cd backend
-          docker build -t backend-image .
+          docker build -t backend-image -f Dockerfile.backend .
 
       # Backend Docker 이미지 태그 및 푸시
       - name: Tag and Push Backend Docker image to ECR
         run: |
           docker tag backend-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
+
+      # Frontend Docker 이미지 빌드
+      - name: Build Frontend Docker image
+        run: |
+          cd frontend
+          docker build -t frontend-image -f Dockerfile.frontend .
+
+      # Frontend Docker 이미지 태그 및 푸시
+      - name: Tag and Push Frontend Docker image to ECR
+        run: |
+          docker tag frontend-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
 
       - name: Execute remote SSH commands on EC2
         uses: appleboy/ssh-action@v0.1.6
@@ -45,22 +57,18 @@ jobs:
           key: ${{ secrets.REMOTE_PRIVATE_KEY }}
           port: ${{ secrets.REMOTE_SSH_PORT }}
           script: |
-                # EC2에 SSH로 접속하여 Docker 컨테이너 실행
+            # EC2에 SSH로 접속하여 Docker Compose로 컨테이너 실행
 
-                # 1. 기존 Docker 컨테이너 중지 및 삭제 (있으면 삭제)
-                docker stop backend-container || true
-                docker rm backend-container || true
+            # 1. 기존 Docker 컨테이너 중지 및 삭제 (있으면 삭제)
+            docker-compose -f /home/ec2-user/app/baseball-server/docker-compose.yml down || true
 
-                # 2. ECR에서 Backend Docker 이미지 풀(pull)
-                docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
+            # 2. ECR에서 Backend 및 Frontend Docker 이미지 풀(pull)
+            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
+            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
 
-                # 3. .env 파일 생성
-                echo "${{ secrets.ENV }}" > /home/ec2-user/app/baseball-server/backend/.env
+            # 3. .env 파일 생성
+            echo "${{ secrets.ENV }}" > /home/ec2-user/app/baseball-server/backend/.env
 
-                # 4. 새 백엔드 컨테이너 실행 (포트 3000) 및 .env 파일 연결
-                docker run -d \
-                    --name backend-container \
-                    --env-file /home/ec2-user/app/baseball-server/backend/.env \
-                    -p 3000:3000 \
-                    ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
-
+            # 4. Docker Compose로 서비스를 빌드하고 시작
+            cd /home/ec2-user/app/baseball-server
+            docker-compose -f docker-compose.yml up -d --build
