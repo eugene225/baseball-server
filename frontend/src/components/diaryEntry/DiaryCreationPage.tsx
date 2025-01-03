@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom'; // Import useNavigate
+import { useNavigate, useParams } from 'react-router-dom';
 import './DiaryCreationPage.css';
 import { Team, TEAMS } from '../../types/teams';
 import { fetchPlayersByTeam } from '../../api/player';
@@ -23,7 +23,7 @@ const DiaryCreationPage = () => {
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [playerSearchResults, setPlayerSearchResults] = useState<{ [key: string]: PlayerDto[] }>({});
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
   const { diaryId } = useParams<{ diaryId: string }>();
 
   const handleTeamChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -83,11 +83,10 @@ const DiaryCreationPage = () => {
     }
 
     const lineUpWithOrder: Array<{ order: number, playerId: number }> = lineup.map((player, index) => ({
-      order: index + 1, // 타순은 1부터 시작
+      order: index + 1,
       playerId: player.id,
     }));
 
-    // CreateDiaryEntryRequestDto 형태로 엔트리 생성
     const newEntry: CreateDiaryEntryRequestDto = {
       date: selectedDate,
       myTeam: selectedTeam,
@@ -103,7 +102,7 @@ const DiaryCreationPage = () => {
     try {
       await createDiaryEntry(Number(diaryId), newEntry, accessToken);
       console.log('Diary entry saved successfully');
-      navigate(`/diaries/${diaryId}`); // 일기장 페이지로 이동
+      navigate(`/diaries/${diaryId}`);
     } catch (error) {
       console.error('Failed to save diary entry:', error);
     }
@@ -221,4 +220,4 @@ const DiaryCreationPage = () => {
   );
 };
 
-export default DiaryCreationPage
+export default DiaryCreationPage;
