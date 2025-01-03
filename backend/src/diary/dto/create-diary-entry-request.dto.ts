@@ -9,5 +9,5 @@ export class CreateDiaryEntryRequestDto {
   awayTeamScore: number;
   homeTeamScore: number;
   weather: Weather;
-  lineUp: number[];
+  lineUp: { order: number; playerId: number }[];
 }

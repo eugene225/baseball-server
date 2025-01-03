@@ -7,6 +7,7 @@ import { CreateDiaryEntryRequestDto } from '../dto/create-diary-entry-request.dt
 import { User } from 'src/users/domain/user.entity';
 import { PlayerRepository } from 'src/player/domain/player.repository';
 import { DiaryEntryDto } from '../dto/diary-entry.dto';
+import { DiaryEntryLineUp } from '../domain/diary-entry-lineup.entity';
 
 @Injectable()
 export class DiaryEntryService {
@@ -40,15 +41,24 @@ export class DiaryEntryService {
       throw new Error(`DiaryNotFound id ${diaryId}`);
     }
 
+    // 선수 정보 조회
     const players = await Promise.all(
-      lineUp.map(async (playerId) => {
+      lineUp.map(async ({ order, playerId }) => {
         const player = await this.playerRepository.findOneBy({ id: playerId });
         if (!player) {
           throw new Error(`PlayerNotFound id ${playerId}`);
         }
-        return player;
+        return { order, player };
       }),
     );
+
+    // DiaryEntryLineUp 생성
+    const diaryEntryLineUps = players.map(({ order, player }) => {
+      const diaryEntryLineUp = new DiaryEntryLineUp();
+      diaryEntryLineUp.order = order;
+      diaryEntryLineUp.player = player;
+      return diaryEntryLineUp;
+    });
 
     const diaryEntry = this.diaryEntryRepository.create({
       title,
@@ -58,9 +68,9 @@ export class DiaryEntryService {
       awayTeamScore,
       homeTeamScore,
       weather,
-      lineUp: players,
       author,
       diary,
+      lineUp: diaryEntryLineUps,
     });
 
     return this.diaryEntryRepository.save(diaryEntry);
