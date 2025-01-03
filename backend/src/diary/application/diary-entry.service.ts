@@ -20,7 +20,7 @@ export class DiaryEntryService {
     @InjectRepository(PlayerRepository)
     private readonly playerRepository: PlayerRepository,
     @InjectRepository(DiaryEntryLineUpRepository)
-    private readonly diaryEntryLineUpRepository,
+    private readonly diaryEntryLineUpRepository: DiaryEntryLineUpRepository,
   ) {}
 
   async create(
@@ -44,6 +44,8 @@ export class DiaryEntryService {
       throw new Error(`DiaryNotFound id ${diaryId}`);
     }
 
+    console.log(`diary : ${diary}`);
+
     // 선수 정보 조회
     const players = await Promise.all(
       lineUp.map(async ({ order, playerId }) => {
@@ -57,43 +59,40 @@ export class DiaryEntryService {
 
     console.log(players);
 
-    return await this.diaryEntryRepository.manager.transaction(
-      async (transactionalEntityManager) => {
-        // DiaryEntry 생성
-        const diaryEntry = this.diaryEntryRepository.create({
-          title,
-          content,
-          myTeam,
-          opponent,
-          awayTeamScore,
-          homeTeamScore,
-          weather,
-          author,
-          diary,
-        });
+    // DiaryEntry 생성
+    const diaryEntry = this.diaryEntryRepository.create({
+      title,
+      content,
+      myTeam,
+      opponent,
+      awayTeamScore,
+      homeTeamScore,
+      weather,
+      author,
+      diary,
+    });
 
-        // DiaryEntry 저장
-        const savedDiaryEntry =
-          await transactionalEntityManager.save(diaryEntry);
+    // DiaryEntry 저장
+    const savedDiaryEntry = await this.diaryEntryRepository.save(diaryEntry);
 
-        // DiaryEntryLineUp 생성
-        const diaryEntryLineUps = players.map(({ order, player }) => {
-          const diaryEntryLineUp = new DiaryEntryLineUp();
-          diaryEntryLineUp.orderNum = order;
-          diaryEntryLineUp.diaryEntry = savedDiaryEntry;
-          diaryEntryLineUp.player = player;
-          return diaryEntryLineUp;
-        });
+    // DiaryEntryLineUp 생성
+    const diaryEntryLineUps = players.map(({ order, player }) => {
+      const diaryEntryLineUp = new DiaryEntryLineUp();
+      diaryEntryLineUp.orderNum = order;
+      diaryEntryLineUp.diaryEntry = savedDiaryEntry;
+      diaryEntryLineUp.player = player;
+      return diaryEntryLineUp;
+    });
 
-        // DiaryEntryLineUp 저장
-        await transactionalEntityManager.save(diaryEntryLineUps);
+    console.log(`diaryEntryLineUp : ${diaryEntryLineUps}`);
 
-        // DiaryEntry에 lineUp 연결
-        savedDiaryEntry.lineUp = diaryEntryLineUps;
+    // DiaryEntryLineUp 저장
+    await this.diaryEntryLineUpRepository.save(diaryEntryLineUps);
 
-        return savedDiaryEntry;
-      },
-    );
+    // DiaryEntry에 lineUp 연결
+    savedDiaryEntry.lineUp = diaryEntryLineUps;
+
+    return savedDiaryEntry;
   }
 
   async getAllEntriesBy(diaryId: number, user: User): Promise<DiaryEntryDto[]> {

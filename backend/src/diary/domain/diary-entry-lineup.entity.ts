@@ -7,7 +7,7 @@ export class DiaryEntryLineUp {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ name: 'orderNum' })
   orderNum: number;
 
   @ManyToOne(() => DiaryEntry, (diaryEntry) => diaryEntry.lineUp)
