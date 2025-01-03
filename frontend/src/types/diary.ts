@@ -32,7 +32,7 @@ export interface CreateDiaryEntryRequestDto {
   weather: Weather;
   title: string;
   content: string;
-  lineUp: number[]; // 선수 ID 리스트
+  lineUp: {order: number, playerId: number}[];
 }
 
 export interface DiaryEntry {

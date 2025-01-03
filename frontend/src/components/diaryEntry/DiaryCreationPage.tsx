@@ -70,7 +70,7 @@ const DiaryCreationPage = () => {
     }
   };
 
-  const handleSaveEntry = async () => {
+  const handleSaveEntry = async (): Promise<void> => {
     const user = localStorage.getItem('user');
     if (!user) {
       throw new Error('User Not Found : Local Storage');
@@ -82,8 +82,12 @@ const DiaryCreationPage = () => {
       return;
     }
 
-    const lineUpIds = lineup.map(player => player.id);
+    const lineUpWithOrder: Array<{ order: number, playerId: number }> = lineup.map((player, index) => ({
+      order: index + 1, // 타순은 1부터 시작
+      playerId: player.id,
+    }));
 
+    // CreateDiaryEntryRequestDto 형태로 엔트리 생성
     const newEntry: CreateDiaryEntryRequestDto = {
       date: selectedDate,
       myTeam: selectedTeam,
@@ -93,13 +97,13 @@ const DiaryCreationPage = () => {
       weather: weather as Weather,
       title,
       content: entry,
-      lineUp: lineUpIds,
+      lineUp: lineUpWithOrder,
     };
 
     try {
       await createDiaryEntry(Number(diaryId), newEntry, accessToken);
       console.log('Diary entry saved successfully');
-      navigate(`/diaries/${diaryId}}`); // Navigate to the diary list page after saving
+      navigate(`/diaries/${diaryId}`); // 일기장 페이지로 이동
     } catch (error) {
       console.error('Failed to save diary entry:', error);
     }
