@@ -31,7 +31,7 @@ jobs:
           cd frontend
           npm install
           npm run build
-          docker build -t frontend-image .
+          docker build -t frontend-image:latest .
       
       # Frontend Docker 이미지 태그 및 푸시
       - name: Tag and Push Frontend Docker image to ECR
@@ -43,7 +43,7 @@ jobs:
       - name: Build Backend Docker image
         run: |
           cd backend
-          docker build -t backend-image .
+          docker build -t backend-image:latest .
 
       # Backend Docker 이미지 태그 및 푸시
       - name: Tag and Push Backend Docker image to ECR
