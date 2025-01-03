@@ -27,7 +27,7 @@ export class DiaryEntryService {
     createDiaryEntryRequestDto: CreateDiaryEntryRequestDto,
     author: User,
     diaryId: number,
-  ): Promise<DiaryEntry> {
+  ): Promise<DiaryEntryDto> {
     const {
       title,
       content,
@@ -39,27 +39,24 @@ export class DiaryEntryService {
       lineUp,
     } = createDiaryEntryRequestDto;
 
+    // 다이어리 조회
     const diary = await this.diaryRepository.findOneBy({ id: diaryId });
     if (!diary) {
       throw new Error(`DiaryNotFound id ${diaryId}`);
     }
 
-    console.log(`diary : ${diary}`);
-
     // 선수 정보 조회
     const players = await Promise.all(
-      lineUp.map(async ({ order, playerId }) => {
+      lineUp.map(async ({ orderNum, playerId }) => {
         const player = await this.playerRepository.findOneBy({ id: playerId });
         if (!player) {
           throw new Error(`PlayerNotFound id ${playerId}`);
         }
-        return { order, player };
+        return { orderNum, player };
       }),
     );
 
-    console.log(players);
-
-    // DiaryEntry 생성
+    // DiaryEntry 생성 및 저장
     const diaryEntry = this.diaryEntryRepository.create({
       title,
       content,
@@ -71,28 +68,20 @@ export class DiaryEntryService {
       author,
       diary,
     });
-
-    // DiaryEntry 저장
     const savedDiaryEntry = await this.diaryEntryRepository.save(diaryEntry);
 
-    // DiaryEntryLineUp 생성
-    const diaryEntryLineUps = players.map(({ order, player }) => {
+    // DiaryEntryLineUp 생성 및 저장
+    const diaryEntryLineUps = players.map(({ orderNum, player }) => {
       const diaryEntryLineUp = new DiaryEntryLineUp();
-      diaryEntryLineUp.orderNum = order;
-      diaryEntryLineUp.diaryEntry = savedDiaryEntry;
+      diaryEntryLineUp.orderNum = orderNum;
+      diaryEntryLineUp.diaryEntry = savedDiaryEntry; // 순환 참조의 원인
       diaryEntryLineUp.player = player;
       return diaryEntryLineUp;
     });
-
-    console.log(`diaryEntryLineUp : ${diaryEntryLineUps}`);
-
-    // DiaryEntryLineUp 저장
     await this.diaryEntryLineUpRepository.save(diaryEntryLineUps);
 
-    // DiaryEntry에 lineUp 연결
-    savedDiaryEntry.lineUp = diaryEntryLineUps;
-
-    return savedDiaryEntry;
+    // DTO 생성 및 반환
+    return DiaryEntryDto.create(diaryId, savedDiaryEntry, diaryEntryLineUps);
   }
 
   async getAllEntriesBy(diaryId: number, user: User): Promise<DiaryEntryDto[]> {
