@@ -57,29 +57,43 @@ export class DiaryEntryService {
 
     console.log(players);
 
-    // DiaryEntryLineUp 생성
-    const diaryEntryLineUps = players.map(({ order, player }) => {
-      const diaryEntryLineUp = new DiaryEntryLineUp();
-      diaryEntryLineUp.order = order;
-      diaryEntryLineUp.player = player;
-      return diaryEntryLineUp;
-    });
-    await this.diaryEntryLineUpRepository.save(diaryEntryLineUps);
+    return await this.diaryEntryRepository.manager.transaction(
+      async (transactionalEntityManager) => {
+        // DiaryEntry 생성
+        const diaryEntry = this.diaryEntryRepository.create({
+          title,
+          content,
+          myTeam,
+          opponent,
+          awayTeamScore,
+          homeTeamScore,
+          weather,
+          author,
+          diary,
+        });
 
-    const diaryEntry = this.diaryEntryRepository.create({
-      title,
-      content,
-      myTeam,
-      opponent,
-      awayTeamScore,
-      homeTeamScore,
-      weather,
-      author,
-      diary,
-      lineUp: diaryEntryLineUps,
-    });
+        // DiaryEntry 저장
+        const savedDiaryEntry =
+          await transactionalEntityManager.save(diaryEntry);
 
-    return this.diaryEntryRepository.save(diaryEntry);
+        // DiaryEntryLineUp 생성
+        const diaryEntryLineUps = players.map(({ order, player }) => {
+          const diaryEntryLineUp = new DiaryEntryLineUp();
+          diaryEntryLineUp.orderNum = order;
+          diaryEntryLineUp.diaryEntry = savedDiaryEntry;
+          diaryEntryLineUp.player = player;
+          return diaryEntryLineUp;
+        });
+
+        // DiaryEntryLineUp 저장
+        await transactionalEntityManager.save(diaryEntryLineUps);
+
+        // DiaryEntry에 lineUp 연결
+        savedDiaryEntry.lineUp = diaryEntryLineUps;
+
+        return savedDiaryEntry;
+      },
+    );
   }
 
   async getAllEntriesBy(diaryId: number, user: User): Promise<DiaryEntryDto[]> {
@@ -101,7 +115,7 @@ export class DiaryEntryService {
       DiaryEntryDto.create(
         diaryId,
         entry,
-        entry.lineUp.sort((a, b) => a.order - b.order),
+        entry.lineUp.sort((a, b) => a.orderNum - b.orderNum),
       ),
     );
 

@@ -8,7 +8,7 @@ export class DiaryEntryLineUp {
   id: number;
 
   @Column()
-  order: number;
+  orderNum: number;
 
   @ManyToOne(() => DiaryEntry, (diaryEntry) => diaryEntry.lineUp)
   diaryEntry: DiaryEntry;
