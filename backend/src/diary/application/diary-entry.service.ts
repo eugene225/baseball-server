@@ -8,6 +8,7 @@ import { User } from 'src/users/domain/user.entity';
 import { PlayerRepository } from 'src/player/domain/player.repository';
 import { DiaryEntryDto } from '../dto/diary-entry.dto';
 import { DiaryEntryLineUp } from '../domain/diary-entry-lineup.entity';
+import { DiaryEntryLineUpRepository } from '../domain/diary-entry-lineup.repository';
 
 @Injectable()
 export class DiaryEntryService {
@@ -18,6 +19,8 @@ export class DiaryEntryService {
     private readonly diaryRepository: DiaryRepository,
     @InjectRepository(PlayerRepository)
     private readonly playerRepository: PlayerRepository,
+    @InjectRepository(DiaryEntryLineUpRepository)
+    private readonly diaryEntryLineUpRepository,
   ) {}
 
   async create(
@@ -59,6 +62,8 @@ export class DiaryEntryService {
       diaryEntryLineUp.player = player;
       return diaryEntryLineUp;
     });
+
+    await this.diaryEntryLineUpRepository.save(diaryEntryLineUps);
 
     const diaryEntry = this.diaryEntryRepository.create({
       title,
