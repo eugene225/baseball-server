@@ -82,8 +82,8 @@ const DiaryCreationPage = () => {
       return;
     }
 
-    const lineUpWithOrder: Array<{ order: number, playerId: number }> = lineup.map((player, index) => ({
-      order: index,
+    const lineUpWithOrder: Array<{ orderNum: number, playerId: number }> = lineup.map((player, index) => ({
+      orderNum: index,
       playerId: player.id,
     }));
 
