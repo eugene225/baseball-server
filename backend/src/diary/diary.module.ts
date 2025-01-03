@@ -12,10 +12,12 @@ import { DiaryEntryRepository } from './domain/diary-entry.repository';
 import { DiaryEntryService } from './application/diary-entry.service';
 import { PlayerRepository } from 'src/player/domain/player.repository';
 import { Player } from 'src/player/domain/player.entity';
+import { DiaryEntryLineUp } from './domain/diary-entry-lineup.entity';
+import { DiaryEntryLineUpRepository } from './domain/diary-entry-lineup.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Diary, DiaryEntry, Player]),
+    TypeOrmModule.forFeature([Diary, DiaryEntry, Player, DiaryEntryLineUp]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [DiaryController],
@@ -27,6 +29,7 @@ import { Player } from 'src/player/domain/player.entity';
     DiaryEntryRepository,
     DiaryEntryService,
     PlayerRepository,
+    DiaryEntryLineUpRepository,
   ],
 })
 export class DiaryModule {}

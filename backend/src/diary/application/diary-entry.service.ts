@@ -55,6 +55,8 @@ export class DiaryEntryService {
       }),
     );
 
+    console.log(players);
+
     // DiaryEntryLineUp 생성
     const diaryEntryLineUps = players.map(({ order, player }) => {
       const diaryEntryLineUp = new DiaryEntryLineUp();
@@ -62,7 +64,6 @@ export class DiaryEntryService {
       diaryEntryLineUp.player = player;
       return diaryEntryLineUp;
     });
-
     await this.diaryEntryLineUpRepository.save(diaryEntryLineUps);
 
     const diaryEntry = this.diaryEntryRepository.create({
