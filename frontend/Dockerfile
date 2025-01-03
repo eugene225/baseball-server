@@ -14,5 +14,5 @@ COPY . .
 
 # Build and expose the application
 RUN npm run build
-EXPOSE 3000
+EXPOSE 5000
 CMD ["npm", "start"]
