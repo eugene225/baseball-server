@@ -32,7 +32,7 @@ export interface CreateDiaryEntryRequestDto {
   weather: Weather;
   title: string;
   content: string;
-  lineUp: {order: number, playerId: number}[];
+  lineUp: {orderNum: number, playerId: number}[];
 }
 
 export interface DiaryEntry {
