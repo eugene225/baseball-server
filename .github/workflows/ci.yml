@@ -67,6 +67,10 @@ jobs:
             docker stop frontend-container || true
             docker rm frontend-container || true
 
+            # 기존 로컬 캐시 이미지 삭제 (최신 이미지를 강제적으로 가져오기 위해)
+            docker rmi -f ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest || true
+            docker rmi -f ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest || true
+
             # ECR에서 Backend Docker 이미지 풀(pull)
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
 
@@ -88,3 +92,4 @@ jobs:
                 --name frontend-container \
                 -p 5000:5000 \
                 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
+
