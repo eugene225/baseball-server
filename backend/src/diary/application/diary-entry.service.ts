@@ -109,18 +109,17 @@ export class DiaryEntryService {
       throw new Error('This Diary is Private !');
     }
 
-    const entries = await this.diaryEntryRepository.find({
-      where: { diary: { id: diary.id } },
-      relations: ['author', 'lineUp'],
-      order: { createdAt: 'DESC' },
-    });
+    const entries = await this.diaryEntryRepository
+      .createQueryBuilder('diaryEntry')
+      .leftJoinAndSelect('diaryEntry.lineUp', 'lineUp')
+      .leftJoinAndSelect('lineUp.player', 'player')
+      .leftJoinAndSelect('diaryEntry.author', 'author')
+      .where('diaryEntry.diaryId = :diaryId', { diaryId: diary.id })
+      .orderBy('diaryEntry.createdAt', 'DESC')
+      .getMany();
 
     const entriesDto = entries.map((entry) =>
-      DiaryEntryDto.create(
-        diaryId,
-        entry,
-        entry.lineUp.sort((a, b) => a.orderNum - b.orderNum),
-      ),
+      DiaryEntryDto.create(diaryId, entry, entry.lineUp),
     );
 
     return entriesDto;
