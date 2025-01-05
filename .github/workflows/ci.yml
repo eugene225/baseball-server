@@ -64,6 +64,9 @@ jobs:
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
             docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
+            # 모든 중지된 컨테이너, 사용되지 않는 이미지, 네트워크, 볼륨을 강제로 정리
+            docker system prune -f --volumes
+
             # 기존 Docker 컨테이너 중지 및 삭제
             docker stop backend-container || true
             docker rm backend-container || true
