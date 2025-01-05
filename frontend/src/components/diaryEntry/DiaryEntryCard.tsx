@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import html2canvas from 'html2canvas';
 import './DiaryEntryCard.css';
-import { DiaryEntry as DiaryEntryType } from '../../types/diary';
+import { DiaryEntry as DiaryEntryType, PlayerDto } from '../../types/diary';
 
 interface DiaryEntryProps {
   diaryEntry: DiaryEntryType;
@@ -52,7 +52,7 @@ const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
           <h3>선발 라인업</h3>
           <div className="starting-pitcher-info">
             <h4>
-              선발 투수: {diaryEntry.lineUp[0] ? diaryEntry.lineUp[0].name : '선발 투수 정보가 없습니다.'}
+              선발 투수: {diaryEntry.lineUp[0] ? diaryEntry.lineUp[0].player.name : '선발 투수 정보가 없습니다.'}
             </h4>
           </div>
           <table>
@@ -66,7 +66,7 @@ const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
               {diaryEntry.lineUp.slice(1).map((player, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{player.name}</td>
+                  <td>{player.player.name}</td>
                 </tr>
               ))}
             </tbody>

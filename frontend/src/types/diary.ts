@@ -35,6 +35,11 @@ export interface CreateDiaryEntryRequestDto {
   lineUp: {orderNum: number, playerId: number}[];
 }
 
+export interface LineUpPlayerDto {
+  orderNum: number,
+  player: PlayerDto,
+}
+
 export interface DiaryEntry {
   id: number;
   title: string;
@@ -44,7 +49,7 @@ export interface DiaryEntry {
   awayTeamScore: number;
   homeTeamScore: number;
   weather: string;
-  lineUp: PlayerDto[];
+  lineUp: LineUpPlayerDto[];
   diaryId: number;
   authorNickname: string;
   createdAt: Date;
