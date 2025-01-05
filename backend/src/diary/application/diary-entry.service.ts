@@ -9,6 +9,7 @@ import { PlayerRepository } from 'src/player/domain/player.repository';
 import { DiaryEntryDto } from '../dto/diary-entry.dto';
 import { DiaryEntryLineUp } from '../domain/diary-entry-lineup.entity';
 import { DiaryEntryLineUpRepository } from '../domain/diary-entry-lineup.repository';
+import { In } from 'typeorm';
 
 @Injectable()
 export class DiaryEntryService {
@@ -40,21 +41,34 @@ export class DiaryEntryService {
     } = createDiaryEntryRequestDto;
 
     // 다이어리 조회
-    const diary = await this.diaryRepository.findOneBy({ id: diaryId });
+    const diary = await this.diaryRepository.findOne({
+      where: { id: diaryId },
+    });
     if (!diary) {
       throw new Error(`DiaryNotFound id ${diaryId}`);
     }
 
-    // 선수 정보 조회
-    const players = await Promise.all(
-      lineUp.map(async ({ orderNum, playerId }) => {
-        const player = await this.playerRepository.findOneBy({ id: playerId });
-        if (!player) {
-          throw new Error(`PlayerNotFound id ${playerId}`);
-        }
-        return { orderNum, player };
-      }),
-    );
+    // 선수 정보 조회 (선수 정보를 한 번에 가져오기)
+    const playerIds = lineUp.map(({ playerId }) => playerId);
+    const players = await this.playerRepository.find({
+      where: {
+        id: In(playerIds),
+      },
+    });
+
+    // 선수 정보가 없으면 에러 처리
+    if (players.length !== playerIds.length) {
+      const missingPlayerIds = playerIds.filter(
+        (id) => !players.some((player) => player.id === id),
+      );
+      throw new Error(`Player(s) not found: ${missingPlayerIds.join(', ')}`);
+    }
+
+    // Player와 orderNum 결합
+    const playersWithOrder = lineUp.map(({ orderNum, playerId }) => ({
+      orderNum,
+      player: players.find((player) => player.id === playerId),
+    }));
 
     // DiaryEntry 생성 및 저장
     const diaryEntry = this.diaryEntryRepository.create({
@@ -70,14 +84,16 @@ export class DiaryEntryService {
     });
     const savedDiaryEntry = await this.diaryEntryRepository.save(diaryEntry);
 
-    // DiaryEntryLineUp 생성 및 저장
-    const diaryEntryLineUps = players.map(({ orderNum, player }) => {
+    // DiaryEntryLineUp 생성
+    const diaryEntryLineUps = playersWithOrder.map(({ orderNum, player }) => {
       const diaryEntryLineUp = new DiaryEntryLineUp();
       diaryEntryLineUp.orderNum = orderNum;
-      diaryEntryLineUp.diaryEntry = savedDiaryEntry; // 순환 참조의 원인
+      diaryEntryLineUp.diaryEntry = savedDiaryEntry; // 순환 참조 방지
       diaryEntryLineUp.player = player;
       return diaryEntryLineUp;
     });
+
+    // DiaryEntryLineUp 저장
     await this.diaryEntryLineUpRepository.save(diaryEntryLineUps);
 
     // DTO 생성 및 반환

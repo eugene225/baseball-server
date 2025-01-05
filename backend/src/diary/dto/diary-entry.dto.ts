@@ -2,6 +2,7 @@ import { Team } from 'src/global/enum/team.enum';
 import { DiaryEntry } from '../domain/diary-entry.entity';
 import { Weather } from '../domain/weather.enum';
 import { DiaryEntryLineUp } from '../domain/diary-entry-lineup.entity';
+import { DiaryEntryLineUpDto } from './diary-entry-lineup.dto';
 
 export class DiaryEntryDto {
   constructor(
@@ -13,7 +14,7 @@ export class DiaryEntryDto {
     public readonly awayTeamScore: number,
     public readonly homeTeamScore: number,
     public readonly weather: Weather,
-    public readonly lineUp: DiaryEntryLineUp[],
+    public readonly lineUp: DiaryEntryLineUpDto[],
     public readonly diaryId: number,
     public readonly authorNickname: string,
     public readonly createdAt?: Date,
@@ -25,6 +26,9 @@ export class DiaryEntryDto {
     diaryEntry: DiaryEntry,
     lineUp: DiaryEntryLineUp[],
   ): DiaryEntryDto {
+    const diaryEntryLineUpDto = lineUp
+      .map((entryLineUp) => DiaryEntryLineUpDto.create(entryLineUp))
+      .sort((a, b) => a.orderNum - b.orderNum);
     return new DiaryEntryDto(
       diaryEntry.id,
       diaryEntry.title,
@@ -34,7 +38,7 @@ export class DiaryEntryDto {
       diaryEntry.awayTeamScore,
       diaryEntry.homeTeamScore,
       diaryEntry.weather,
-      lineUp,
+      diaryEntryLineUpDto,
       diaryId,
       diaryEntry.author.nickname,
       diaryEntry.createdAt,
