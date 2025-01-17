@@ -64,13 +64,21 @@ const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
               </tr>
             </thead>
             <tbody>
-              {diaryEntry.lineUp.slice(1).map((player, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{player.player.name}</td>
-                </tr>
-              ))}
+              {(() => {
+                const rows = [];
+                for (let i = 1; i <= 9; i++) {
+                  const player = diaryEntry.lineUp[i];
+                  rows.push(
+                    <tr key={i}>
+                      <td>{i}</td>
+                      <td>{player?.player.name || '선수 이름 없음'}</td>
+                    </tr>
+                  );
+                }
+                return rows;
+              })()}
             </tbody>
+
           </table>
         </div>
       </div>
