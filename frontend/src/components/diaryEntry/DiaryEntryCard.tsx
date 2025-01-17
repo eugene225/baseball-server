@@ -8,7 +8,6 @@ interface DiaryEntryProps {
 }
 
 const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
-  console.log(...diaryEntry.lineUp);
   const entryRef = useRef<HTMLDivElement>(null); // 각 일기장 카드를 참조할 ref
 
   const handleSaveAsImage = () => {
@@ -53,7 +52,7 @@ const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
           <h3>선발 라인업</h3>
           <div className="starting-pitcher-info">
             <h4>
-              선발 투수: {diaryEntry.lineUp[0] && diaryEntry.lineUp[0].player ? diaryEntry.lineUp[0].player.name : '선발 투수 정보가 없습니다.'}
+              선발 투수: {diaryEntry.lineUp[0]?.playerName || '선발 투수 정보가 없습니다.'}
             </h4>
           </div>
           <table>
@@ -61,24 +60,18 @@ const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
               <tr>
                 <th>타자 번호</th>
                 <th>선수 이름</th>
+                <th>포지션</th>
               </tr>
             </thead>
             <tbody>
-              {(() => {
-                const rows = [];
-                for (let i = 1; i <= 9; i++) {
-                  const player = diaryEntry.lineUp[i];
-                  rows.push(
-                    <tr key={i}>
-                      <td>{i}</td>
-                      <td>{player?.player.name || '선수 이름 없음'}</td>
-                    </tr>
-                  );
-                }
-                return rows;
-              })()}
+              {diaryEntry.lineUp.slice(1).map((lineUpPlayer, index) => (
+                <tr key={index}>
+                  <td>{lineUpPlayer.orderNum}</td>
+                  <td>{lineUpPlayer.playerName || '선수 이름 없음'}</td>
+                  <td>{lineUpPlayer.playerPosition}</td>
+                </tr>
+              ))}
             </tbody>
-
           </table>
         </div>
       </div>

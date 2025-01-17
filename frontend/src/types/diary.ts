@@ -1,4 +1,5 @@
 import { Weather } from './global';
+import { Position } from '../../../backend/src/global/enum/position.enum';
 // 일기장 생성 데이터 타입 정의
 export interface CreateDiaryData {
     title: string;
@@ -37,7 +38,9 @@ export interface CreateDiaryEntryRequestDto {
 
 export interface LineUpPlayerDto {
   orderNum: number,
-  player: PlayerDto,
+  playerId: number,
+  playerName: string,
+  playerPosition: Position,
 }
 
 export interface DiaryEntry {

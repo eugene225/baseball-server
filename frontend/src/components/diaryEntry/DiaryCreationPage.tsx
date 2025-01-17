@@ -5,7 +5,7 @@ import { Team, TEAMS } from '../../types/teams';
 import { fetchPlayersByTeam } from '../../api/player';
 import { CreateDiaryEntryRequestDto, PlayerDto } from '../../types/diary';
 import { Weather } from '../../types/global';
-import { createDiaryEntry } from '../../api/diary';
+import { createDiaryEntry, fetchPublicDiaries } from '../../api/diary';
 
 const DiaryCreationPage = () => {
   const [selectedDate, setSelectedDate] = useState<string>('');
@@ -102,9 +102,15 @@ const DiaryCreationPage = () => {
     try {
       await createDiaryEntry(Number(diaryId), newEntry, accessToken);
       console.log('Diary entry saved successfully');
-      navigate(`/diaries/${diaryId}`);
+
+      const publicDiaries = await fetchPublicDiaries();
+      if (publicDiaries.length > 0) {
+        navigate(`/diary-list/${diaryId}`);
+      } else {
+        console.error('No public diaries found');
+      }
     } catch (error) {
-      console.error('Failed to save diary entry:', error);
+      console.error('Failed to save diary entry or fetch public diaries:', error);
     }
   };
 

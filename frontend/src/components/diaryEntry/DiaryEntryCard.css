@@ -61,12 +61,6 @@
     color: #555;
 }
 
-.diary-entry-card-right h3 {
-    margin: 0 0 10px;
-    font-size: 14px;
-    color: #333;
-}
-
 .diary-entry-card-right table {
     width: 100%;
     border-collapse: collapse;
@@ -81,6 +75,18 @@
 
 .diary-entry-card-right th {
     background-color: #f4f4f4;
+}
+
+.diary-entry-card-right th:nth-child(1), 
+.diary-entry-card-right td:nth-child(1) {
+    width: 20%; /* 타순 열에 넓은 공간을 할당 */
+}
+
+.diary-entry-card-right th:nth-child(2), 
+.diary-entry-card-right td:nth-child(2),
+.diary-entry-card-right th:nth-child(3), 
+.diary-entry-card-right td:nth-child(3) {
+    width: 40%; /* 다른 두 열은 같은 크기 */
 }
 
 .diary-entry-card::before, .diary-entry-card::after {
