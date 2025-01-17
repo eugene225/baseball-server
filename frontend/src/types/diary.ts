@@ -1,5 +1,6 @@
 import { Weather } from './global';
-import { Position } from '../../../backend/src/global/enum/position.enum';
+import { Position } from './global';
+
 // 일기장 생성 데이터 타입 정의
 export interface CreateDiaryData {
     title: string;
