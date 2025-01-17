@@ -1,13 +1,14 @@
 import React, { useRef } from 'react';
 import html2canvas from 'html2canvas';
 import './DiaryEntryCard.css';
-import { DiaryEntry as DiaryEntryType, PlayerDto } from '../../types/diary';
+import { DiaryEntry } from '../../types/diary';
 
 interface DiaryEntryProps {
-  diaryEntry: DiaryEntryType;
+  diaryEntry: DiaryEntry;
 }
 
 const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
+  console.log(...diaryEntry.lineUp);
   const entryRef = useRef<HTMLDivElement>(null); // 각 일기장 카드를 참조할 ref
 
   const handleSaveAsImage = () => {
@@ -52,7 +53,7 @@ const DiaryEntryCard: React.FC<DiaryEntryProps> = ({ diaryEntry }) => {
           <h3>선발 라인업</h3>
           <div className="starting-pitcher-info">
             <h4>
-              선발 투수: {diaryEntry.lineUp[0] ? diaryEntry.lineUp[0].player.name : '선발 투수 정보가 없습니다.'}
+              선발 투수: {diaryEntry.lineUp[0] && diaryEntry.lineUp[0].player ? diaryEntry.lineUp[0].player.name : '선발 투수 정보가 없습니다.'}
             </h4>
           </div>
           <table>
