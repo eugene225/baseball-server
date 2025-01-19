@@ -1,6 +1,6 @@
-import { Position } from 'src/global/enum/position.enum';
-import { Team } from 'src/global/enum/team.enum';
-import { Player } from '../domain/player.entity';
+import { Position } from '../../global/enum/position.enum.js';
+import { Team } from '../../global/enum/team.enum.js';
+import { Player } from '../domain/player.entity.js';
 
 export class PlayerDto {
   constructor(

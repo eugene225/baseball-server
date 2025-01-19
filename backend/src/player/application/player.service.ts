@@ -1,9 +1,9 @@
+import { Team } from '../../global/enum/team.enum.js';
+import { Position } from '../../global/enum/position.enum.js';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PlayerRepository } from '../domain/player.repository';
+import { PlayerRepository } from '../domain/player.repository.js';
 import { Injectable } from '@nestjs/common';
-import { Team } from 'src/global/enum/team.enum';
-import { PlayerDto } from '../dto/player.dto';
-import { Position } from 'src/global/enum/position.enum';
+import { PlayerDto } from '../dto/player.dto.js';
 
 @Injectable()
 export class PlayerService {

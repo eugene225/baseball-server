@@ -1,8 +1,8 @@
 import { DataSource, Repository } from 'typeorm';
-import { Diary } from './diary.entity';
-import { CreateDiaryRequestDto } from '../dto/create-diary-request.dto';
-import { CustomRepository } from 'src/global/decorator/custom-repository.decorator';
-import { User } from 'src/users/domain/user.entity';
+import { Diary } from './diary.entity.js';
+import { CreateDiaryRequestDto } from '../dto/create-diary-request.dto.js';
+import { CustomRepository } from '../../global/decorator/custom-repository.decorator.js';
+import { User } from '../../users/domain/user.entity.js';
 
 @CustomRepository(Diary)
 export class DiaryRepository extends Repository<Diary> {

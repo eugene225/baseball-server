@@ -1,11 +1,11 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { DiaryRepository } from '../domain/diary.repository';
-import { CreateDiaryRequestDto } from '../dto/create-diary-request.dto';
-import { UserService } from 'src/users/application/user.service';
-import { User } from 'src/users/domain/user.entity';
-import { DiaryDto } from '../dto/diary.dto';
+import { DiaryRepository } from '../domain/diary.repository.js';
+import { CreateDiaryRequestDto } from '../dto/create-diary-request.dto.js';
+import { UserService } from '../../users/application/user.service.js';
+import { User } from '../../users/domain/user.entity.js';
+import { DiaryDto } from '../dto/diary.dto.js';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { DiaryEntryService } from './diary-entry.service';
+import { DiaryEntryService } from './diary-entry.service.js';
 
 @Injectable()
 export class DiaryService {

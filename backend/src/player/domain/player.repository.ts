@@ -1,6 +1,6 @@
 import { DataSource, Repository } from 'typeorm';
-import { Player } from './player.entity';
-import { CustomRepository } from 'src/global/decorator/custom-repository.decorator';
+import { Player } from './player.entity.js';
+import { CustomRepository } from '../../global/decorator/custom-repository.decorator.js';
 
 @CustomRepository(Player)
 export class PlayerRepository extends Repository<Player> {

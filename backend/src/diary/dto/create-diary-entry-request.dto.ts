@@ -1,5 +1,5 @@
-import { Team } from 'src/global/enum/team.enum';
-import { Weather } from '../domain/weather.enum';
+import { Team } from '../../global/enum/team.enum.js';
+import { Weather } from '../domain/weather.enum.js';
 
 export class CreateDiaryEntryRequestDto {
   title: string;

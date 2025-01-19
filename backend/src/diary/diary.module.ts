@@ -1,19 +1,19 @@
 import { Module } from '@nestjs/common';
-import { DiaryController } from './diary.controller';
+import { DiaryController } from './diary.controller.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Diary } from './domain/diary.entity';
-import { DiaryRepository } from './domain/diary.repository';
-import { DiaryService } from './application/diary.service';
-import { UserService } from 'src/users/application/user.service';
-import { UserRepository } from 'src/users/domain/user.repository';
+import { Diary } from './domain/diary.entity.js';
+import { DiaryRepository } from './domain/diary.repository.js';
+import { DiaryService } from './application/diary.service.js';
+import { UserService } from '../users/application/user.service.js';
+import { UserRepository } from '../users/domain/user.repository.js';
 import { PassportModule } from '@nestjs/passport';
-import { DiaryEntry } from './domain/diary-entry.entity';
-import { DiaryEntryRepository } from './domain/diary-entry.repository';
-import { DiaryEntryService } from './application/diary-entry.service';
-import { PlayerRepository } from 'src/player/domain/player.repository';
-import { Player } from 'src/player/domain/player.entity';
-import { DiaryEntryLineUp } from './domain/diary-entry-lineup.entity';
-import { DiaryEntryLineUpRepository } from './domain/diary-entry-lineup.repository';
+import { DiaryEntry } from './domain/diary-entry.entity.js';
+import { DiaryEntryRepository } from './domain/diary-entry.repository.js';
+import { DiaryEntryService } from './application/diary-entry.service.js';
+import { PlayerRepository } from '../player/domain/player.repository.js';
+import { Player } from '../player/domain/player.entity.js';
+import { DiaryEntryLineUp } from './domain/diary-entry-lineup.entity.js';
+import { DiaryEntryLineUpRepository } from './domain/diary-entry-lineup.repository.js';
 
 @Module({
   imports: [

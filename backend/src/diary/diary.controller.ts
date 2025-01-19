@@ -8,13 +8,13 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { CreateDiaryRequestDto } from './dto/create-diary-request.dto';
-import { DiaryService } from './application/diary.service';
+import { CreateDiaryRequestDto } from './dto/create-diary-request.dto.js';
+import { DiaryService } from './application/diary.service.js';
 import { AuthGuard } from '@nestjs/passport';
-import { DiaryDto } from './dto/diary.dto';
-import { DiaryEntryService } from './application/diary-entry.service';
-import { DiaryEntryDto } from './dto/diary-entry.dto';
-import { CreateDiaryEntryRequestDto } from './dto/create-diary-entry-request.dto';
+import { DiaryDto } from './dto/diary.dto.js';
+import { DiaryEntryService } from './application/diary-entry.service.js';
+import { DiaryEntryDto } from './dto/diary-entry.dto.js';
+import { CreateDiaryEntryRequestDto } from './dto/create-diary-entry-request.dto.js';
 
 @Controller('/api/v1/diarys')
 export class DiaryController {

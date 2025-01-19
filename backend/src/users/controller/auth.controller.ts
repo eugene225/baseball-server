@@ -5,11 +5,11 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { AuthService } from '../auth/auth.service';
-import { SignUpRequestDto } from '../dto/signup-request.dto';
-import { UserDto } from '../dto/user.dto';
-import { SignInResponseDto } from '../dto/signIn-response.dto';
-import { SignInRequestDto } from '../dto/signIn-request.dto';
+import { AuthService } from '../auth/auth.service.js';
+import { SignUpRequestDto } from '../dto/signup-request.dto.js';
+import { UserDto } from '../dto/user.dto.js';
+import { SignInResponseDto } from '../dto/signIn-response.dto.js';
+import { SignInRequestDto } from '../dto/signIn-request.dto.js';
 
 @Controller('/api/v1/auth')
 export class AuthController {

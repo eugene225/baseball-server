@@ -1,14 +1,18 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
+import { UsersModule } from './users/users.module.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeORMConfig } from './configs/typeorm.config';
+import { typeORMConfig } from './configs/typeorm.config.mjs';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
-import { DiaryModule } from './diary/diary.module';
-import { PlayerModule } from './player/player.module';
-import { HuggingFaceModule } from './hugging-face/hugging-face.module';
+import { dirname, join } from 'path';
+import { DiaryModule } from './diary/diary.module.js';
+import { PlayerModule } from './player/player.module.js';
+import { HuggingFaceModule } from './hugging-face/hugging-face.module.js';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 @Module({
   imports: [

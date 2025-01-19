@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { PlayerService } from './application/player.service';
-import { Team } from 'src/global/enum/team.enum';
-import { Position } from 'src/global/enum/position.enum';
+import { PlayerService } from './application/player.service.js';
+import { Team } from '../global/enum/team.enum.js';
+import { Position } from '../global/enum/position.enum.js';
 
 @Controller('/api/v1/players')
 export class PlayerController {

@@ -8,10 +8,10 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { UserService } from '../application/user.service';
-import { UserDto } from '../dto/user.dto';
+import { UserService } from '../application/user.service.js';
+import { UserDto } from '../dto/user.dto.js';
 import { AuthGuard } from '@nestjs/passport';
-import { UpdateUserInfoRequest } from '../dto/update-info-request.dto';
+import { UpdateUserInfoRequest } from '../dto/update-info-request.dto.js';
 
 @Controller('/api/v1/users')
 export class UserController {
