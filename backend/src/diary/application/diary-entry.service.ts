@@ -1,14 +1,14 @@
-import { DiaryRepository } from './../domain/diary.repository';
+import { DiaryRepository } from './../domain/diary.repository.js';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DiaryEntry } from '../domain/diary-entry.entity';
-import { DiaryEntryRepository } from '../domain/diary-entry.repository';
+import { DiaryEntry } from '../domain/diary-entry.entity.js';
+import { DiaryEntryRepository } from '../domain/diary-entry.repository.js';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateDiaryEntryRequestDto } from '../dto/create-diary-entry-request.dto';
-import { User } from 'src/users/domain/user.entity';
-import { PlayerRepository } from 'src/player/domain/player.repository';
-import { DiaryEntryDto } from '../dto/diary-entry.dto';
-import { DiaryEntryLineUp } from '../domain/diary-entry-lineup.entity';
-import { DiaryEntryLineUpRepository } from '../domain/diary-entry-lineup.repository';
+import { CreateDiaryEntryRequestDto } from '../dto/create-diary-entry-request.dto.js';
+import { User } from '../../users/domain/user.entity.js';
+import { PlayerRepository } from '../../player/domain/player.repository.js';
+import { DiaryEntryDto } from '../dto/diary-entry.dto.js';
+import { DiaryEntryLineUp } from '../domain/diary-entry-lineup.entity.js';
+import { DiaryEntryLineUpRepository } from '../domain/diary-entry-lineup.repository.js';
 import { In } from 'typeorm';
 
 @Injectable()
@@ -111,16 +111,17 @@ export class DiaryEntryService {
 
     const entries = await this.diaryEntryRepository
       .createQueryBuilder('diaryEntry')
-      .leftJoinAndSelect('diaryEntry.lineUp', 'lineUp')
+      .leftJoinAndSelect('diaryEntry.lineUp', 'lineUp', 'lineUp.diaryEntryId = diaryEntry.id')
       .leftJoinAndSelect('lineUp.player', 'player')
       .leftJoinAndSelect('diaryEntry.author', 'author')
       .where('diaryEntry.diaryId = :diaryId', { diaryId: diary.id })
       .orderBy('diaryEntry.createdAt', 'DESC')
       .getMany();
 
-    const entriesDto = entries.map((entry) =>
-      DiaryEntryDto.create(diaryId, entry, entry.lineUp),
-    );
+    const entriesDto = entries.map((entry) => {
+      const lineUp = entry['lineUp'] || [];
+      return DiaryEntryDto.create(diaryId, entry, lineUp);
+    });
 
     return entriesDto;
   }
