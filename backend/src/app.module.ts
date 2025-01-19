@@ -8,6 +8,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { DiaryModule } from './diary/diary.module';
 import { PlayerModule } from './player/player.module';
+import { HuggingFaceModule } from './hugging-face/hugging-face.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PlayerModule } from './player/player.module';
     }),
     DiaryModule,
     PlayerModule,
+    HuggingFaceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
