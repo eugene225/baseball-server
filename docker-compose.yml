@@ -1,18 +1,77 @@
+version: '3.8'
+
 services:
+  # Backend 서비스
   backend:
     build:
       context: .
-      dockerfile: backend/Dockerfile # 상대 경로
+      dockerfile: backend/Dockerfile  # Backend Dockerfile 경로
     container_name: backend
     ports:
-      - "3000:3000"
+      - "3000:3000"  # 외부 포트 3000으로 매핑
     restart: always
+    networks:
+      - app-network
 
+  # Frontend 서비스
   frontend:
     build:
       context: .
-      dockerfile: frontend/Dockerfile # 상대 경로
+      dockerfile: frontend/Dockerfile  # Frontend Dockerfile 경로
     container_name: frontend
     ports:
-      - "5000:5000"
+      - "5000:5000"  # 외부 포트 5000으로 매핑
     restart: always
+    networks:
+      - app-network
+
+  # AI 서비스
+  ai:
+    build:
+      context: .
+      dockerfile: ai-service/Dockerfile
+    container_name: ai-service
+    ports:
+      - "8000:8000"  # AI 서비스의 포트 매핑
+    restart: always
+    networks:
+      - app-network
+
+  # Nginx API Gateway 서비스
+  nginx:
+    image: nginx:latest
+    container_name: nginx-api-gateway
+    ports:
+      - "80:80"  # Nginx가 포트 80에서 요청을 받아서 라우팅
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Nginx 설정 파일 경로
+    depends_on:
+      - frontend
+      - backend
+      - ai-service
+    networks:
+      - app-network
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge
+
+# services:
+#   backend:
+#     build:
+#       context: .
+#       dockerfile: backend/Dockerfile # 상대 경로
+#     container_name: backend
+#     ports:
+#       - "3000:3000"
+#     restart: always
+
+#   frontend:
+#     build:
+#       context: .
+#       dockerfile: frontend/Dockerfile # 상대 경로
+#     container_name: frontend
+#     ports:
+#       - "5000:5000"
+#     restart: always
