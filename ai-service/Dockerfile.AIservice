@@ -2,7 +2,7 @@
 FROM python:3.9-slim
 
 # Step 2: Set the working directory in the container
-WORKDIR /home/app/baseball-server/ai-service
+WORKDIR /ai-service
 
 # Step 3: Copy the requirements file into the container
 COPY ai-service/requirements.txt ./

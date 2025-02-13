@@ -1,7 +1,7 @@
 FROM node:16
 
 # Set the working directory
-WORKDIR /home/app/baseball-server/frontend
+WORKDIR /frontend
 
 # Copy only package.json and package-lock.json for installing dependencies
 COPY frontend/package*.json ./
