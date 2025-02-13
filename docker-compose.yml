@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # Backend 서비스
   backend:
-    image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
+    image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest  # 이미 로컬에 있는 이미지 사용
     container_name: backend-container
     ports:
       - "3000:3000"  # 외부 포트 3000으로 매핑
@@ -14,6 +14,7 @@ services:
   # Frontend 서비스
   frontend:
     image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
+    image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest  # 이미 로컬에 있는 이미지 사용
     container_name: frontend-container
     ports:
       - "5000:5000"  # 외부 포트 5000으로 매핑
@@ -23,7 +24,7 @@ services:
 
   # AI 서비스
   ai:
-    image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
+    image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest  # 로컬에 있는 AI 이미지 사용
     container_name: ai-service
     ports:
       - "8000:8000"  # AI 서비스의 포트 매핑
@@ -33,7 +34,7 @@ services:
 
   # Nginx API Gateway 서비스
   nginx:
-    image: nginx:latest
+    image: nginx:latest  # Nginx 이미지
     container_name: nginx-api-gateway
     ports:
       - "80:80"  # Nginx가 포트 80에서 요청을 받아서 라우팅
@@ -42,7 +43,7 @@ services:
     depends_on:
       - frontend
       - backend
-      - ai
+      - ai  # ai 서비스 의존성 추가
     networks:
       - app-network
     restart: always
