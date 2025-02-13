@@ -36,6 +36,17 @@ jobs:
           docker tag frontend-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
 
+      # AI Docker 이미지 빌드
+      - name: Build AI Docker image
+        run: |
+          docker build -f ./ai-service/Dockerfile.AIservice -t ai-image:latest .
+
+      # AI Docker 이미지 태그 및 푸시
+      - name: Tag and Push AI Docker image to ECR
+        run: |
+          docker tag ai-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
+
       # Backend Docker 이미지 빌드
       - name: Build Backend Docker image
         run: |
