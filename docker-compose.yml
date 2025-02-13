@@ -13,7 +13,6 @@ services:
 
   # Frontend 서비스
   frontend:
-    image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
     image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest  # 이미 로컬에 있는 이미지 사용
     container_name: frontend-container
     ports:
