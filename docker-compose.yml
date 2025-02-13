@@ -7,7 +7,7 @@ services:
       - "3000:3000"  # 외부 포트 3000으로 매핑
     restart: always
     networks:
-      - app-network
+      - baseball-server_default
 
   # Frontend 서비스
   frontend:
@@ -17,7 +17,7 @@ services:
       - "5000:5000"  # 외부 포트 5000으로 매핑
     restart: always
     networks:
-      - app-network
+      - baseball-server_default
 
   # AI 서비스
   ai:
@@ -27,23 +27,23 @@ services:
       - "8000:8000"  # AI 서비스의 포트 매핑
     restart: always
     networks:
-      - app-network
+      - baseball-server_default
 
-  # Nginx API Gateway 서비스
-  nginx:
-    image: nginx:latest  # Nginx 이미지
-    container_name: nginx-api-gateway
-    ports:
-      - "80:80"  # Nginx가 포트 80에서 요청을 받아서 라우팅
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Nginx 설정 파일 경로
-    depends_on:
-      - frontend
-      - backend
-      - ai  # ai 서비스 의존성 추가
-    networks:
-      - app-network
-    restart: always
+  # # Nginx API Gateway 서비스
+  # nginx:
+  #   image: nginx:latest  # Nginx 이미지
+  #   container_name: nginx-api-gateway
+  #   ports:
+  #     - "80:80"  # Nginx가 포트 80에서 요청을 받아서 라우팅
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Nginx 설정 파일 경로
+  #   depends_on:
+  #     - frontend
+  #     - backend
+  #     - ai  # ai 서비스 의존성 추가
+  #   networks:
+  #     - baseball-server_default
+  #   restart: always
 
 networks:
   app-network:
