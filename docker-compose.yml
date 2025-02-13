@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile.backend  # Backend Dockerfile 경로
-    container_name: backend
+    container_name: backend-container
     ports:
       - "3000:3000"  # 외부 포트 3000으로 매핑
     restart: always
@@ -18,7 +18,7 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile.frontend  # Frontend Dockerfile 경로
-    container_name: frontend
+    container_name: frontend-container
     ports:
       - "5000:5000"  # 외부 포트 5000으로 매핑
     restart: always
