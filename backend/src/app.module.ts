@@ -8,7 +8,6 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { dirname, join } from 'path';
 import { DiaryModule } from './diary/diary.module.js';
 import { PlayerModule } from './player/player.module.js';
-import { HuggingFaceModule } from './hugging-face/hugging-face.module.js';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,7 +22,6 @@ const __dirname = dirname(__filename);
     }),
     DiaryModule,
     PlayerModule,
-    HuggingFaceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
