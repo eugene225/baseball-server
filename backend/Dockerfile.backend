@@ -4,7 +4,7 @@ FROM node:16
 WORKDIR /home/app/baseball-server/backend
 
 # Copy only package.json and package-lock.json for installing dependencies
-COPY package*.json ./
+COPY backend/package*.json ./
 
 # Install dependencies
 RUN npm install

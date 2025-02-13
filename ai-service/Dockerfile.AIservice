@@ -2,10 +2,10 @@
 FROM python:3.9-slim
 
 # Step 2: Set the working directory in the container
-WORKDIR /app
+WORKDIR /home/app/baseball-server/ai-service
 
 # Step 3: Copy the requirements file into the container
-COPY requirements.txt /app/
+COPY ai-service/requirements.txt ./
 
 # Step 4: Install the Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
