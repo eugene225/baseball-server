@@ -3,9 +3,7 @@ version: '3.8'
 services:
   # Backend 서비스
   backend:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile.backend  # Backend Dockerfile 경로
+    image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
     container_name: backend-container
     ports:
       - "3000:3000"  # 외부 포트 3000으로 매핑
@@ -15,9 +13,7 @@ services:
 
   # Frontend 서비스
   frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile.frontend  # Frontend Dockerfile 경로
+    image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
     container_name: frontend-container
     ports:
       - "5000:5000"  # 외부 포트 5000으로 매핑
@@ -27,9 +23,7 @@ services:
 
   # AI 서비스
   ai:
-    build:
-      context: .
-      dockerfile: ai-service/Dockerfile.AIservice
+    image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
     container_name: ai-service
     ports:
       - "8000:8000"  # AI 서비스의 포트 매핑
@@ -48,7 +42,7 @@ services:
     depends_on:
       - frontend
       - backend
-      - ai  # ai-service에서 ai로 변경
+      - ai
     networks:
       - app-network
     restart: always
