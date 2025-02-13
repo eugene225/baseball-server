@@ -1,12 +1,12 @@
 import { DataSource, Repository } from 'typeorm';
-import { User } from './user.entity';
-import { SignUpRequestDto } from '../dto/signup-request.dto';
+import { User } from './user.entity.js';
+import { SignUpRequestDto } from '../dto/signup-request.dto.js';
 import * as bcrypt from 'bcryptjs';
 import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { CustomRepository } from 'src/global/decorator/custom-repository.decorator';
+import { CustomRepository } from '../../global/decorator/custom-repository.decorator.js';
 
 @CustomRepository(User)
 export class UserRepository extends Repository<User> {

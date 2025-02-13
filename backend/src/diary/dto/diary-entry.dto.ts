@@ -1,8 +1,8 @@
-import { Team } from 'src/global/enum/team.enum';
-import { DiaryEntry } from '../domain/diary-entry.entity';
-import { Weather } from '../domain/weather.enum';
-import { DiaryEntryLineUp } from '../domain/diary-entry-lineup.entity';
-import { DiaryEntryLineUpDto } from './diary-entry-lineup.dto';
+import { Team } from '../../global/enum/team.enum.js';
+import { DiaryEntry } from '../domain/diary-entry.entity.js';
+import { Weather } from '../domain/weather.enum.js';
+import { DiaryEntryLineUp } from '../domain/diary-entry-lineup.entity.js';
+import { DiaryEntryLineUpDto } from './diary-entry-lineup.dto.js';
 
 export class DiaryEntryDto {
   constructor(

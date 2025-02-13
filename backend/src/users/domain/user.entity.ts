@@ -1,4 +1,4 @@
-import { Team } from 'src/global/enum/team.enum';
+import { Team } from '../../global/enum/team.enum.js';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('users')

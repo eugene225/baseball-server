@@ -1,4 +1,4 @@
-import { Team } from 'src/global/enum/team.enum';
+import { Team } from '../../global/enum/team.enum.js';
 import {
   BaseEntity,
   Column,
@@ -9,10 +9,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Weather } from './weather.enum';
-import { Diary } from './diary.entity';
-import { User } from 'src/users/domain/user.entity';
-import { DiaryEntryLineUp } from './diary-entry-lineup.entity';
+import { Weather } from './weather.enum.js';
+import { Diary } from './diary.entity.js';
+import { User } from '../../users/domain/user.entity.js';
+import { DiaryEntryLineUp } from './diary-entry-lineup.entity.js';
+import { forwardRef } from '@nestjs/common';
 
 @Entity()
 export class DiaryEntry extends BaseEntity {
@@ -39,11 +40,6 @@ export class DiaryEntry extends BaseEntity {
 
   @Column({ type: 'enum', enum: Weather, nullable: false })
   weather: Weather;
-
-  @OneToMany(() => DiaryEntryLineUp, (lineUp) => lineUp.diaryEntry, {
-    cascade: true,
-  })
-  lineUp: DiaryEntryLineUp[];
 
   @ManyToOne(() => Diary)
   diary: Diary;

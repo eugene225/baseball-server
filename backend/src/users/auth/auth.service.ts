@@ -1,10 +1,10 @@
-import { UserRepository } from './../domain/user.repository';
+import { UserRepository } from './../domain/user.repository.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { SignUpRequestDto } from '../dto/signup-request.dto';
-import { UserDto } from '../dto/user.dto';
-import { SignInRequestDto } from '../dto/signIn-request.dto';
-import { SignInResponseDto } from '../dto/signIn-response.dto';
+import { SignUpRequestDto } from '../dto/signup-request.dto.js';
+import { UserDto } from '../dto/user.dto.js';
+import { SignInRequestDto } from '../dto/signIn-request.dto.js';
+import { SignInResponseDto } from '../dto/signIn-response.dto.js';
 import * as bcrypt from 'bcryptjs';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 

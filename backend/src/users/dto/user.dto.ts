@@ -1,4 +1,4 @@
-import { User } from '../domain/user.entity';
+import { User } from '../domain/user.entity.js';
 
 export class UserDto {
   constructor(

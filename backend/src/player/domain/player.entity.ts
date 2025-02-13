@@ -1,5 +1,5 @@
-import { Position } from 'src/global/enum/position.enum';
-import { Team } from 'src/global/enum/team.enum';
+import { Position } from '../../global/enum/position.enum.js';
+import { Team } from '../../global/enum/team.enum.js';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

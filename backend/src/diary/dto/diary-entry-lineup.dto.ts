@@ -1,5 +1,5 @@
-import { DiaryEntryLineUp } from './../domain/diary-entry-lineup.entity';
-import { Position } from 'src/global/enum/position.enum';
+import { DiaryEntryLineUp } from './../domain/diary-entry-lineup.entity.js';
+import { Position } from '../../global/enum/position.enum.js';
 
 export class DiaryEntryLineUpDto {
   constructor(

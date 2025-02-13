@@ -1,5 +1,5 @@
 import { IsEnum, MinLength } from 'class-validator';
-import { Team } from 'src/global/enum/team.enum';
+import { Team } from '../../global/enum/team.enum.js';
 
 export class UpdateUserInfoRequest {
   @MinLength(2)
