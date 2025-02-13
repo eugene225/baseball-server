@@ -28,10 +28,7 @@ jobs:
       # Frontend Docker 이미지 빌드
       - name: Build Frontend Docker image
         run: |
-          cd frontend
-          npm install
-          npm run build
-          docker build -t frontend-image .
+          docker build -f frontend/Dockerfile.frontend -t frontend-image .
       
       # Frontend Docker 이미지 태그 및 푸시
       - name: Tag and Push Frontend Docker image to ECR
@@ -42,8 +39,7 @@ jobs:
       # Backend Docker 이미지 빌드
       - name: Build Backend Docker image
         run: |
-          cd backend
-          docker build -t backend-image .
+          docker build -f backend/Dockerfile.backend -t backend-image .
 
       # Backend Docker 이미지 태그 및 푸시
       - name: Tag and Push Backend Docker image to ECR
@@ -64,22 +60,17 @@ jobs:
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
             docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
       
-            # 모든 중지된 컨테이너, 사용되지 않는 이미지, 네트워크, 볼륨을 강제로 정리
+            # 기존 컨테이너 정리
+            docker-compose -f /home/ec2-user/app/baseball-server/docker-compose.yml down || true
             docker system prune -f --volumes
       
-            # 기존 Docker 컨테이너 중지 및 삭제
-            docker-compose down || true
-      
-            # ECR에서 Backend Docker 이미지 풀(pull)
+            # 최신 이미지 풀링
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
-      
-            # ECR에서 Frontend Docker 이미지 풀(pull)
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
       
-            # .env 파일 생성 (백엔드)
-            echo "${{ secrets.ENV }}" > /home/ec2-user/app/baseball-server/backend/.env
+            # .env 파일 설정
+            echo "${{ secrets.ENV }}" > /home/ec2-user/app/baseball-server/.env
       
-            # Docker Compose를 사용하여 새로운 컨테이너 실행
+            # Docker Compose 실행
             cd /home/ec2-user/app/baseball-server
-            docker-compose up -d
-
+            docker-compose -f docker-compose.yml up -d --force-recreate
