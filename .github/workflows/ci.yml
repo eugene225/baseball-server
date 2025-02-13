@@ -77,7 +77,11 @@ jobs:
       
             # 최신 이미지 풀링
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
+            docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest baseball-server-backend:latest
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
+            docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest baseball-server-frontend:latest
+            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
+            docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest baseball-server-ai:latest
       
             # .env 파일 설정
             echo "${{ secrets.ENV }}" > /home/ec2-user/app/baseball-server/backend/.env

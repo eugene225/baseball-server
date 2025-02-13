@@ -1,7 +1,7 @@
 services:
   # Backend 서비스
   backend:
-    image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest  # 이미 로컬에 있는 이미지 사용
+    image: baseball-server-backend:latest  # 이미 로컬에 있는 이미지 사용
     container_name: backend-container
     ports:
       - "3000:3000"  # 외부 포트 3000으로 매핑
@@ -11,7 +11,7 @@ services:
 
   # Frontend 서비스
   frontend:
-    image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest  # 이미 로컬에 있는 이미지 사용
+    image: baseball-server-frontend:latest
     container_name: frontend-container
     ports:
       - "5000:5000"  # 외부 포트 5000으로 매핑
@@ -21,7 +21,7 @@ services:
 
   # AI 서비스
   ai:
-    image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest  # 로컬에 있는 AI 이미지 사용
+    image: baseball-server-ai:latest
     container_name: ai-service
     ports:
       - "8000:8000"  # AI 서비스의 포트 매핑
