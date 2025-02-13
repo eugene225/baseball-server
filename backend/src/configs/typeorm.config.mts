@@ -8,9 +8,12 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const stringToBoolean = (value: string): boolean => {
+function stringToBoolean(value: string | undefined): boolean {
+  if (!value) {
+    return true;
+  }
   return value.toLowerCase() === 'true';
-};
+}
 
 export const typeORMConfig: TypeOrmModuleOptions = {
   type: 'mysql',
