@@ -50,6 +50,7 @@ jobs:
       # Backend Docker 이미지 빌드
       - name: Build Backend Docker image
         run: |
+          echo "${{ secrets.ENV }}" > ./backend/.env
           docker build -f ./backend/Dockerfile.backend -t backend-image:latest .
 
       # Backend Docker 이미지 태그 및 푸시
@@ -82,9 +83,6 @@ jobs:
             docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest baseball-server-frontend:latest
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
             docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest baseball-server-ai:latest
-      
-            # .env 파일 설정
-            echo "${{ secrets.ENV }}" > /home/ec2-user/app/baseball-server/backend/.env
       
             # Docker Compose 실행
             cd /home/ec2-user/app/baseball-server
