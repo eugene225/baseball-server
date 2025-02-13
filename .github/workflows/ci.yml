@@ -69,7 +69,7 @@ jobs:
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
       
             # .env 파일 설정
-            echo "${{ secrets.ENV }}" > /home/ec2-user/app/baseball-server/.env
+            echo "${{ secrets.ENV }}" > /home/ec2-user/app/baseball-server/backend/.env
       
             # Docker Compose 실행
             cd /home/ec2-user/app/baseball-server
