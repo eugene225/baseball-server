@@ -28,6 +28,7 @@ jobs:
       # Pull the latest changes from Git repository (if needed)
       - name: Pull the latest Git repository
         run: |
+          cd /home/ec2-user/app/baseball-server
           git pull origin main
 
       # 모든 Docker 이미지 빌드

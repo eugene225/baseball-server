@@ -8,9 +8,9 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro  # 설정 파일 적용
     depends_on:
-      - backend
-      - frontend
-      - ai
+      - backend-container
+      - frontend-container
+      - ai-container
     networks:
       - baseball-server_default
 
