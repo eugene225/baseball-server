@@ -25,37 +25,34 @@ jobs:
         with:
           region: ${{ secrets.AWS_REGION }}
 
-      # Frontend Docker 이미지 빌드
-      - name: Build Frontend Docker image
+      # Pull the latest changes from Git repository (if needed)
+      - name: Pull the latest Git repository
         run: |
+          git pull origin main
+
+      # 모든 Docker 이미지 빌드
+      - name: Build Docker images
+        run: |
+          # Frontend 빌드
           docker build -f ./frontend/Dockerfile.frontend -t frontend-image:latest .
-      
-      # Frontend Docker 이미지 태그 및 푸시
-      - name: Tag and Push Frontend Docker image to ECR
-        run: |
-          docker tag frontend-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
-
-      # AI Docker 이미지 빌드
-      - name: Build AI Docker image
-        run: |
+          # AI 서비스 빌드
           docker build -f ./ai-service/Dockerfile.AIservice -t ai-image:latest .
-
-      # AI Docker 이미지 태그 및 푸시
-      - name: Tag and Push AI Docker image to ECR
-        run: |
-          docker tag ai-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
-
-      # Backend Docker 이미지 빌드
-      - name: Build Backend Docker image
-        run: |
+          # Backend 빌드
           echo "${{ secrets.ENV }}" > ./backend/.env
           docker build -f ./backend/Dockerfile.backend -t backend-image:latest .
 
-      # Backend Docker 이미지 태그 및 푸시
-      - name: Tag and Push Backend Docker image to ECR
+      # 모든 Docker 이미지 태그 및 푸시
+      - name: Tag and Push Docker images to ECR
         run: |
+          # Frontend 태그 및 푸시
+          docker tag frontend-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
+
+          # AI 서비스 태그 및 푸시
+          docker tag ai-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
+
+          # Backend 태그 및 푸시
           docker tag backend-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
 
@@ -71,19 +68,19 @@ jobs:
             # AWS ECR 로그인 갱신
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
             docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-      
+
             # 기존 컨테이너 정리
             docker-compose -f /home/ec2-user/app/baseball-server/docker-compose.yml down || true
             docker system prune -f --volumes
-      
-            # 최신 이미지 풀링
+
+            # 최신 이미지 풀링 및 태그
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
             docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest baseball-server-backend:latest
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
             docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest baseball-server-frontend:latest
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
             docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest baseball-server-ai:latest
-      
+
             # Docker Compose 실행
             cd /home/ec2-user/app/baseball-server
             docker-compose -f docker-compose.yml up -d --force-recreate --no-build
