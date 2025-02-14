@@ -1,50 +1,51 @@
 services:
-  # Backend 서비스
-  backend:
-    image: baseball-server-backend:latest  # 이미 로컬에 있는 이미지 사용
+  # Nginx 서비스 추가
+  nginx:
+    image: nginx:latest  # 공식 Nginx 이미지 사용
+    container_name: nginx-container
+    ports:
+      - "80:80"  # 외부 80번 포트로 접근 가능하게 설정
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # 설정 파일 적용
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - baseball-server_default
+
+  # 기존 Backend
+  backend-container:
+    image: baseball-server-backend:latest
     container_name: backend-container
     ports:
-      - "3000:3000"  # 외부 포트 3000으로 매핑
+      - "3000:3000"
     restart: always
     networks:
       - baseball-server_default
 
-  # Frontend 서비스
-  frontend:
+  # 기존 Frontend
+  frontend-container:
     image: baseball-server-frontend:latest
     container_name: frontend-container
     ports:
-      - "5000:5000"  # 외부 포트 5000으로 매핑
+      - "5000:5000"
     restart: always
     networks:
       - baseball-server_default
 
-  # AI 서비스
-  ai:
+  # 기존 AI 서비스
+  ai-container:
     image: baseball-server-ai:latest
-    container_name: ai-service
+    container_name: ai-container
     ports:
-      - "8000:8000"  # AI 서비스의 포트 매핑
+      - "8000:8000"
     restart: always
     networks:
       - baseball-server_default
-
-  # # Nginx API Gateway 서비스
-  # nginx:
-  #   image: nginx:latest  # Nginx 이미지
-  #   container_name: nginx-api-gateway
-  #   ports:
-  #     - "80:80"  # Nginx가 포트 80에서 요청을 받아서 라우팅
-  #   volumes:
-  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Nginx 설정 파일 경로
-  #   depends_on:
-  #     - frontend
-  #     - backend
-  #     - ai  # ai 서비스 의존성 추가
-  #   networks:
-  #     - baseball-server_default
-  #   restart: always
 
 networks:
-  app-network:
+  baseball-server_default:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
