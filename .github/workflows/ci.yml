@@ -89,4 +89,4 @@ jobs:
 
             # Docker Compose 실행
             cd /home/ec2-user/app/baseball-server
-            docker-compose -f docker-compose.yml up -d --force-recreate --no-build
+            docker-compose up -d --force-recreate --remove-orphans
