@@ -22,8 +22,6 @@ jobs:
 
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
-        with:
-          region: ${{ secrets.AWS_REGION }}
 
       - name: Pull the latest Git repository on EC2
         uses: appleboy/ssh-action@v0.1.6
@@ -40,6 +38,7 @@ jobs:
       - name: Build Docker images
         run: |
           # Frontend 빌드
+          echo "${{ secrets.ENV_FE }}" > ./frontend/.env
           docker build -f ./frontend/Dockerfile.frontend -t frontend-image:latest .
           # AI 서비스 빌드
           docker build -f ./ai-service/Dockerfile.AIservice -t ai-image:latest .
