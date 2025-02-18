@@ -17,9 +17,6 @@ const __dirname = dirname(__filename);
   imports: [
     TypeOrmModule.forRoot(typeORMConfig),
     UsersModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
-    }),
     DiaryModule,
     PlayerModule,
   ],
