@@ -13,7 +13,7 @@ import { UserDto } from '../dto/user.dto.js';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateUserInfoRequest } from '../dto/update-info-request.dto.js';
 
-@Controller('/api/v1/users')
+@Controller('/v1/users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

@@ -3,7 +3,7 @@ import { PlayerService } from './application/player.service.js';
 import { Team } from '../global/enum/team.enum.js';
 import { Position } from '../global/enum/position.enum.js';
 
-@Controller('/api/v1/players')
+@Controller('/v1/players')
 export class PlayerController {
   constructor(private readonly playerService: PlayerService) {}
 
