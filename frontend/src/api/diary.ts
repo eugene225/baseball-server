@@ -3,7 +3,7 @@ import { ErrorResponse } from '../types/global';
 import { CreateDiaryData, CreateDiaryEntryRequestDto, Diary, DiaryEntry } from '../types/diary';
 
 // API URL 상수
-const API_URL = 'http://52.65.47.31:3000/api/v1/diarys';
+const API_URL = `${ process.env.REACT_APP_API_URL }/api/v1/diarys`;
 
 // 공개 일기장 목록을 가져오는 API 호출 함수의 반환 타입 정의
 export const fetchPublicDiaries = async (): Promise<Diary[]> => {

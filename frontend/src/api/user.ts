@@ -1,20 +1,18 @@
 import axios, { AxiosError } from 'axios';
 
 // API URL 상수 정의
-const API_URL = 'http://52.65.47.31:3000/api/v1/users';
+const API_URL = `${ process.env.REACT_APP_API_URL }/api/v1/users`;
 
 // 사용자 정보 타입 정의
 interface UserInfo {
   nickname: string;
   myTeam: string;
-  // 필요한 다른 필드를 여기에 추가하세요
 }
 
 // 업데이트된 사용자 정보 타입 정의
 interface UpdatedUserInfo {
   nickname?: string;
   myTeam?: string;
-  // 필요한 다른 필드를 여기에 추가하세요
 }
 
 // 에러 응답 데이터의 타입 정의
@@ -68,7 +66,6 @@ export const updateUserInfo = async (
 
 // 비공개 일기장 목록을 가져오는 API 호출 함수
 interface PrivateDiary {
-  // 비공식 일기장의 데이터 구조를 정의하세요
   id: string;
   title: string;
   description: string;
