@@ -1,7 +1,7 @@
 import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity.js';
 import { SignUpRequestDto } from '../dto/signup-request.dto.js';
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcrypt';
 import {
   ConflictException,
   InternalServerErrorException,

@@ -5,15 +5,12 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Weather } from './weather.enum.js';
 import { Diary } from './diary.entity.js';
 import { User } from '../../users/domain/user.entity.js';
-import { DiaryEntryLineUp } from './diary-entry-lineup.entity.js';
-import { forwardRef } from '@nestjs/common';
 
 @Entity()
 export class DiaryEntry extends BaseEntity {

@@ -5,7 +5,7 @@ import { SignUpRequestDto } from '../dto/signup-request.dto.js';
 import { UserDto } from '../dto/user.dto.js';
 import { SignInRequestDto } from '../dto/signIn-request.dto.js';
 import { SignInResponseDto } from '../dto/signIn-response.dto.js';
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcrypt';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
