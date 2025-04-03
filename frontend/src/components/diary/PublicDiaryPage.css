@@ -1,133 +1,214 @@
 /* General Styles */
 :root {
-  --burgundy: #800020;
-  --light-burgundy: #a03f47;
-  --dark-burgundy: #4e001d;
-  --white: #fff;
-  --light-grey: #f4f4f4;
-  --paper-color: #faf8f0; /* 배경을 종이 느낌으로 */
-  --card-bg: #ffffff; /* 카드 배경 색 */
-  --card-shadow: rgba(0, 0, 0, 0.1); /* 카드 그림자 색 */
+  --primary: #800020;
+  --primary-dark: #5c0017;
+  --primary-light: #b3334d;
+  --accent: #f59e0b;
+  --text-dark: #1f2937;
+  --text-light: #6b7280;
+  --white: #ffffff;
+  --light-grey: #f3f4f6;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --transition: all 0.3s ease;
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Nunito', sans-serif;
-  background-color: var(--paper-color); /* 전체 배경 색 */
+  font-family: 'WandohopeR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--light-grey);
+  color: var(--text-dark);
 }
 
 .public-diary-page {
-  text-align: center;
-  padding: 30px;
-  max-width: 900px;
+  padding: 2rem;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
 .page-title {
-  font-size: 2.0rem;
-  color: var(--dark-burgundy);
-  margin-bottom: 10px;
+  font-size: 2.2rem;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.page-subtitle {
+  color: var(--text-light);
+  font-size: 1.1rem;
 }
 
 .create-diary-button {
-  background-color: var(--burgundy);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--primary);
   color: var(--white);
   border: none;
-  margin-bottom: 20px;
-  border-radius: 12px;
-  padding: 10px 25px;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  position: relative;
-  box-shadow: 0 4px 6px var(--card-shadow);
-}
-
-.create-diary-button::before {
-  content: '+';
-  font-size: 1.4rem; /* 이모지 크기 조정 */
-  color: var(--light-grey);
-  margin-right: 8px; /* 이모지와 텍스트 사이 여백 */
+  transition: var(--transition);
+  margin: 0 auto 2rem;
 }
 
 .create-diary-button:hover {
-  background-color: var(--light-burgundy);
-  transform: scale(1.05);
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
 }
 
-.create-diary-button:active {
-  background-color: var(--dark-burgundy);
-  transform: scale(0.95);
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0;
 }
 
-/* Diary Card Styles */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--light-grey);
+  border-top: 4px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-container {
+  background-color: #fee2e2;
+  color: #dc2626;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  color: var(--text-light);
+  margin-bottom: 1rem;
+}
+
 .diary-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 일기장을 두 개씩 배치 */
-  column-gap: 50px;
-  justify-items: center;
-  align-items: start; /* 카드가 수직으로도 잘 정렬되도록 함 */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
 }
 
 .diary-card {
-  background-color: var(--card-bg);
-  border-radius: 8px;
-  padding: 15px; /* 패딩을 줄여서 여백을 조정 */
-  margin: 10px;
-  box-shadow: 0 4px 6px var(--card-shadow);
-  text-align: left;
-  font-family: 'Nunito', sans-serif;
-  line-height: 1.3; /* 줄 간격을 줄여 글씨 간격 조정 */
-  width: 100%; /* 카드의 너비를 부모 요소에 맞추도록 조정 */
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--box-shadow);
+  cursor: pointer;
+  transition: var(--transition);
 }
 
-.diary-card h2 {
-  margin-top: 0;
-  margin-bottom: 2px; /* 제목과 설명 사이의 간격 조정 */
-  font-size: 1.4rem; /* 글씨 크기를 살짝 줄임 */
-  color: var(--dark-burgundy);
-  font-family: 'Nunito', sans-serif;
-  font-weight: 600;
+.diary-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-.diary-card p {
-  margin: 5px 0; /* 위아래 간격을 줄임 */
-  color: var(--dark-burgundy);
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.9rem;
+.diary-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
 }
 
-.diary-card strong {
-  color: var(--burgundy);
-  font-weight: bold;
+.diary-card-header h2 {
+  font-size: 1.25rem;
+  color: var(--text-dark);
+  margin: 0;
 }
 
 .delete-diary-icon {
-  color: rgba(255, 0, 0, 0.6); /* 기본 빨간색 투명도 */
-  font-size: 18px; /* 아이콘 크기 */
+  color: var(--text-light);
   cursor: pointer;
-  opacity: 0.7; /* 기본 상태의 투명도 */
-  transition: opacity 0.3s ease, color 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: var(--transition);
 }
 
 .delete-diary-icon:hover {
-  color: rgba(255, 0, 0, 1); /* 마우스 오버 시 불투명하고 진한 색 */
-  opacity: 1;
+  color: #dc2626;
+  background-color: #fee2e2;
 }
 
-/* Mobile-specific adjustments */
+.diary-description {
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.diary-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--light-grey);
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-light);
+  font-size: 0.875rem;
+}
+
+.meta-icon {
+  color: var(--primary);
+}
+
 @media (max-width: 768px) {
-  .diary-list {
-    grid-template-columns: repeat(2, 1fr); /* 모바일에서도 두 개씩 보이도록 함 */
-    column-gap: 40px; /* 모바일에서 카드 간격을 조금 더 줄임 */
+  .public-diary-page {
+    padding: 1rem;
   }
 
-  .diary-card {
-    margin: 10px
+  .page-title {
+    font-size: 1.8rem;
+  }
+
+  .diary-list {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .page-subtitle {
+    font-size: 1rem;
+  }
+
+  .create-diary-button {
+    width: 100%;
+    justify-content: center;
   }
 }

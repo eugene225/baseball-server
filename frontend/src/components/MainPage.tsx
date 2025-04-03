@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './MainPage.css';
 import { fetchUserInfo } from '../api/user';
+import { FaUser, FaSignOutAlt, FaBook, FaCalendarAlt, FaTrophy, FaComments } from 'react-icons/fa';
 
 // 사용자 정보를 표시하는 컴포넌트의 Props 타입 정의
 interface UserInfoProps {
@@ -21,8 +22,16 @@ const UserInfo: React.FC<UserInfoProps> = ({ userInfo, onLogout }) => {
 
   return (
     <div className="user-info">
-      <p>닉네임: {userInfo.nickname} / 마이팀: {userInfo.myTeam}</p>
-      <a href="#" className="logout-link" onClick={handleLogout}>로그아웃</a>
+      <div className="user-profile">
+        <FaUser className="user-icon" />
+        <div className="user-details">
+          <p className="user-name">{userInfo.nickname}</p>
+          <p className="user-team">{userInfo.myTeam}</p>
+        </div>
+      </div>
+      <a href="#" className="logout-link" onClick={handleLogout}>
+        <FaSignOutAlt /> 로그아웃
+      </a>
     </div>
   );
 };
@@ -65,7 +74,10 @@ function MainPage() {
 
   return (
     <div className="main-page">
-      <h1>🍠 고구마 🍠</h1>
+      <header className="main-header">
+        <h1>야구 다이어리</h1>
+        <p className="subtitle">당신의 야구 경험을 기록하고 공유하세요</p>
+      </header>
 
       {isLoggedIn ? <UserInfo userInfo={userInfo} onLogout={handleLogout} /> : null}
 
@@ -73,6 +85,7 @@ function MainPage() {
         {isLoggedIn ? (
           <Link to="/mypage" className="board-item">
             <div className="board-content">
+              <FaUser className="feature-icon" />
               <h2>마이페이지</h2>
               <p>내 정보를 확인하고 수정하세요.</p>
             </div>
@@ -80,6 +93,7 @@ function MainPage() {
         ) : (
           <Link to="/login" className='board-item'>
             <div className="board-content">
+              <FaUser className="feature-icon" />
               <h2>로그인 / 회원가입</h2>
               <p>로그인을 해야 합니다.</p>
             </div>
@@ -87,28 +101,28 @@ function MainPage() {
         )}
         <Link to="/diary" className="board-item">
           <div className="board-content">
-            <span className="emoji">📓</span>
+            <FaBook className="feature-icon" />
             <h2>야구 일기</h2>
             <p>나만의 야구 일기를 기록하세요.</p>
           </div>
         </Link>
         <div className={`board-item ${!isLoggedIn ? 'disabled' : ''}`}>
           <div className="board-content" onClick={isLoggedIn ? () => navigate('/log') : undefined}>
-            <span className="emoji">📅</span>
+            <FaCalendarAlt className="feature-icon" />
             <h2>직관 Log</h2>
             <p>직관한 경기의 정보를 기록합니다.</p>
           </div>
         </div>
         <div className={`board-item ${!isLoggedIn ? 'disabled' : ''}`}>
           <div className="board-content" onClick={isLoggedIn ? () => navigate('/teams') : undefined}>
-            <span className="emoji">🏆</span>
+            <FaTrophy className="feature-icon" />
             <h2>실시간 팀 현황</h2>
             <p>팀의 현재 상태를 확인하세요.</p>
           </div>
         </div>
         <div className={`board-item ${!isLoggedIn ? 'disabled' : ''}`}>
           <div className="board-content" onClick={isLoggedIn ? () => navigate('/chat') : undefined}>
-            <span className="emoji">💬</span>
+            <FaComments className="feature-icon" />
             <h2>채팅방</h2>
             <p>다른 팬들과 소통하세요.</p>
           </div>

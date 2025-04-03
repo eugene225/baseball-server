@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './PublicDiaryPage.css';
-import { fetchPublicDiaries, fetchDeleteDiary } from '../../api/diary'; // 삭제 API 추가
+import { fetchPublicDiaries, fetchDeleteDiary } from '../../api/diary';
 import CreateDiaryModal from './CreateDiaryModal';
 import { Diary } from '../../types/diary';
 import { AxiosError } from 'axios';
 import { ErrorResponse, useNavigate } from 'react-router-dom';
-import { FaTrash } from 'react-icons/fa'; // Font Awesome의 휴지통 아이콘 가져오기
+import { FaTrash, FaPlus, FaBook, FaUser, FaGlobe, FaCalendarAlt } from 'react-icons/fa';
 
 const PublicDiaryPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -60,20 +60,31 @@ const PublicDiaryPage = () => {
 
   return (
     <div className="public-diary-page">
-      <h1 className="page-title">공개 일기장</h1>
+      <header className="page-header">
+        <h1 className="page-title">공개 일기장</h1>
+        <p className="page-subtitle">다른 사용자들의 야구 일기를 둘러보세요</p>
+      </header>
+
       <button className="create-diary-button" onClick={openModal}>
-        일기장 만들기
+        <FaPlus /> 일기장 만들기
       </button>
 
       {isModalOpen && <CreateDiaryModal closeModal={closeModal} accessToken={accessToken} />}
 
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
-      {!loading && !error && diaries.length === 0 && <p>일기장이 없습니다.</p>}
+      {loading && <div className="loading-container"><div className="loading-spinner"></div><p>로딩 중...</p></div>}
+      {error && <div className="error-container"><p>{error}</p></div>}
+      {!loading && !error && diaries.length === 0 && (
+        <div className="empty-state">
+          <FaBook className="empty-icon" />
+          <p>아직 일기장이 없습니다.</p>
+          <p>첫 번째 일기장을 만들어보세요!</p>
+        </div>
+      )}
+
       <div className="diary-list">
         {diaries.map((diary) => (
           <div key={diary.id} className="diary-card" onClick={() => handleCardClick(diary)}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="diary-card-header">
               <h2>{diary.title}</h2>
               <FaTrash
                 onClick={(e) => {
@@ -82,10 +93,21 @@ const PublicDiaryPage = () => {
                 }}
                 className="delete-diary-icon"/>
             </div>
-            <p>{diary.description}</p>
-            <p><strong>작성자:</strong> {diary.creator}</p>
-            <p><strong>공개 여부:</strong> {diary.isPublic ? '공개' : '비공개'}</p>
-            <p><strong>작성일:</strong> {new Date(diary.createdAt).toLocaleDateString()}</p>
+            <p className="diary-description">{diary.description}</p>
+            <div className="diary-meta">
+              <div className="meta-item">
+                <FaUser className="meta-icon" />
+                <span>{diary.creator}</span>
+              </div>
+              <div className="meta-item">
+                <FaGlobe className="meta-icon" />
+                <span>{diary.isPublic ? '공개' : '비공개'}</span>
+              </div>
+              <div className="meta-item">
+                <FaCalendarAlt className="meta-icon" />
+                <span>{new Date(diary.createdAt).toLocaleDateString()}</span>
+              </div>
+            </div>
           </div>
         ))}
       </div>
