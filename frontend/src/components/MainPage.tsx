@@ -1,135 +1,133 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './MainPage.css';
-import { fetchUserInfo } from '../api/user';
-import { FaUser, FaSignOutAlt, FaBook, FaCalendarAlt, FaTrophy, FaComments } from 'react-icons/fa';
 
-// 사용자 정보를 표시하는 컴포넌트의 Props 타입 정의
 interface UserInfoProps {
-  userInfo: {
-    nickname: string;
-    myTeam: string;
-  };
-  onLogout: () => void;
-}
-
-// 사용자 정보를 표시하는 컴포넌트
-const UserInfo: React.FC<UserInfoProps> = ({ userInfo, onLogout }) => {
-  const handleLogout = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault(); // Prevent the default link behavior
-    onLogout(); // Call the logout function
-  };
-
-  return (
-    <div className="user-info">
-      <div className="user-profile">
-        <FaUser className="user-icon" />
-        <div className="user-details">
-          <p className="user-name">{userInfo.nickname}</p>
-          <p className="user-team">{userInfo.myTeam}</p>
-        </div>
-      </div>
-      <a href="#" className="logout-link" onClick={handleLogout}>
-        <FaSignOutAlt /> 로그아웃
-      </a>
-    </div>
-  );
-};
-
-// MainPage 컴포넌트의 상태 타입 정의
-interface User {
   nickname: string;
   myTeam: string;
 }
 
-function MainPage() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState<User>({ nickname: '', myTeam: '' });
-  const navigate = useNavigate(); // For programmatic navigation
-
-  useEffect(() => {
-    const fetchAndSetUserInfo = async () => {
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-      if (user && user.userId && user.accessToken) {
-        try {
-          const data = await fetchUserInfo(user.userId, user.accessToken);
-          setUserInfo({ nickname: data.nickname, myTeam: data.myTeam });
-          setIsLoggedIn(true);
-        } catch (error) {
-          // Error handling: clear localStorage and set logged out state
-          localStorage.removeItem('user');
-          setIsLoggedIn(false);
-        }
-      }
-    };
-
-    fetchAndSetUserInfo();
-  }, []); // Empty array means this effect runs only once
-
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    setIsLoggedIn(false);
-    navigate('/'); // Redirect to home page after logout
-  };
-
+const UserInfo: React.FC<UserInfoProps> = ({ nickname, myTeam }) => {
   return (
-    <div className="main-page">
-      <header className="main-header">
-        <h1>야구 다이어리</h1>
-        <p className="subtitle">당신의 야구 경험을 기록하고 공유하세요</p>
-      </header>
-
-      {isLoggedIn ? <UserInfo userInfo={userInfo} onLogout={handleLogout} /> : null}
-
-      <div className="board-container">
-        {isLoggedIn ? (
-          <Link to="/mypage" className="board-item">
-            <div className="board-content">
-              <FaUser className="feature-icon" />
-              <h2>마이페이지</h2>
-              <p>내 정보를 확인하고 수정하세요.</p>
-            </div>
-          </Link>
-        ) : (
-          <Link to="/login" className='board-item'>
-            <div className="board-content">
-              <FaUser className="feature-icon" />
-              <h2>로그인 / 회원가입</h2>
-              <p>로그인을 해야 합니다.</p>
-            </div>
-          </Link>
-        )}
-        <Link to="/diary" className="board-item">
-          <div className="board-content">
-            <FaBook className="feature-icon" />
-            <h2>야구 일기</h2>
-            <p>나만의 야구 일기를 기록하세요.</p>
-          </div>
-        </Link>
-        <div className={`board-item ${!isLoggedIn ? 'disabled' : ''}`}>
-          <div className="board-content" onClick={isLoggedIn ? () => navigate('/log') : undefined}>
-            <FaCalendarAlt className="feature-icon" />
-            <h2>직관 Log</h2>
-            <p>직관한 경기의 정보를 기록합니다.</p>
-          </div>
+    <div className="user-info">
+      <div className="user-profile">
+        <div className="user-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
         </div>
-        <div className={`board-item ${!isLoggedIn ? 'disabled' : ''}`}>
-          <div className="board-content" onClick={isLoggedIn ? () => navigate('/teams') : undefined}>
-            <FaTrophy className="feature-icon" />
-            <h2>실시간 팀 현황</h2>
-            <p>팀의 현재 상태를 확인하세요.</p>
-          </div>
-        </div>
-        <div className={`board-item ${!isLoggedIn ? 'disabled' : ''}`}>
-          <div className="board-content" onClick={isLoggedIn ? () => navigate('/chat') : undefined}>
-            <FaComments className="feature-icon" />
-            <h2>채팅방</h2>
-            <p>다른 팬들과 소통하세요.</p>
-          </div>
+        <div className="user-details">
+          <h3 className="user-name">{nickname}</h3>
+          <p className="user-team">{myTeam}</p>
         </div>
       </div>
     </div>
   );
-}
+};
+
+const MainPage: React.FC = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<{ nickname: string; myTeam: string } | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user && user.accessToken) {
+      setIsLoggedIn(true);
+      setUserInfo({
+        nickname: user.nickname || '사용자',
+        myTeam: user.myTeam || '팀 없음',
+      });
+    }
+  }, []);
+
+  return (
+    <div className="main-page">
+      <main className="main-content">
+        <header className="main-header">
+          <h1>야구 다이어리</h1>
+          <p className="subtitle">당신의 야구 경험을 기록하고 공유하세요</p>
+        </header>
+
+        {isLoggedIn && userInfo && (
+          <UserInfo nickname={userInfo.nickname} myTeam={userInfo.myTeam} />
+        )}
+
+        <div className="board-container" role="navigation" aria-label="메인 메뉴">
+          <Link to="/mypage" className="board-item" tabIndex={0}>
+            <div className="board-content">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feature-icon">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <h2>마이페이지</h2>
+              <p>개인 정보 관리</p>
+            </div>
+          </Link>
+
+          {!isLoggedIn && (
+            <Link to="/login" className="board-item" tabIndex={0}>
+              <div className="board-content">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feature-icon">
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                  <polyline points="10 17 15 12 10 7"></polyline>
+                  <line x1="15" y1="12" x2="3" y2="12"></line>
+                </svg>
+                <h2>로그인/회원가입</h2>
+                <p>계정 생성 및 로그인</p>
+              </div>
+            </Link>
+          )}
+
+          <Link to="/diary" className="board-item" tabIndex={0}>
+            <div className="board-content">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feature-icon">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+              <h2>일기장</h2>
+              <p>야구 경험 기록하기</p>
+            </div>
+          </Link>
+
+          <Link to="/log" className={`board-item ${!isLoggedIn ? 'disabled' : ''}`} tabIndex={isLoggedIn ? 0 : -1} aria-disabled={!isLoggedIn}>
+            <div className="board-content">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feature-icon">
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+              <h2>기록</h2>
+              <p>경기 기록 관리</p>
+            </div>
+          </Link>
+
+          <Link to="/team-status" className={`board-item ${!isLoggedIn ? 'disabled' : ''}`} tabIndex={isLoggedIn ? 0 : -1} aria-disabled={!isLoggedIn}>
+            <div className="board-content">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feature-icon">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <h2>팀 현황</h2>
+              <p>팀 정보 및 통계</p>
+            </div>
+          </Link>
+
+          <Link to="/chat" className={`board-item ${!isLoggedIn ? 'disabled' : ''}`} tabIndex={isLoggedIn ? 0 : -1} aria-disabled={!isLoggedIn}>
+            <div className="board-content">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feature-icon">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <h2>채팅방</h2>
+              <p>실시간 소통</p>
+            </div>
+          </Link>
+        </div>
+      </main>
+    </div>
+  );
+};
 
 export default MainPage;
