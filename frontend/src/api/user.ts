@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
 // API URL 상수 정의
-const API_URL = `${ process.env.REACT_APP_API_URL }/api/v1/users`;
+const API_URL = `${ process.env.REACT_APP_API_URL }/v1/users`;
 
 // 사용자 정보 타입 정의
 interface UserInfo {

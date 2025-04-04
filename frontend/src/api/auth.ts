@@ -3,7 +3,7 @@ import { AuthResponse, SignInData, SignUpData } from '../types/auth';
 import { ErrorResponse } from '../types/global';
 
 // API URL 상수 정의
-const API_URL = `${process.env.REACT_APP_API_URL}/api/v1/auth`;
+const API_URL = `${process.env.REACT_APP_API_URL}/v1/auth`;
 
 // 회원가입 API 호출 함수
 export const signUp = async (signUpData: SignUpData): Promise<AuthResponse> => {
