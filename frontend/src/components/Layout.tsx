@@ -1,27 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navigation from './Navigation';
 import './Layout.css';
+import { useAuth } from '../contexts/AuthContext';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const location = useLocation();
+  const { isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (user && user.accessToken) {
-      setIsLoggedIn(true);
-    }
-  }, []);
-
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    setIsLoggedIn(false);
+    logout();
     navigate('/');
   };
 

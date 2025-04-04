@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // useHistory 대신 useNavigate 임포트
 import './LoginSignUp.css';
 import { signIn } from '../../api/auth'; // API 호출 함수 임포트
+import { useAuth } from '../../contexts/AuthContext';
 import { AuthResponse } from '../../types/auth';
 
 // 상태와 이벤트 핸들러 타입 정의
@@ -15,30 +16,28 @@ const LogInPage: React.FC = () => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const navigate = useNavigate(); // useHistory 대신 useNavigate 훅 사용
+  const { login } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
+    setError('');
+    setSuccessMessage('');
 
     try {
       const signInData: SignInFormValues = { email, password };
       const response: AuthResponse = await signIn(signInData);
-      console.log(response);
 
-      // 로그인 성공 시, 사용자 정보를 로컬 스토리지에 저장
-      localStorage.setItem('user', JSON.stringify({
-        userId: response.userId,
-        accessToken: response.accessToken,
-      }));
-
+      await login(response.userId.toString(), response.accessToken);
       setSuccessMessage('로그인 성공!');
-      setError('');
-
-      // 로그인 성공 후 메인 페이지로 리디렉션
       navigate('/');
     } catch (error) {
       setError((error as Error).message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -52,6 +51,7 @@ const LogInPage: React.FC = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          disabled={isLoading}
         />
         <input
           type="password"
@@ -59,8 +59,11 @@ const LogInPage: React.FC = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          disabled={isLoading}
         />
-        <button type="submit">로그인</button>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? '로그인 중...' : '로그인'}
+        </button>
       </form>
       {error && <p className="error">{error}</p>}
       {successMessage && <p className="success">{successMessage}</p>}

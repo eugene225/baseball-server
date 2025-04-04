@@ -8,23 +8,26 @@ import PublicDiaryPage from './components/diary/PublicDiaryPage';
 import DiaryCreationPage from './components/diaryEntry/DiaryCreationPage';
 import DiaryListPage from './components/diaryEntry/DiaryListPage';
 import Layout from './components/Layout';
+import { AuthProvider } from './contexts/AuthContext';
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/diary" element={<PublicDiaryPage />} />
-          <Route path="/diary-entry-create" element={<DiaryCreationPage />} />
-          <Route path="/diary-list/:diaryId" element={<DiaryListPage />} />
-          <Route path="/diaries/:diaryId/new-entry" element={<DiaryCreationPage />} />
-        </Routes>
-      </Layout>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/diary" element={<PublicDiaryPage />} />
+            <Route path="/diary-entry-create" element={<DiaryCreationPage />} />
+            <Route path="/diary-list/:diaryId" element={<DiaryListPage />} />
+            <Route path="/diaries/:diaryId/new-entry" element={<DiaryCreationPage />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </AuthProvider>
   );
 }
 

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import './MainPage.css';
+import { useAuth } from '../contexts/AuthContext';
 
 interface UserInfoProps {
   nickname: string;
@@ -27,20 +28,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ nickname, myTeam }) => {
 };
 
 const MainPage: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState<{ nickname: string; myTeam: string } | null>(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (user && user.accessToken) {
-      setIsLoggedIn(true);
-      setUserInfo({
-        nickname: user.nickname || '사용자',
-        myTeam: user.myTeam || '팀 없음',
-      });
-    }
-  }, []);
+  const { isLoggedIn, userInfo } = useAuth();
 
   return (
     <div className="main-page">
