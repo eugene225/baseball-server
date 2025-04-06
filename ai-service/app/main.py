@@ -14,11 +14,11 @@ app.add_middleware(
     max_age=3600,
 )
 
-@app.get("/kbo/rank")
+@app.get("/ai/kbo/rank")
 def read_kbo_rank():
     return get_kbo_rank()
 
-@app.get("/")
+@app.get("/ai")
 def read_root():
     return {"Hello": "World"}
 
