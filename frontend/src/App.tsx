@@ -9,6 +9,7 @@ import DiaryCreationPage from './components/diaryEntry/DiaryCreationPage';
 import DiaryListPage from './components/diaryEntry/DiaryListPage';
 import Layout from './components/Layout';
 import { AuthProvider } from './contexts/AuthContext';
+import TeamRankPage from './components/teamRank/TeamRankPage';
 
 const App: React.FC = () => {
   return (
@@ -24,6 +25,7 @@ const App: React.FC = () => {
             <Route path="/diary-entry-create" element={<DiaryCreationPage />} />
             <Route path="/diary-list/:diaryId" element={<DiaryListPage />} />
             <Route path="/diaries/:diaryId/new-entry" element={<DiaryCreationPage />} />
+            <Route path="/team-rank" element={<TeamRankPage />} />
           </Routes>
         </Layout>
       </Router>
