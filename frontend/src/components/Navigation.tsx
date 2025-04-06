@@ -73,8 +73,8 @@ const Navigation: React.FC<NavigationProps> = ({ isLoggedIn, onLogout }) => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/team-status" className={`nav-link ${location.pathname === '/team-status' ? 'active' : ''}`}>
-                    팀 현황
+                  <Link to="/team-rank" className={`nav-link ${location.pathname === '/team-rank' ? 'active' : ''}`}>
+                    팀 순위
                   </Link>
                 </li>
                 <li className="nav-item">
