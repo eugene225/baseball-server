@@ -2,7 +2,12 @@ from fastapi import FastAPI
 from app.crawling.rank import get_kbo_rank
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+app = FastAPI(
+    title="My Baseball API",
+    description="baseball app 에서 사용되는 데이터 관련 api를 제공합니다.",
+    version="1.0.0",
+    docs_url="/docs"
+)
 
 app.add_middleware(
     CORSMiddleware,
