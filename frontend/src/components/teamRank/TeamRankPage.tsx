@@ -23,9 +23,7 @@ const TeamRankPage: React.FC = () => {
     const fetchRankings = async () => {
       try {
         const data = await getKboRank();
-        // Ensure data is an array
-        const rankingsData = Array.isArray(data) ? data : [];
-        setRankings(rankingsData);
+        setRankings(data);
         setLoading(false);
       } catch (err) {
         setError('순위 정보를 불러오는데 실패했습니다.');
@@ -38,7 +36,6 @@ const TeamRankPage: React.FC = () => {
 
   if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">{error}</div>;
-  if (rankings.length === 0) return <div className="error">순위 정보가 없습니다.</div>;
 
   return (
     <div className="team-rank-container">

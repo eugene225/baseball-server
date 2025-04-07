@@ -1,6 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from app.crawling.rank import get_kbo_rank
 from fastapi.middleware.cors import CORSMiddleware
+import logging
+import time
+
+# 로깅 설정
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     root_path="/ai",
@@ -9,6 +15,25 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs"
 )
+
+# 요청 로깅 미들웨어
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+    
+    # 요청 정보 로깅
+    logger.info(f"Request: {request.method} {request.url}")
+    logger.info(f"Headers: {dict(request.headers)}")
+    logger.info(f"Query params: {dict(request.query_params)}")
+    
+    response = await call_next(request)
+    
+    # 응답 시간 로깅
+    process_time = time.time() - start_time
+    logger.info(f"Response time: {process_time:.2f} seconds")
+    logger.info(f"Response status: {response.status_code}")
+    
+    return response
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,7 +49,7 @@ app.add_middleware(
 def read_root():
     return {"Hello": "World"}
 
-@app.get("/kbo/rank")
+@app.get("/ai/kbo/rank")
 def read_kbo_rank():
     return get_kbo_rank()
 
