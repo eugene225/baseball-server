@@ -23,7 +23,7 @@ const TeamRankPage: React.FC = () => {
       try {
         const data = await getKboRank();
         const rankingsData = Array.isArray(data) ? data : [];
-        
+
         setRankings(rankingsData);
         setError(null);
       } catch (err) {
