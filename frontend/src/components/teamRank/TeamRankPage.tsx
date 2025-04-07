@@ -16,26 +16,29 @@ interface TeamRank {
 
 const TeamRankPage: React.FC = () => {
   const [rankings, setRankings] = useState<TeamRank[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchRankings = async () => {
       try {
         const data = await getKboRank();
-        setRankings(data);
-        setLoading(false);
+        const rankingsData = Array.isArray(data) ? data : [];
+        
+        setRankings(rankingsData);
+        setError(null);
       } catch (err) {
+        console.error('Error fetching rankings:', err);
         setError('순위 정보를 불러오는데 실패했습니다.');
-        setLoading(false);
+        setRankings([]);
       }
     };
 
     fetchRankings();
   }, []);
 
-  if (loading) return <div className="loading">Loading...</div>;
-  if (error) return <div className="error">{error}</div>;
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
 
   return (
     <div className="team-rank-container">
@@ -54,8 +57,8 @@ const TeamRankPage: React.FC = () => {
           <div className="streak-col">연속</div>
         </div>
 
-        {rankings.map((team) => (
-          <div key={team.rank} className={`table-row ${parseInt(team.rank) <= 5 ? 'top-five' : ''}`}>
+        {rankings.map((team, index) => (
+          <div key={index} className={`table-row ${index < 5 ? 'top-five' : ''}`}>
             <div className="rank-col">
               <span className="rank-number">{team.rank}</span>
             </div>
