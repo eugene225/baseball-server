@@ -1,8 +1,12 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from app.crawling.rank import get_kbo_rank
 from fastapi.middleware.cors import CORSMiddleware
 import time
 from app.utils.logger import logger
+from pydantic import BaseModel, Field
+from typing import List, Optional
+from datetime import date
+from app.llm.open_ai import generate_game_review
 
 app = FastAPI(
     title="My Baseball API",
@@ -47,3 +51,25 @@ def read_root():
 @app.get("/kbo/rank")
 def read_kbo_rank():
     return get_kbo_rank()
+
+class ReviewRequest(BaseModel):
+    rating: float = Field(..., ge=0.0, le=5.0, multiple_of=0.5)  # 0.5 단위로 0.5부터 5.0까지
+    team: str
+    opponent: str
+    game_date: date
+    additional_notes: Optional[str] = None
+
+@app.post("/game/review")
+async def generate_game_review_endpoint(request: ReviewRequest):
+    try:
+        review = generate_game_review(
+            request.rating,
+            request.team,
+            request.opponent,
+            request.game_date.strftime("%Y-%m-%d"),
+            request.additional_notes
+        )
+        return {"review": review}
+    except Exception as e:
+        logger.error(f"Error generating review: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
