@@ -8,13 +8,6 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-function stringToBoolean(value: string | undefined): boolean {
-  if (!value) {
-    return true;
-  }
-  return value.toLowerCase() === 'true';
-}
-
 export const typeORMConfig: TypeOrmModuleOptions = {
   type: 'mysql',
   host: process.env.DB_HOST || 'localhost',
@@ -23,5 +16,5 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   entities: [join(__dirname, '..', '**', '*.entity.{js,ts}')],
-  synchronize: stringToBoolean(process.env.DB_SYNCHRONIZE),
+  synchronize: Boolean(process.env.DB_SYNCHRONIZE),
 };
