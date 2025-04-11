@@ -41,6 +41,7 @@ jobs:
           echo "${{ secrets.ENV_FE }}" > ./frontend/.env
           docker build -f ./frontend/Dockerfile.frontend -t frontend-image:latest .
           # AI 서비스 빌드
+          echo "${{ secrets.ENV_AI }}" > ./ai-service/.env
           docker build -f ./ai-service/Dockerfile.AIservice -t ai-image:latest .
           # Backend 빌드
           echo "${{ secrets.ENV }}" > ./backend/.env
