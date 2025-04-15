@@ -10,6 +10,7 @@ import { CustomRepository } from '../../global/decorator/custom-repository.decor
 
 @CustomRepository(User)
 export class UserRepository extends Repository<User> {
+
   constructor(dataSource: DataSource) {
     super(User, dataSource.createEntityManager());
   }
@@ -32,5 +33,15 @@ export class UserRepository extends Repository<User> {
         throw new InternalServerErrorException('An unexpected error occurred');
       }
     }
+  }
+
+  async existsByEmail(email: string): Promise<boolean> {
+    const result = await this.countBy({ email });
+    return result > 0;
+  }
+
+  async existsByNickname(nickname: string): Promise<boolean> {
+    const result = await this.countBy({ nickname });
+    return result > 0;
   }
 }
