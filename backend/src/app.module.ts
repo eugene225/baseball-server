@@ -9,6 +9,8 @@ import { dirname, join } from 'path';
 import { DiaryModule } from './diary/diary.module.js';
 import { PlayerModule } from './player/player.module.js';
 import { fileURLToPath } from 'url';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './global/filter/httpException.filter.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -21,6 +23,9 @@ const __dirname = dirname(__filename);
     PlayerModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [{
+    provide: APP_FILTER,
+    useClass: HttpExceptionFilter
+    }, AppService],
 })
 export class AppModule {}
