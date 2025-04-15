@@ -6,7 +6,7 @@ import { UserDto } from '../dto/user.dto.js';
 import { SignInRequestDto } from '../dto/signIn-request.dto.js';
 import { SignInResponseDto } from '../dto/signIn-response.dto.js';
 import * as bcrypt from 'bcrypt';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +17,13 @@ export class AuthService {
   ) {}
 
   async signUp(signUpRequestDto: SignUpRequestDto): Promise<UserDto> {
+    if (await this.userRepository.existsByEmail(signUpRequestDto.email)) {
+      throw new ConflictException('해당 이메일로 가입한 계정이 존재합니다.');
+    }
+    if (await this.userRepository.existsByNickname(signUpRequestDto.nickname)) {
+      throw new ConflictException('사용중인 닉네임 입니다.');
+    }
+
     const user = await this.userRepository.createUser(signUpRequestDto);
     return UserDto.create(user);
   }
