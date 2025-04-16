@@ -1,10 +1,40 @@
+import os
+import json
+from datetime import datetime
 from bs4 import BeautifulSoup
 import requests
 from typing import List, Dict
 
 KBO_RANK_URL = "https://sports.news.naver.com/kbaseball/record/index.nhn?category=kbo"
+CACHE_FILE_PATH = 'kbo_rank_cache.json'
+
+def get_cached_data() -> Dict:
+    """캐시 파일에서 데이터를 읽어옵니다."""
+    if os.path.exists(CACHE_FILE_PATH):
+        with open(CACHE_FILE_PATH, 'r', encoding='utf-8') as file:
+            return json.load(file)
+    return {}
+
+def save_to_cache(data: List[Dict]) -> None:
+    """새 데이터를 캐시 파일에 저장합니다."""
+    cache_data = {
+        "date": datetime.now().strftime("%Y-%m-%d"),  # 오늘 날짜
+        "rankings": data
+    }
+    with open(CACHE_FILE_PATH, 'w', encoding='utf-8') as file:
+        json.dump(cache_data, file, ensure_ascii=False, indent=4)
 
 def get_kbo_rank() -> List[Dict]:
+    """KBO 순위를 가져오는 함수"""
+    cached_data = get_cached_data()
+
+    # 캐시된 데이터가 있고, 오늘 날짜의 데이터가 있을 경우 캐시 사용
+    cached_date = cached_data.get("date")
+    if cached_date == datetime.now().strftime("%Y-%m-%d"):
+        print("캐시된 데이터 반환")
+        return cached_data.get("rankings", [])
+
+    # 캐시가 없거나 날짜가 다른 경우 새로 요청하여 캐시
     try:
         headers = {
             "User-Agent": "Mozilla/5.0"
@@ -38,6 +68,9 @@ def get_kbo_rank() -> List[Dict]:
                 }
                 rankings.append(team_info)
 
+        # 새 데이터를 캐시하고 반환
+        save_to_cache(rankings)
+        print("새 데이터 반환 및 캐시 저장")
         return rankings
 
     except requests.RequestException as e:
