@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { TEAMS } from '../../types/teams';
-import './ChatPage.css';
+import './ChatListPage.css';
 
 const ChatListPage: React.FC = () => {
   return (
