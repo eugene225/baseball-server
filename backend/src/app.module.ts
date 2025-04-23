@@ -11,6 +11,7 @@ import { PlayerModule } from './player/player.module.js';
 import { fileURLToPath } from 'url';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './global/filter/httpException.filter.js';
+import { ChatModule } from './chat/chat.module.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -21,6 +22,7 @@ const __dirname = dirname(__filename);
     UsersModule,
     DiaryModule,
     PlayerModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [{
