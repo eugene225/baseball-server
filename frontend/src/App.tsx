@@ -1,15 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import MainPage from './components/MainPage';
 import LoginPage from './components/auth/LoginPage';
 import SignUpPage from './components/auth/SignUpPage';
-import MyPage from './components/MyPage';
 import PublicDiaryPage from './components/diary/PublicDiaryPage';
 import DiaryCreationPage from './components/diaryEntry/DiaryCreationPage';
 import DiaryListPage from './components/diaryEntry/DiaryListPage';
 import Layout from './components/layout/Layout';
 import { AuthProvider } from './contexts/AuthContext';
 import TeamRankPage from './components/teamRank/TeamRankPage';
+import ChatListPage from './components/chat/ChatListPage';
+import ChatRoomPage from './components/chat/ChatRoomPage';
+import MainPage from './components/main/MainPage';
+import MyPage from './components/myPage/MyPage';
 
 const App: React.FC = () => {
   return (
@@ -26,6 +28,8 @@ const App: React.FC = () => {
             <Route path="/diary-list/:diaryId" element={<DiaryListPage />} />
             <Route path="/diaries/:diaryId/new-entry" element={<DiaryCreationPage />} />
             <Route path="/team-rank" element={<TeamRankPage />} />
+            <Route path="/chat" element={<ChatListPage />} />
+            <Route path="/chat/:team" element={<ChatRoomPage />} />
           </Routes>
         </Layout>
       </Router>

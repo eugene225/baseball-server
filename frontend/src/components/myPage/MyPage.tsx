@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MyPage.css';
-import { fetchUserInfo, updateUserInfo } from '../api/user';
-import { TEAMS } from '../types/teams';
+import { fetchUserInfo, updateUserInfo } from '../../api/user';
+import { TEAMS } from '../../types/teams';
 
 interface UserInfo {
   nickname: string;
