@@ -10,7 +10,7 @@ interface ChatMessage {
 
 @WebSocketGateway({
   cors: {
-    origin: ["http://localhost:5001", "http://52.65.47.31"],
+    origin: ["http://localhost:5001", "http://52.65.47.31:5000"],
     methods: ['GET', 'POST'],
   },
   transports: ['websocket'],
