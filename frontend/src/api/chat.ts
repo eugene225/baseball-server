@@ -2,7 +2,7 @@ import { io, Socket } from 'socket.io-client';
 
 let socket: Socket | null = null;
 
-const API_URL = `${process.env.REACT_APP_API_URL}`
+const API_URL = `${process.env.REACT_APP_SOCKET_URL}`
 
 /** 소켓 연결 초기화 */
 export const initChat = () => {
