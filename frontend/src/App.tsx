@@ -7,7 +7,7 @@ import MyPage from './components/MyPage';
 import PublicDiaryPage from './components/diary/PublicDiaryPage';
 import DiaryCreationPage from './components/diaryEntry/DiaryCreationPage';
 import DiaryListPage from './components/diaryEntry/DiaryListPage';
-import Layout from './components/Layout';
+import Layout from './components/layout/Layout';
 import { AuthProvider } from './contexts/AuthContext';
 import TeamRankPage from './components/teamRank/TeamRankPage';
 
