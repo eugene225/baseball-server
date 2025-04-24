@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 scheduler = BackgroundScheduler()
 
 def start_schedule_task():
-    @scheduler.scheduled_job('cron', hour=17, minute=42)
+    @scheduler.scheduled_job('cron', hour=0, minute=0)
     def scheduled_job():
         logging.info("스케줄 저장 작업 시작")
         try:
