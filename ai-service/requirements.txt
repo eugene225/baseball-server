@@ -13,4 +13,4 @@ pandas==2.0.3
 SQLAlchemy==2.0.40
 sqlmodel==0.0.24
 pymysql==1.1.1
-ASPscheduler==3.11.0
+APScheduler==3.11.0
