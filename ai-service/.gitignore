@@ -8,3 +8,4 @@ logs/
 
 # 캐시 파일
 kbo_rank_cache.json
+/data
