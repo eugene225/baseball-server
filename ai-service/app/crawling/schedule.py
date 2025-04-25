@@ -1,9 +1,14 @@
+import os
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 import pandas as pd
 import time
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # 연도를 포함한 KBO 일정 URL 템플릿
 KBO_URL_TEMPLATE = "https://www.koreabaseball.com/Schedule/Schedule.aspx?seriesId=0&seasonId={year}"
@@ -12,8 +17,16 @@ def get_kbo_schedule(year: int, month: int):
     options = Options()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-software-rasterizer")
+    options.add_argument("--remote-debugging-port=9222")
+    options.add_argument("--window-size=1920x1080")
 
-    driver = webdriver.Chrome(options=options)
+    chromedriver_path = os.getenv("CHROME_DRIVER_PATH", "/usr/bin/chromedriver")
+    service = Service(executable_path=chromedriver_path)
+
+    driver = webdriver.Chrome(service=service, options=options)
 
     # 연도를 URL에 반영
     url = KBO_URL_TEMPLATE.format(year=year)
