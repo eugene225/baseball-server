@@ -24,7 +24,7 @@ def get_kbo_schedule(year: int, month: int):
     options.add_argument("--window-size=1920x1080")
 
     chromedriver_path = os.getenv("CHROME_DRIVER_PATH", "/usr/bin/chromedriver")
-    service = Service(executable_path=chromedriver_path)
+    service = Service(executable_path=chromedriver_path, port=9515)
 
     driver = webdriver.Chrome(service=service, options=options)
 

@@ -5,7 +5,8 @@ services:
     container_name: nginx-container
     ports:
       - "80:80"  # 외부 80번 포트로 접근 가능하게 설정
-      - "9222:9222" # chrome driver 포트 열기
+      - "9222:9222" # chrome driver 디버깅 포트 열기
+      - "9515:9515" # chrome driver 포트 열기
     volumes:
       - /etc/nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # 설정 파일 적용
     depends_on:
