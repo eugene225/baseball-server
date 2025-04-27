@@ -44,6 +44,7 @@ services:
       - "8000:8000"
     volumes:
       - /home/ec2-user/app/baseball-server/ai-service/logs:/ai-service/logs  # 절대 경로 수정
+      - /home/ec2-user/app/baseball-server/ai-service/data:/ai-service/data
     restart: always
     networks:
       - baseball-server_default

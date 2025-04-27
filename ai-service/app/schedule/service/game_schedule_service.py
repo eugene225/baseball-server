@@ -19,7 +19,6 @@ class GameScheduleService:
 
         # 2. yyyy-mm.json 파일 경로 설정
         file_name = f"{year}-{month:02d}.json"
-        os.makedirs("data", exist_ok=True)
         file_path = os.path.join("data", file_name)  # 파일 경로 설정
 
         # 3. 파일이 있는지 확인
