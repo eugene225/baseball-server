@@ -6,7 +6,8 @@ COPY ai-service/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 RUN mkdir -p logs
-RUN mkdir -p /usr/bin/chrome /usr/bin/chromedriver
+RUN mkdir -p /usr/bin/chrome
+RUN mkdir -p /usr/bin/chromedriver
 COPY ai-service/ .
 
 EXPOSE 8000
