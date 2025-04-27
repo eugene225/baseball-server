@@ -45,9 +45,6 @@ services:
     volumes:
       - /home/ec2-user/app/baseball-server/ai-service/logs:/ai-service/logs  # 절대 경로 수정
       - /home/ec2-user/app/baseball-server/ai-service/data:/ai-service/data
-      - /usr/bin/google-chrome:/usr/bin/google-chrome  # 링크 파일
-      - /opt/chrome/chrome-linux64:/opt/chrome/chrome-linux64  # 진짜 파일들
-      - /opt/chromedriver:/usr/bin/chromedriver
     restart: always
     networks:
       - baseball-server_default
