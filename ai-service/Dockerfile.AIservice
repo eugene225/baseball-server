@@ -2,15 +2,13 @@ FROM python:3.11-slim
 
 WORKDIR /ai-service
 
-# apt 라이브러리 설치
-RUN apt install -y \
+RUN apt update && apt install -y --no-install-recommends \
+    wget \
     libnss3 \
-    libgconf-2-4 \
     libxi6 \
     libxcomposite1 \
     libxcursor1 \
     libxdamage1 \
-    libxtst6 \
     libatk-bridge2.0-0 \
     libdrm2 \
     libgbm1 \
@@ -22,15 +20,16 @@ RUN apt install -y \
     libatk1.0-0 \
     libcups2 \
     libxss1 \
-    lsb-release
+    lsb-release \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY ai-service/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN mkdir -p logs
-RUN mkdir -p /usr/bin/chrome
-RUN mkdir -p /usr/bin/chromedriver
 COPY ai-service/ .
 
+RUN mkdir -p logs /usr/bin/chrome /usr/bin/chromedriver
+
 EXPOSE 8000
+
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
