@@ -1,40 +1,12 @@
 FROM python:3.11-slim
 
-# 필수 패키지 설치 (apt 기반)
-RUN apt-get update && apt-get install -y \
-    wget \
-    curl \
-    unzip \
-    gnupg \
-    libnss3 \
-    libxss1 \
-    libatk-bridge2.0-0 \
-    libgtk-3-0 \
-    libasound2 \
-    libgbm1 \
-    libxshmfence1 \
-    --no-install-recommends && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# 크롬 설치
-RUN wget -O /tmp/chrome.zip https://storage.googleapis.com/chrome-for-testing-public/135.0.7049.114/linux64/chrome-linux64.zip && \
-    unzip /tmp/chrome.zip -d /opt/chrome && \
-    ln -s /opt/chrome/chrome-linux64/chrome /usr/bin/google-chrome && \
-    rm /tmp/chrome.zip
-
-# 크롬드라이버 설치
-RUN wget -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/135.0.7049.114/linux64/chromedriver-linux64.zip && \
-    unzip /tmp/chromedriver.zip -d /tmp && \
-    mv /tmp/chromedriver-linux64/chromedriver /usr/bin/chromedriver && \
-    chmod +x /usr/bin/chromedriver && \
-    rm -rf /tmp/chromedriver.zip /tmp/chromedriver-linux64
-
 WORKDIR /ai-service
 
 COPY ai-service/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 RUN mkdir -p logs
+RUN mkdir -p /usr/bin/chrome /usr/bin/chromedriver
 COPY ai-service/ .
 
 EXPOSE 8000

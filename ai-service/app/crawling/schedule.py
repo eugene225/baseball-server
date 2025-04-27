@@ -27,6 +27,7 @@ def get_kbo_schedule(year: int, month: int):
     service = Service(executable_path=chromedriver_path, port=9515)
 
     driver = webdriver.Chrome(service=service, options=options)
+    driver.set_page_load_timeout(120)
 
     # 연도를 URL에 반영
     url = KBO_URL_TEMPLATE.format(year=year)

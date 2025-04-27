@@ -45,6 +45,8 @@ services:
     volumes:
       - /home/ec2-user/app/baseball-server/ai-service/logs:/ai-service/logs  # 절대 경로 수정
       - /home/ec2-user/app/baseball-server/ai-service/data:/ai-service/data
+      - /usr/bin/google-chrome:/usr/bin/google-chrome  # EC2의 chrome을 컨테이너에 마운트
+      - /usr/bin/chromedriver:/usr/bin/chromedriver  # EC2의 chromedriver를 컨테이너에 마운트
     restart: always
     networks:
       - baseball-server_default
