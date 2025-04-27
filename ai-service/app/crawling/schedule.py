@@ -23,10 +23,12 @@ def get_kbo_schedule(year: int, month: int):
     options.add_argument("--remote-debugging-port=9222")
     options.add_argument("--window-size=1920x1080")
 
-    chromedriver_path = os.getenv("CHROME_DRIVER_PATH", "/usr/bin/chromedriver")
-    service = Service(executable_path=chromedriver_path, port=9515)
-
-    driver = webdriver.Chrome(service=service, options=options)
+    # Selenium Hub에 연결하기 위한 Remote WebDriver 설정
+    hub_url = os.getenv("SELENIUM_HUB_URL")  # Selenium Hub 주소
+    driver = webdriver.Remote(
+        command_executor=hub_url,
+        options=options
+    )
     driver.set_page_load_timeout(120)
 
     # 연도를 URL에 반영
@@ -42,7 +44,7 @@ def get_kbo_schedule(year: int, month: int):
     month_select.select_by_value(f"{month:02d}")
 
     # 페이지가 새로 로딩되므로 대기 (간단하게 sleep 사용)
-    time.sleep(2)
+    time.sleep(5)
 
     table = driver.find_element(By.CLASS_NAME, "tbl-type06")
     thead = table.find_element(By.TAG_NAME, "thead")

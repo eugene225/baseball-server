@@ -1,14 +1,12 @@
 services:
   # Nginx 서비스 추가
   nginx:
-    image: nginx:latest  # 공식 Nginx 이미지 사용
+    image: nginx:latest
     container_name: nginx-container
     ports:
-      - "80:80"  # 외부 80번 포트로 접근 가능하게 설정
-      - "9222:9222" # chrome driver 디버깅 포트 열기
-      - "9515:9515" # chrome driver 포트 열기
+      - "80:80"
     volumes:
-      - /etc/nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # 설정 파일 적용
+      - /etc/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - backend-container
       - frontend-container
@@ -43,9 +41,25 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - /home/ec2-user/app/baseball-server/ai-service/logs:/ai-service/logs  # 절대 경로 수정
+      - /home/ec2-user/app/baseball-server/ai-service/logs:/ai-service/logs
       - /home/ec2-user/app/baseball-server/ai-service/data:/ai-service/data
     restart: always
+    networks:
+      - baseball-server_default
+  selenium-hub:
+    image: selenium/standalone-chrome:4.10.0
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"  # Selenium Hub 포트
+    networks:
+      - baseball-server_default
+
+  # Selenium Node
+  selenium-node-chrome:
+    image: selenium/node-chrome:4.10.0
+    container_name: selenium-node-chrome
+    depends_on:
+      - selenium-hub
     networks:
       - baseball-server_default
 
