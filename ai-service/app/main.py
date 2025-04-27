@@ -1,11 +1,12 @@
 import time
-from urllib.request import Request
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database.db import engine
 from sqlmodel import SQLModel
 from app.utils.logger import logger
 from app.batch.game_schedule_batch_scheduler import start_schedule_task
+from fastapi import Request, HTTPException
+from fastapi.responses import JSONResponse
 
 SQLModel.metadata.create_all(bind=engine)
 
@@ -47,6 +48,16 @@ async def log_requests(request: Request, call_next):
     logger.info(f"Response status: {response.status_code}")
     
     return response
+
+# 전역 예외 핸들러
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Unhandled exception: {exc}")
+    logger.error(f"Request URL: {request.url}")
+    return JSONResponse(
+        status_code=500,
+        content={"message": "Internal Server Error. Please try again later."},
+    )
 
 @app.get("/")
 def read_root():

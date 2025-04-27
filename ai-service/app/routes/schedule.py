@@ -7,14 +7,14 @@ from app.schedule.service.game_schedule_service import GameScheduleService
 router = APIRouter(prefix="/kbo/schedule", tags=["KBO Schedule"])
 
 @router.get("/")
-def read_kbo_schedule(
+async def read_kbo_schedule(
     year: int = Query(datetime.today().year, description="예: 2024"),
     month: int = Query(datetime.today().month, ge=1, le=12, description="예: 4")
 ):
     return get_kbo_schedule(year, month)
 
 @router.post("/{year}/{month}")
-def save_kbo_schedule(year: int, month: int):
+async def save_kbo_schedule(year: int, month: int):
     with get_db() as db:
         service = GameScheduleService(db)
         result = service.save_game_schedule(year, month)

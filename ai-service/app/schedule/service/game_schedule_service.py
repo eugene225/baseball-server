@@ -13,9 +13,9 @@ class GameScheduleService:
     def __init__(self, db: Session):
         self.db = db
 
-    def save_game_schedule(self, year: int, month: int) -> bool:
+    async def save_game_schedule(self, year: int, month: int) -> bool:
         # 1. 크롤링 정보 가져오기
-        schedule_data = get_kbo_schedule(year, month)
+        schedule_data = await get_kbo_schedule(year, month)
 
         # 2. yyyy-mm.json 파일 경로 설정
         file_name = f"{year}-{month:02d}.json"
@@ -33,7 +33,7 @@ class GameScheduleService:
 
             # 3.3 파일이 다르면, 파일을 새로 저장하고 DB 업데이트
             with open(file_path, "w") as file:
-                json.dump(schedule_data, file)
+                await json.dump(schedule_data, file)
 
         # 4. 파일이 없으면 새로 저장하고 DB 업데이트
         else:
@@ -42,10 +42,10 @@ class GameScheduleService:
                 json.dump(schedule_data, file)
         
         # DB에 해당 년-월 데이터 추가
-        self.update_schedule_in_db(year, month, schedule_data["data"])
+        await self.update_schedule_in_db(year, month, schedule_data["data"])
         return True
 
-    def update_schedule_in_db(self, year: int, month: int, schedule_data: list):
+    async def update_schedule_in_db(self, year: int, month: int, schedule_data: list):
         # DB에서 해당 연-월의 기존 데이터를 삭제
         start_date = datetime(year, month, 1)
         # 다음 달 1일을 구해서 범위 끝으로 사용
@@ -53,11 +53,11 @@ class GameScheduleService:
         end_year = year if month < 12 else year + 1
         end_date = datetime(end_year, end_month, 1)
 
-        deleted = self.db.query(GameSchedule).filter(
+        deleted = await self.db.query(GameSchedule).filter(
             GameSchedule.date >= start_date,
             GameSchedule.date < end_date
         ).delete()
-        self.db.commit()
+        await self.db.commit()
 
         # 새로운 데이터 추가
         batch_size = 70  # 배치사이즈 결정
@@ -85,14 +85,14 @@ class GameScheduleService:
 
             # 배치사이즈에 도달하면 DB에 저장
             if len(batch) >= batch_size:
-                self.db.bulk_save_objects(batch)
-                self.db.commit()
+                await self.db.bulk_save_objects(batch)
+                await self.db.commit()
                 batch = []
 
         # 남은 데이터 저장
         if batch:
-            self.db.bulk_save_objects(batch)
-            self.db.commit()
+            await self.db.bulk_save_objects(batch)
+            await self.db.commit()
 
     def convert_to_yyyymmdd(self, date_str: str, year: int) -> datetime:
         date_part = date_str.split('(')[0].strip()
