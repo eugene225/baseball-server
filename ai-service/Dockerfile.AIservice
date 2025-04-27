@@ -2,6 +2,28 @@ FROM python:3.11-slim
 
 WORKDIR /ai-service
 
+# apt 라이브러리 설치
+RUN apt install -y \
+    libnss3 \
+    libgconf-2-4 \
+    libxi6 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxtst6 \
+    libatk-bridge2.0-0 \
+    libdrm2 \
+    libgbm1 \
+    libxrandr2 \
+    xdg-utils \
+    fonts-liberation \
+    libappindicator3-1 \
+    libasound2 \
+    libatk1.0-0 \
+    libcups2 \
+    libxss1 \
+    lsb-release
+
 COPY ai-service/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
