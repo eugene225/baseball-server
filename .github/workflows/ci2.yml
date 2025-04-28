@@ -76,10 +76,10 @@ jobs:
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
             docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
-            cd /home/${{ secrets.REMOTE_HOME_USER}}/app/baseball-server
-            docker-compose down
+            docker-compose -f /home/${{ secrets.REMOTE_HOME_USER }}/app/baseball-server/docker-compose.yml down || true
             docker system prune -f --volumes
 
+            # 최신 이미지 풀링 및 태그
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
             docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest baseball-server-backend:latest
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
@@ -87,4 +87,6 @@ jobs:
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
             docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest baseball-server-ai:latest
 
+            # Docker Compose 실행
+            cd /home/${{ secrets.REMOTE_HOME_USER }}/app/baseball-server
             docker-compose up -d --force-recreate --remove-orphans
