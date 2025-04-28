@@ -65,4 +65,4 @@ services:
 
 networks:
   baseball-server_default:
-  driver: bridge
+    driver: bridge
