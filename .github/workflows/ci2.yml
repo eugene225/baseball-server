@@ -1,0 +1,27 @@
+name: home-server branch auto deploy
+
+on:
+  push:
+    branches:
+      - home-server
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Connect to home server and deploy
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.REMOTE_HOME_IP }}
+          username: ${{ secrets.REMOTE_HOME_USER }}
+          key: ${{ secrets.REMOTE_HOME_PRIVATE_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          script: |
+            cd /home/${{ secrets.REMOTE_HOME_USER }}/app/baseball-server
+            git pull origin home-server
+            docker-compose down
+            docker-compose up -d --build
