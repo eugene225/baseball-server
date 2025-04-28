@@ -19,6 +19,20 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+    
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Execute remote SSH commands on Ubuntu
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.REMOTE_HOME_IP }}
+          username: ${{ secrets.REMOTE_HOME_USER }}
+          key: ${{ secrets.REMOTE_HOME_PRIVATE_KEY }}
+          port: ${{ secrets.REMOTE_HOME_PORT }}
+          script: |
+            cd /home/${{ secrets.REMOTE_HOME_USER }}/app/baseball-server
+            git pull origin home-server
 
       # Docker 이미지 빌드
       - name: Build Docker images
@@ -51,7 +65,7 @@ jobs:
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
 
       # 원격 EC2에서 Docker 컨테이너 실행
-      - name: Execute remote SSH commands on EC2
+      - name: Execute remote SSH commands on Ubuntu
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.REMOTE_HOME_IP }}
@@ -59,10 +73,10 @@ jobs:
           key: ${{ secrets.REMOTE_HOME_PRIVATE_KEY }}
           port: ${{ secrets.REMOTE_HOME_PORT }}
           script: |
-            cd /home/${{ secrets.REMOTE_HOME_USER }}/app/baseball-server
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
             docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
+            cd /home/${{ secrets.REMOTE_HOME_USER}}/app/baseball-server
             docker-compose down
             docker system prune -f --volumes
 
