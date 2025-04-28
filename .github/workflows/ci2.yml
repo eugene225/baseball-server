@@ -20,19 +20,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Connect to home server and deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.REMOTE_HOME_IP }}
-          username: ${{ secrets.REMOTE_HOME_USER }}
-          key: ${{ secrets.REMOTE_HOME_PRIVATE_KEY }}
-          port: ${{ secrets.REMOTE_HOME_PORT }}
-          script: |
-            cd /home/${{ secrets.REMOTE_HOME_USER }}/app/baseball-server
-            git pull origin home-server
-            docker-compose down
-            docker-compose up -d --build
-
       # Docker 이미지 빌드
       - name: Build Docker images
         run: |
