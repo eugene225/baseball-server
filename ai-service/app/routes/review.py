@@ -15,7 +15,7 @@ class ReviewRequest(BaseModel):
     additional_notes: Optional[str] = None
 
 @router.post("/")
-async def generate_game_review_endpoint(request: ReviewRequest):
+def generate_game_review_endpoint(request: ReviewRequest):
     try:
         review = generate_game_review(
             request.rating,
