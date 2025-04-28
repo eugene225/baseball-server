@@ -19,7 +19,7 @@ jobs:
           host: ${{ secrets.REMOTE_HOME_IP }}
           username: ${{ secrets.REMOTE_HOME_USER }}
           key: ${{ secrets.REMOTE_HOME_PRIVATE_KEY }}
-          port: ${{ secrets.REMOTE_SSH_PORT }}
+          port: ${{ secrets.REMOTE_HOME_PORT }}
           script: |
             cd /home/${{ secrets.REMOTE_HOME_USER }}/app/baseball-server
             git pull origin home-server
