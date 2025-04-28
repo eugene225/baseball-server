@@ -13,6 +13,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - name: Connect to home server and deploy
         uses: appleboy/ssh-action@master
         with:
@@ -25,3 +32,58 @@ jobs:
             git pull origin home-server
             docker-compose down
             docker-compose up -d --build
+
+      # Docker 이미지 빌드
+      - name: Build Docker images
+        run: |
+          # Frontend 빌드
+          echo "${{ secrets.ENV_FE }}" > ./frontend/.env
+          docker build -f ./frontend/Dockerfile.frontend -t frontend-image:latest .
+          
+          # AI 서비스 빌드
+          echo "${{ secrets.ENV_AI }}" > ./ai-service/.env
+          docker build -f ./ai-service/Dockerfile.AIservice -t ai-image:latest .
+          
+          # Backend 빌드
+          echo "${{ secrets.ENV }}" > ./backend/.env
+          docker build -f ./backend/Dockerfile.backend -t backend-image:latest .
+
+      # Docker 이미지 ECR에 푸시
+      - name: Tag and Push Docker images to ECR
+        run: |
+          # Frontend 태그 및 푸시
+          docker tag frontend-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
+
+          # AI 서비스 태그 및 푸시
+          docker tag ai-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
+
+          # Backend 태그 및 푸시
+          docker tag backend-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
+
+      # 원격 EC2에서 Docker 컨테이너 실행
+      - name: Execute remote SSH commands on EC2
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.REMOTE_HOME_IP }}
+          username: ${{ secrets.REMOTE_HOME_USER }}
+          key: ${{ secrets.REMOTE_HOME_PRIVATE_KEY }}
+          port: ${{ secrets.REMOTE_HOME_PORT }}
+          script: |
+            cd /home/${{ secrets.REMOTE_HOME_USER }}/app/baseball-server
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
+            docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+
+            docker-compose down
+            docker system prune -f --volumes
+
+            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest
+            docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-backend:latest baseball-server-backend:latest
+            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest
+            docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-frontend:latest baseball-server-frontend:latest
+            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest
+            docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/baseball-project-ai:latest baseball-server-ai:latest
+
+            docker-compose up -d --force-recreate --remove-orphans
