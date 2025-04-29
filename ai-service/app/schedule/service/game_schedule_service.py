@@ -35,13 +35,15 @@ class GameScheduleService:
                     json.dump(schedule_data, file)
                     await self.delete_game_schedule_in_db(year, month)
                     await self.save_game_schedule_in_db(year, month, schedule_data["data"])
+                    self.db.commit()
                     return {"success": True, "message": "Data updated successfully"}
 
             else:
                 with open(file_path, "w") as file:
                     json.dump(schedule_data, file)
-                print(f"Data : {schedule_data}")
+                print(f"Data Counts : {schedule_data['count']}")
                 await self.save_game_schedule_in_db(year, month, schedule_data["data"])
+                self.db.commit()
                 return {"success": True, "message": "Data saved successfully"}
 
         except Exception as e:
