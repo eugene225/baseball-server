@@ -8,15 +8,15 @@ from fastapi.concurrency import run_in_threadpool
 router = APIRouter(prefix="/kbo/schedule", tags=["KBO Schedule"])
 
 @router.get("/")
-async def read_kbo_schedule(
+def read_kbo_schedule(
     year: int = Query(datetime.today().year, description="예: 2024"),
     month: int = Query(datetime.today().month, ge=1, le=12, description="예: 4")
 ):
-    return await run_in_threadpool(get_kbo_schedule, year, month)
+    return run_in_threadpool(get_kbo_schedule, year, month)
 
 @router.post("/{year}/{month}")
-def save_kbo_schedule(year: int, month: int):
+async def save_kbo_schedule(year: int, month: int):
     with get_db() as db:
         service = GameScheduleService(db)
-        result = service.save_game_schedule(year, month)
+        result = await service.save_game_schedule(year, month)
         return {"success": result}
