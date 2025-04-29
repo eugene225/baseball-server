@@ -1,25 +1,31 @@
 from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.executors.asyncio import AsyncIOExecutor
 from datetime import datetime
 from app.schedule.service.game_schedule_service import GameScheduleService
 from app.database.db import get_db
+import asyncio
 import logging
 
 logging.basicConfig(level=logging.INFO)
-scheduler = BackgroundScheduler()
+scheduler = AsyncIOScheduler(executors={"default": AsyncIOExecutor()})
+
+async def save_schedule_task():
+    logging.info("스케줄 저장 작업 시작")
+    try:
+        async with get_db() as db:
+            today = datetime.today()
+            service = GameScheduleService(db)
+            result = await service.save_game_schedule(today.year, today.month)
+            logging.info(f"스케줄 저장 결과: {result}")
+    except Exception as e:
+        logging.error(f"스케줄 저장 중 오류 발생: {e}")
+    logging.info("스케줄 저장 작업 완료")
 
 def start_schedule_task():
     @scheduler.scheduled_job('cron', hour=0, minute=0)
     def scheduled_job():
-        logging.info("스케줄 저장 작업 시작")
-        try:
-            with get_db() as db:
-                today = datetime.today()
-                service = GameScheduleService(db)
-                service.save_game_schedule(today.year, today.month)
-        except Exception as e:
-            logging.error(f"스케줄 저장 중 오류 발생: {e}")
-        finally:
-            db.close()
-        logging.info("스케줄 저장 작업 완료")
+        logging.info("스케줄러 작업 실행")
+        asyncio.run(save_schedule_task())
 
     scheduler.start()
