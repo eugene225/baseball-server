@@ -30,14 +30,20 @@ export class AuthService {
 
   async singIn(signInRequestDto: SignInRequestDto): Promise<SignInResponseDto> {
     const { email, password } = signInRequestDto;
-    const user = await this.userRepository.findOneBy({ email });
+    const user = await this.userRepository.findOneBy({ email })
+    if(!user) {
+      throw new UnauthorizedException({
+        message: '해당 이메일로 가입한 계정이 없습니다.',
+        email,
+      });
+    }
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { email };
       const accessToken = await this.jwtService.sign(payload);
       return SignInResponseDto.create(user.id, email, accessToken);
     } else {
-      throw new UnauthorizedException('login failed - email {}', email);
+      throw new UnauthorizedException({message: '비밀번호가 일치하지 않습니다.'});
     }
   }
 }

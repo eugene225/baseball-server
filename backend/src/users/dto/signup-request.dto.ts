@@ -6,7 +6,7 @@ export class SignUpRequestDto {
 
   @IsString()
   @Matches(/^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,}$/, {
-    message: '비밀번호는 영어 대소문자+숫자 8자 이상'
+    message: '비밀번호는 영어와 숫자만 포함하고 8자 이상이어야 합니다'
   })
   password: string;
 
