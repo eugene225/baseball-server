@@ -1,0 +1,57 @@
+:root {
+  --main-color: #800020; /* 버건디 */
+  --text-color: #333;
+  --subtext-color: #777;
+  --border-color: #e5e5e5;
+}
+
+/* 카드 전체 */
+.reviewCard {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease;
+}
+
+.reviewCard:hover {
+  transform: translateY(-2px);
+}
+
+/* 상단 정보 */
+.reviewHeader {
+  font-size: 14px;
+  color: var(--subtext-color);
+  margin-bottom: 6px;
+}
+
+.reviewHeader strong {
+  color: var(--main-color);
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+/* 본문 */
+.reviewBody {
+  font-size: 15px;
+  color: var(--text-color);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+/* 하단 정보 */
+.reviewFooter {
+  font-size: 13px;
+  color: var(--subtext-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 별점 */
+.reviewStars {
+  color: #f5c518;
+  font-size: 15px;
+}
