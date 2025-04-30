@@ -8,7 +8,7 @@ async function bootstrap() {
   const port = process.env.SERVER_PORT;
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:5001', 'http://52.65.47.31:5000'],
+    origin: ['http://localhost:3000', 'http://localhost:5001', 'http://52.65.47.31:5000', 'https://haengbokza.site'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
