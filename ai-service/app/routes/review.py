@@ -14,6 +14,7 @@ class ReviewRequest(BaseModel):
     game_date: date
     additional_notes: Optional[str] = None
 
+@router.post("")
 @router.post("/")
 def generate_game_review_endpoint(request: ReviewRequest):
     try:

@@ -7,6 +7,7 @@ from fastapi.concurrency import run_in_threadpool
 
 router = APIRouter(prefix="/kbo/schedule", tags=["KBO Schedule"])
 
+@router.get("")
 @router.get("/")
 def read_kbo_schedule(
     year: int = Query(datetime.today().year, description="예: 2024"),
