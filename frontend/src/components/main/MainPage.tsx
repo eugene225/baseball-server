@@ -79,21 +79,20 @@ const MainPage: React.FC = () => {
         )}
 
         <div className="board-container" role="navigation" aria-label="메인 메뉴">
-          {/* Other menu links... */}
+
         </div>
 
         <section className="review-feed">
-          <div className="review-feed-header">
-            <button className="write-review-button" disabled>
-              Today's sweet potato
-            </button>
-          </div>
-
           <div className="review-list">
             {reviews.map((review, idx) => (
               <ReviewCard key={idx} {...review} />
             ))}
           </div>
+
+          {/* 플로팅 버튼 */}
+          <button className="floating-write-button" disabled>
+            +
+          </button>
         </section>
 
       </main>
