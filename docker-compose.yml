@@ -7,10 +7,21 @@ services:
       - "80:80"
     volumes:
       - /home/eugene/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /home/eugene/certbot/www:/var/www/certbot
+      - /home/eugene/certbot/conf:/etc/letsencrypt
     depends_on:
       - backend-container
       - frontend-container
       - ai-container
+    networks:
+      - baseball-server_default
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - /home/eugene/certbot/www:/var/www/certbot
+      - /home/eugene/certbot/conf:/etc/letsencrypt
     networks:
       - baseball-server_default
 
