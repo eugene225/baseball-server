@@ -1,17 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import LoginPage from './components/auth/LoginPage';
-import SignUpPage from './components/auth/SignUpPage';
-import PublicDiaryPage from './components/diary/PublicDiaryPage';
-import DiaryCreationPage from './components/diaryEntry/DiaryCreationPage';
-import DiaryListPage from './components/diaryEntry/DiaryListPage';
-import Layout from './components/layout/Layout';
+import LoginPage from './features/auth/LoginPage';
+import SignUpPage from './features/auth/SignUpPage';
+import PublicDiaryPage from './features/diary/PublicDiaryPage';
+import DiaryCreationPage from './features/diaryEntry/DiaryCreationPage';
+import DiaryListPage from './features/diaryEntry/DiaryListPage';
+import Layout from './features/layout/Layout';
 import { AuthProvider } from './contexts/AuthContext';
-import TeamRankPage from './components/teamRank/TeamRankPage';
-import ChatListPage from './components/chat/ChatListPage';
-import ChatRoomPage from './components/chat/ChatRoomPage';
-import MainPage from './components/main/MainPage';
-import MyPage from './components/myPage/MyPage';
+import TeamRankPage from './features/teamRank/TeamRankPage';
+import ChatListPage from './features/chat/ChatListPage';
+import ChatRoomPage from './features/chat/ChatRoomPage';
+import MainPage from './features/main/MainPage';
+import MyPage from './features/myPage/MyPage';
 
 const App: React.FC = () => {
   return (

@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './ReviewCard.module.css';
+import StarRating from '../gloabal/StarRating';
 
 type ReviewProps = {
     content: string;
@@ -26,9 +27,9 @@ const ReviewCard = ({ content, rating, author, team, time, matchInfo, stadium }:
     </div>
 
     <div className={styles.reviewFooter}>
-      <span className={styles.reviewStars}>
-        {'⭐'.repeat(rating)}{'☆'.repeat(5 - rating)}
-      </span>
+      <div className={styles.reviewStars}>
+        <StarRating rating={rating} size={16} />
+      </div>
       <small>{time}</small>
     </div>
   </div>

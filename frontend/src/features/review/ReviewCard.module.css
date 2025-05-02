@@ -52,6 +52,7 @@
 
 /* 별점 */
 .reviewStars {
-  color: #f5c518;
-  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
