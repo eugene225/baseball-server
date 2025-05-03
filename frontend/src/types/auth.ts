@@ -1,3 +1,17 @@
+// user 관련 타입 정의
+export interface UserInfo {
+    nickname: string;
+    myTeam: string;
+    fcmToken?: string;
+}
+
+export interface AuthContextType {
+    isLoggedIn: boolean;
+    userInfo: UserInfo | null;
+    login: (userId: string, accessToken: string) => void;
+    logout: () => void;
+}
+
 // 회원가입 데이터 타입 정의
 export interface SignUpData {
     email: string;

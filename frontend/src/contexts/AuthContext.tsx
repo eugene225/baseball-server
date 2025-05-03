@@ -1,12 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { fetchUserInfo } from '../api/user';
+import {AuthContextType} from '../types/auth';
 
-interface AuthContextType {
-  isLoggedIn: boolean;
-  userInfo: { nickname: string; myTeam: string } | null;
-  login: (userId: string, accessToken: string) => void;
-  logout: () => void;
-}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
