@@ -1,4 +1,3 @@
-/* General Styles for MyPage */
 .my-page {
     text-align: center;
     padding: 40px 20px;
@@ -80,13 +79,11 @@ h1 {
     transform: translateY(-2px);
 }
 
-/* Button style when saving */
 .user-info-form button.saving {
     background-color: var(--text-light);
     cursor: not-allowed;
 }
 
-/* Save message style */
 .save-message {
     margin-top: 16px;
     font-size: 1rem;
@@ -94,7 +91,72 @@ h1 {
     font-weight: 500;
 }
 
-/* Private Diaries Block Styles */
+/* 알림 허용 토글 레이블 스타일 */
+.notification-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+/* 스위치 컨테이너 스타일 */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px; /* 스위치 너비 */
+    height: 34px; /* 스위치 높이 */
+    margin-left: 10px;
+}
+
+/* 스위치 내부 input 스타일 */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* 슬라이더 디자인 */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: #ccc; /* 기본 배경 색 */
+    transition: background-color 0.4s, transform 0.4s;
+    border-radius: 50px; /* 동그란 모서리 */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* 슬라이더의 동그라미 */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px; /* 동그라미 크기 */
+    width: 26px; /* 동그라미 크기 */
+    background-color: #fff; /* 하얀색 동그라미 */
+    transition: transform 0.4s;
+    border-radius: 50%;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); /* 동그라미에 그림자 추가 */
+}
+
+/* 체크된 상태의 슬라이더 디자인 */
+input:checked + .slider {
+    background-color: #4CAF50; /* 체크된 상태에서의 색상 */
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px); /* 오른쪽으로 이동 */
+}
+
+/* 슬라이더의 둥근 끝 모양 */
+.slider.round {
+    border-radius: 50px;
+}
+
+/* Private Diaries Block 스타일 */
 .private-diaries-block {
     background-color: var(--white);
     border-radius: var(--border-radius);
@@ -109,13 +171,13 @@ h1 {
     margin-right: auto;
     border: 1px solid rgba(0, 0, 0, 0.05);
 }
-  
+
 .private-diaries-block:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     border-color: var(--primary-light);
 }
-  
+
 .private-diaries-block .block-content h2 {
     margin: 0;
     font-size: 1.2rem;
@@ -124,7 +186,7 @@ h1 {
     align-items: center;
     justify-content: center;
 }
-  
+
 .private-diaries-block .block-content h2 span {
     margin-right: 12px;
     font-size: 1.4em;
@@ -133,37 +195,51 @@ h1 {
 /* Responsive Design */
 @media (max-width: 768px) {
     .user-info-form {
-      max-width: 100%;
-      padding: 24px;
+        max-width: 100%;
+        padding: 24px;
     }
-  
+
     .private-diaries-block {
-      width: 100%;
-      padding: 20px;
+        width: 90%;
+        padding: 20px;
     }
-  
+
     h1 {
-      font-size: 2rem;
+        font-size: 2rem;
+    }
+
+    /* 버튼 스타일 수정 */
+    .user-info-form button {
+        width: 100%;  /* 버튼 너비를 100%로 설정 */
+        font-size: 1rem;  /* 폰트 크기 적절히 조정 */
+        padding: 12px;  /* 버튼 패딩 조정 */
     }
 }
 
 @media (max-width: 480px) {
     h1 {
-      font-size: 1.8rem;
+        font-size: 1.8rem;
     }
-  
+
     .user-info-form input,
     .user-info-form select,
     .user-info-form button {
-      font-size: 0.95rem;
-      padding: 10px 14px;
+        font-size: 0.95rem;
+        padding: 10px 14px;
     }
-  
+
     .user-info-form {
-      padding: 20px;
+        padding: 20px;
     }
 
     .private-diaries-block .block-content h2 {
         font-size: 1.1rem;
     }
+
+    /* 모바일에서 버튼 크기 조정 */
+    .user-info-form button {
+        padding: 10px 14px;
+        font-size: 1rem;  /* 작은 화면에서 폰트 크기 다시 설정 */
+    }
 }
+

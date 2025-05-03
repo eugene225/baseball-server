@@ -28,7 +28,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ nickname, myTeam }) => {
   );
 };
 
-// Sample review data (you can replace this with API data)
 const dummyReviews = [
   {
     content: '재밌는 경기였어요!',
@@ -54,7 +53,6 @@ const MainPage: React.FC = () => {
   const { isLoggedIn, userInfo } = useAuth();
   const [reviews, setReviews] = useState(dummyReviews);
 
-  // Sort reviews by time (latest first)
   useEffect(() => {
     const sortedReviews = [...reviews].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
     setReviews(sortedReviews);

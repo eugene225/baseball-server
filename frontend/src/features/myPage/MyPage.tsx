@@ -3,11 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import './MyPage.css';
 import { fetchUserInfo, updateUserInfo } from '../../api/user';
 import { TEAMS } from '../../types/teams';
-
-interface UserInfo {
-  nickname: string;
-  myTeam: string;
-}
+import {deleteFcmToken, saveFcmToken} from '../../api/fcm';
+import {requestPermission} from '../../config/firebaseConfig';
+import {UserInfo} from '../../types/auth';
 
 function MyPage(): JSX.Element {
   const [userInfo, setUserInfo] = useState<UserInfo>({ nickname: '', myTeam: '' });
@@ -15,6 +13,7 @@ function MyPage(): JSX.Element {
   const [newMyTeam, setNewMyTeam] = useState<string>('');
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [saveMessage, setSaveMessage] = useState<string>('');
+  const [allowNotification, setAllowNotification] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,6 +25,7 @@ function MyPage(): JSX.Element {
           setUserInfo({ nickname: data.nickname, myTeam: data.myTeam });
           setNewNickname(data.nickname);
           setNewMyTeam(data.myTeam);
+          setAllowNotification(!!data.fcmToken);
         } catch (error) {
           localStorage.removeItem('user');
           navigate('/login');
@@ -50,6 +50,35 @@ function MyPage(): JSX.Element {
       } finally {
         setIsSaving(false);
         setTimeout(() => setSaveMessage(''), 3000);
+      }
+    }
+  };
+
+  // FCM 데이터 관리 함수
+  const handleNotificationToggle = async (checked: boolean) => {
+    setAllowNotification(checked);
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!user?.userId || !user?.accessToken) return;
+
+    if (checked) {
+      const token = await requestPermission();
+      if (token) {
+        try {
+          await saveFcmToken(user.userId, user.accessToken, token);
+          console.log('FCM 토큰 저장 완료');
+        } catch (err) {
+          console.error('FCM 저장 실패:', err);
+          setAllowNotification(false);
+        }
+      } else {
+        setAllowNotification(false);
+      }
+    } else {
+      try {
+        await deleteFcmToken(user.userId, user.accessToken);
+        console.log('FCM 토큰 삭제 완료');
+      } catch (err) {
+        console.error('FCM 삭제 실패:', err);
       }
     }
   };
@@ -92,6 +121,17 @@ function MyPage(): JSX.Element {
           {isSaving ? '저장 중...' : '변경사항 저장'}
         </button>
         {saveMessage && <p className="save-message">{saveMessage}</p>}
+        <label className="notification-toggle">
+          <span>알림 허용:</span>
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={allowNotification}
+              onChange={(e) => handleNotificationToggle(e.target.checked)}
+            />
+            <span className="slider round"></span>
+          </label>
+        </label>
       </div>
       <div className="private-diaries-block" onClick={handleDiaryBlockClick}>
         <div className="block-content">
