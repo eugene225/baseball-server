@@ -47,6 +47,7 @@ jobs:
           
           # Backend 빌드
           echo "${{ secrets.ENV }}" > ./backend/.env
+          echo "${{ secrets.FCM_ACCOUNT_KEY }}" > ./backend/serviceAccountKey.json
           docker build -f ./backend/Dockerfile.backend -t backend-image:latest .
 
       # Docker 이미지 ECR에 푸시
