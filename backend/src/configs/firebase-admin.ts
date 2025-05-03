@@ -1,12 +1,9 @@
 import admin from 'firebase-admin';
-import * as fs from 'fs';
-
-const rawData = fs.readFileSync(new URL('../../src/configs/serviceAccountKey.json', import.meta.url), 'utf-8');
-const serviceAccount = JSON.parse(rawData);
 
 const credential = {
-  ...serviceAccount,
-  private_key: serviceAccount.private_key.replace(/\\n/g, '\n'),
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+  privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
 };
 
 if (!admin.apps.length) {
