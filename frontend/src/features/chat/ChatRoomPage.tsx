@@ -16,6 +16,7 @@ interface ChatMsg {
   sender: string;
   text: string;
   timestamp: string;
+  type?: 'user' | 'system';
 }
 
 const ChatRoomPage: React.FC = () => {
@@ -28,15 +29,24 @@ const ChatRoomPage: React.FC = () => {
 
   useEffect(() => {
     initChat();
-    if (team) joinRoom(team);
+    if (team && userInfo?.nickname) {
+      joinRoom(team, userInfo.nickname);
+    }
 
-    onMessage((msg) => setMsgs((prev) => [...prev, msg]));
+    onMessage((msg: ChatMsg) => {
+      setMsgs((prev) => [...prev, {
+        ...msg,
+        type: msg.type || 'user', // 기본값 처리
+      }]);
+    });
 
     return () => {
-      if (team) leaveRoom(team);
+      if (team && userInfo?.nickname) {
+        leaveRoom(team, userInfo.nickname);
+      }
       disconnectChat();
     };
-  }, [team]);
+  }, [team, userInfo?.nickname]);
 
   useEffect(() => {
     if (listRef.current) {
@@ -63,6 +73,12 @@ const ChatRoomPage: React.FC = () => {
 
       <div className="message-list" ref={listRef}>
         {msgs.map((m, i) => {
+          if (m.type === 'system') {
+            return (
+              <div key={i} className="system-message">{m.text}</div>
+            );
+          }
+
           const isMe = m.sender === userInfo?.nickname;
           return (
             <div key={i} className={`message ${isMe ? 'my-message' : 'other-message'}`}>
