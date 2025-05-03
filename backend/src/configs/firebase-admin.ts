@@ -1,10 +1,8 @@
 import admin from 'firebase-admin';
-import serviceAccountRaw from './serviceAccountKey.json' with { type: 'json' };
+import * as fs from 'fs';
 
-const serviceAccount = {
-  ...serviceAccountRaw,
-  private_key: process.platform === 'linux' ? serviceAccountRaw.private_key : serviceAccountRaw.private_key.replace(/\\n/g, '\n'),
-};
+const rawData = fs.readFileSync(new URL('../../src/configs/serviceAccountKey.json', import.meta.url), 'utf-8');
+const serviceAccount = JSON.parse(rawData);
 
 if (!admin.apps.length) {
   admin.initializeApp({
