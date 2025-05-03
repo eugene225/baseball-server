@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './features/auth/LoginPage';
 import SignUpPage from './features/auth/SignUpPage';
@@ -14,6 +14,19 @@ import MainPage from './features/main/MainPage';
 import MyPage from './features/myPage/MyPage';
 
 const App: React.FC = () => {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/firebase-messaging-sw.js')
+        .then((registration) => {
+          console.log('Firebase Service Worker 등록 성공:', registration);
+        })
+        .catch((err) => {
+          console.error('Firebase Service Worker 등록 실패:', err);
+        });
+    }
+  }, []);
+
   return (
     <AuthProvider>
       <Router>
