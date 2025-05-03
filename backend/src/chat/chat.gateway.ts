@@ -33,15 +33,29 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   @SubscribeMessage('join')
-  handleJoin(@MessageBody() room: string, @ConnectedSocket() client: Socket) {
+  handleJoin(
+    @MessageBody() data: { room: string; nickname: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const { room, nickname } = data;
     client.join(room);
-    console.log(`${client.id} joined room ${room}`);
+    console.log(`${nickname} (${client.id}) joined room ${room}`);
+
+    // 입장 메시지를 방 전체에 broadcast
+    this.server.to(room).emit('system', `${nickname}님이 입장하셨습니다.`);
   }
 
   @SubscribeMessage('leave')
-  handleLeave(@MessageBody() room: string, @ConnectedSocket() client: Socket) {
+  handleLeave(
+    @MessageBody() data: { room: string; nickname: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const { room, nickname } = data;
     client.leave(room);
-    console.log(`${client.id} left room ${room}`);
+    console.log(`${nickname} (${client.id}) left room ${room}`);
+
+    // 퇴장 메시지 broadcast
+    this.server.to(room).emit('system', `${nickname}님이 퇴장하셨습니다.`);
   }
 
   @SubscribeMessage('message')
