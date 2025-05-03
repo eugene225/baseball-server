@@ -1,5 +1,10 @@
 import admin from 'firebase-admin';
-import serviceAccount from './serviceAccountKey.json' with { type: 'json' };
+import serviceAccountRaw from './serviceAccountKey.json' with { type: 'json' };
+
+const serviceAccount = {
+  ...serviceAccountRaw,
+  private_key: process.platform === 'linux' ? serviceAccountRaw.private_key : serviceAccountRaw.private_key.replace(/\\n/g, '\n'),
+};
 
 if (!admin.apps.length) {
   admin.initializeApp({
