@@ -38,15 +38,24 @@ export const onMessage = (
 
     socket.on('message', cb);
 
-    socket.on('system', (text: string) => {
+    const systemListener = (text: string) => {
       cb({
         sender: '',
         text,
         timestamp: new Date().toISOString(),
         type: 'system',
       });
-    });
+    };
+
+    socket.on('system', systemListener);
+
+    return () => {
+      socket?.off('message', cb);
+      socket?.off('system', systemListener);
+    };
   }
+
+  return () => {};
 };
 
 /** 소켓 연결 해제 */

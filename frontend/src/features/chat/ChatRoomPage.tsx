@@ -4,12 +4,12 @@ import { useAuth } from '../../contexts/AuthContext';
 import { TEAMS } from '../../types/teams';
 import './ChatRoomPage.css';
 import {
-  disconnectChat,
   initChat,
   joinRoom,
   leaveRoom,
   onMessage,
   sendMessage,
+  disconnectChat,
 } from '../../api/chat';
 
 interface ChatMsg {
@@ -26,28 +26,84 @@ const ChatRoomPage: React.FC = () => {
   const [input, setInput] = useState('');
   const [isComposing, setIsComposing] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
+  const isConnectedRef = useRef(false);
+
+  const connectSocket = (() => {
+    let connecting = false;
+
+    return async () => {
+      if (isConnectedRef.current || connecting) return;
+      connecting = true;
+
+      try {
+        await initChat();
+        if (team && userInfo?.nickname) {
+          joinRoom(team, userInfo.nickname);
+          isConnectedRef.current = true;
+        }
+      } catch (e) {
+        console.error('소켓 연결 실패:', e);
+      } finally {
+        connecting = false;
+      }
+    };
+  })();
+
+  const disconnectSocket = () => {
+    if (isConnectedRef.current && team && userInfo?.nickname) {
+      leaveRoom(team, userInfo.nickname);
+      disconnectChat();
+      isConnectedRef.current = false;
+    }
+  };
 
   useEffect(() => {
-    initChat();
-    if (team && userInfo?.nickname) {
-      joinRoom(team, userInfo.nickname);
-    }
-
-    onMessage((msg: ChatMsg) => {
-      setMsgs((prev) => [...prev, {
-        ...msg,
-        type: msg.type || 'user', // 기본값 처리
-      }]);
-    });
-
     return () => {
-      if (team && userInfo?.nickname) {
-        leaveRoom(team, userInfo.nickname);
-      }
-      disconnectChat();
+      disconnectSocket();
     };
   }, [team, userInfo?.nickname]);
 
+  // 최초 연결 + 메시지 수신
+  useEffect(() => {
+    connectSocket();
+
+    const unsubscribe = onMessage((msg: ChatMsg) => {
+      setMsgs((prev) => [...prev, { ...msg, type: msg.type || 'user' }]);
+    });
+
+    return () => {
+      unsubscribe();
+      disconnectSocket();
+    };
+  }, [team, userInfo?.nickname]);
+
+  // visibilitychange: 탭 전환 시 reconnect
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (!document.hidden && !isConnectedRef.current) {
+        connectSocket();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [team, userInfo?.nickname]);
+
+  // beforeunload: 페이지 닫을 때만 disconnect
+  useEffect(() => {
+    const handleUnload = () => {
+      disconnectSocket();
+    };
+
+    window.addEventListener('beforeunload', handleUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload);
+    };
+  }, [team, userInfo?.nickname]);
+
+  // 스크롤 자동 이동
   useEffect(() => {
     if (listRef.current) {
       listRef.current.scrollTop = listRef.current.scrollHeight;
@@ -56,7 +112,7 @@ const ChatRoomPage: React.FC = () => {
 
   const handleSend = () => {
     if (team && input.trim()) {
-      const sender = userInfo?.nickname || '익명';
+      const sender = userInfo?.nickname || '알 수 없는 사용자';
       sendMessage(team, sender, input.trim());
       setInput('');
     }
@@ -72,22 +128,20 @@ const ChatRoomPage: React.FC = () => {
       </div>
 
       <div className="message-list" ref={listRef}>
-        {msgs.map((m, i) => {
-          if (m.type === 'system') {
-            return (
-              <div key={i} className="system-message">{m.text}</div>
-            );
-          }
-
-          const isMe = m.sender === userInfo?.nickname;
-          return (
-            <div key={i} className={`message ${isMe ? 'my-message' : 'other-message'}`}>
+        {msgs.map((m, i) =>
+          m.type === 'system' ? (
+            <div key={i} className="system-message">{m.text}</div>
+          ) : (
+            <div
+              key={i}
+              className={`message ${m.sender === userInfo?.nickname ? 'my-message' : 'other-message'}`}
+            >
               <span className="sender">{m.sender}</span>
               <span className="text">{m.text}</span>
               <div className="time">{new Date(m.timestamp).toLocaleTimeString()}</div>
             </div>
-          );
-        })}
+          )
+        )}
       </div>
 
       <div className="message-form">
