@@ -18,10 +18,11 @@ export const joinRoom = (room: string, nickname: string) => {
   socket?.emit('join', { room, nickname });
 };
 
-/** 방에서 나가기 (닉네임 포함) */
-export const leaveRoom = (room: string, nickname: string) => {
-  socket?.emit('leave', { room, nickname });
+/** 방에서 나가기 (닉네임 포함) + 콜백 지원 */
+export const leaveRoom = (room: string, nickname: string, callback?: () => void) => {
+  socket?.emit('leave', { room, nickname }, callback);
 };
+
 
 /** 메시지 보내기 */
 export const sendMessage = (room: string, sender: string, text: string) => {

@@ -10,7 +10,7 @@ interface ChatMessage {
 
 @WebSocketGateway({
   cors: {
-    origin: ["http://localhost:5001", "http://52.65.47.31:5000"],
+    origin: ["http://localhost:5001", "https://haengbokza.site"],
     methods: ['GET', 'POST'],
   },
   transports: ['websocket'],
@@ -56,6 +56,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     // 퇴장 메시지 broadcast
     this.server.to(room).emit('system', `${nickname}님이 퇴장하셨습니다.`);
+    return 'ok'; // ack 전용
   }
 
   @SubscribeMessage('message')
