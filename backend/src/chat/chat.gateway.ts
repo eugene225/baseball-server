@@ -38,11 +38,33 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @ConnectedSocket() client: Socket,
   ) {
     const { room, nickname } = data;
+
+    if (client.rooms.has(room)) return;
+
+    client.data.nickname = nickname;
+  
     client.join(room);
     console.log(`${nickname} (${client.id}) joined room ${room}`);
 
     // 입장 메시지를 방 전체에 broadcast
     this.server.to(room).emit('system', `${nickname}님이 입장하셨습니다.`);
+  }
+
+  @SubscribeMessage('getUsers')
+  handleGetUsers(
+    @MessageBody() data: { room: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const { room } = data;
+
+    const socketIds = this.server.sockets.adapter.rooms.get(room);
+    if (!socketIds) return [];
+
+    const nicknames = Array.from(socketIds)
+      .map((socketId) => this.server.sockets.sockets.get(socketId)?.data.nickname)
+      .filter((nickname): nickname is string => !!nickname);
+
+    client.emit('userList', nicknames); 
   }
 
   @SubscribeMessage('leave')

@@ -23,7 +23,6 @@ export const leaveRoom = (room: string, nickname: string, callback?: () => void)
   socket?.emit('leave', { room, nickname }, callback);
 };
 
-
 /** 메시지 보내기 */
 export const sendMessage = (room: string, sender: string, text: string) => {
   socket?.emit('message', { room, sender, text, timestamp: new Date().toISOString() });
