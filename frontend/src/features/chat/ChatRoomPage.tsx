@@ -50,6 +50,7 @@ const ChatRoomPage: React.FC = () => {
   })();
 
   const disconnectSocket = () => {
+    if(!isConnectedRef.current) return;
     if (isConnectedRef.current && team && userInfo?.nickname) {
       leaveRoom(team, userInfo.nickname, () => {
         disconnectChat(); // system 메시지를 수신할 여유를 가진 후 종료
