@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './MainPage.css';
+import styles from './MainPage.module.css';
 import { useAuth } from '../../contexts/AuthContext';
 import ReviewCard from '../review/ReviewCard';
+import { TEAMS } from '../../types/teams';
 
 interface UserInfoProps {
   nickname: string;
@@ -11,17 +12,17 @@ interface UserInfoProps {
 
 const UserInfo: React.FC<UserInfoProps> = ({ nickname, myTeam }) => {
   return (
-    <div className="user-info">
-      <div className="user-profile">
-        <div className="user-icon">
+    <div className={styles.userInfo}>
+      <div className={styles.userProfile}>
+        <div className={styles.userIcon}>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
         </div>
-        <div className="user-details">
-          <h3 className="user-name">{nickname}</h3>
-          <p className="user-team">{myTeam}</p>
+        <div className={styles.userDetails}>
+          <h3 className={styles.userName}>{nickname}</h3>
+          <p className={styles.userTeam}>{myTeam}</p>
         </div>
       </div>
     </div>
@@ -59,40 +60,47 @@ const MainPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="main-page">
-      <main className="main-content">
-        <header className="main-header">
+    <div className={styles.mainPage}>
+      <main>
+        <header className={styles.mainHeader}>
           <h1>야구 다이어리</h1>
-          <p className="subtitle">당신의 야구 경험을 기록하고 공유하세요</p>
+          <p className={styles.subtitle}>당신의 야구 경험을 기록하고 공유하세요</p>
         </header>
 
         {isLoggedIn && userInfo ? (
           <UserInfo nickname={userInfo.nickname} myTeam={userInfo.myTeam} />
         ) : (
-          <div className="login-prompt">
-            <Link to="/login" className="login-button">
+          <div className={styles.loginPrompt}>
+            <Link to="/login" className={styles.loginButton}>
               로그인/회원가입
             </Link>
           </div>
         )}
 
-        <div className="board-container" role="navigation" aria-label="메인 메뉴">
+        {!userInfo?.myTeam && (
+          <div className={styles.setupGuide}>
+            <h2>마이팀을 설정해주세요!</h2>
+            <p>마이팀을 설정하면 해당 팀의 채팅방에 참여할 수 있습니다.</p>
+            <Link to="/mypage" className={styles.setupButton}>
+              마이팀 설정하기
+            </Link>
+          </div>
+        )}
 
+        <div role="navigation" aria-label="메인 메뉴">
         </div>
 
-        <section className="review-feed">
-          <div className="review-list">
+        <section className={styles.reviewFeed}>
+          <div className={styles.reviewList}>
             {reviews.map((review, idx) => (
               <ReviewCard key={idx} {...review} />
             ))}
           </div>
 
-          {/* 플로팅 버튼 */}
-          <button className="floating-write-button" disabled>
+          <button className={styles.floatingWriteButton} disabled>
             +
           </button>
         </section>
-
       </main>
     </div>
   );

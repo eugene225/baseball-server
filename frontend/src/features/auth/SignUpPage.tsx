@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './LoginSignUp.css';
+import styles from './LoginSignUp.module.css';
 import { signUp } from '../../api/auth';
 
 // 상태와 이벤트 핸들러 타입 정의
@@ -46,10 +46,11 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="form-container">
-      <h2>회원가입</h2>
-      <form onSubmit={handleSubmit}>
+    <div className={styles.formContainer}>
+      <h2 className={styles.title}>회원가입</h2>
+      <form className={styles.form} onSubmit={handleSubmit}>
         <input
+          className={styles.input}
           type="text"
           placeholder="닉네임"
           value={nickname}
@@ -57,6 +58,7 @@ const SignUpPage = () => {
           required
         />
         <input
+          className={styles.input}
           type="email"
           placeholder="이메일"
           value={email}
@@ -64,6 +66,7 @@ const SignUpPage = () => {
           required
         />
         <input
+          className={styles.input}
           type="password"
           placeholder="비밀번호"
           value={password}
@@ -71,17 +74,20 @@ const SignUpPage = () => {
           required
         />
         <input
+          className={styles.input}
           type="password"
           placeholder="비밀번호 확인"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
-        <button type="submit">회원가입</button>
+        <button className={styles.button} type="submit">회원가입</button>
       </form>
-      {error && <p className="error">{error}</p>}
-      {successMessage && <p className="success">{successMessage}</p>}
-      <p>이미 회원이신가요? <Link to="/login">로그인</Link></p>
+      {error && <p className={styles.error}>{error}</p>}
+      {successMessage && <p className={styles.success}>{successMessage}</p>}
+      <p className={styles.linkText}>
+        이미 회원이신가요? <Link to="/login" className={styles.link}>로그인</Link>
+      </p>
     </div>
   );
 }

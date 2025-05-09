@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { TEAMS } from '../../types/teams';
-import './ChatRoomPage.css';
+import styles from './ChatRoomPage.module.css';
 import {
   initChat,
   joinRoom,
@@ -11,6 +11,7 @@ import {
   sendMessage,
   disconnectChat,
 } from '../../api/chat';
+import UserList from './UserList';
 
 interface ChatMsg {
   sender: string;
@@ -126,24 +127,26 @@ const ChatRoomPage: React.FC = () => {
   const label = TEAMS.find((t) => t.value === team)?.label || '채팅방';
 
   return (
-    <div className="chat-container">
-      <div className="chat-header">
+    <div className={styles.chatContainer}>
+      <div className={styles.chatHeader}>
         <Link to="/chat">← 뒤로</Link>
         <h2>{label} 채팅</h2>
       </div>
 
-      <div className="message-list" ref={listRef}>
+      <UserList />
+
+      <div className={styles.messageList} ref={listRef}>
         {msgs.map((m, i) =>
           m.type === 'system' ? (
-            <div key={i} className="system-message">{m.text}</div>
+            <div key={i} className={styles.systemMessage}>{m.text}</div>
           ) : (
             <div
               key={i}
-              className={`message ${m.sender === userInfo?.nickname ? 'my-message' : 'other-message'}`}
+              className={`${styles.message} ${m.sender === userInfo?.nickname ? styles.myMessage : styles.otherMessage}`}
             >
-              <span className="sender">{m.sender}</span>
-              <span className="text">{m.text}</span>
-              <div className="time">
+              <span className={styles.sender}>{m.sender}</span>
+              <span className={styles.text}>{m.text}</span>
+              <div className={styles.time}>
                 {new Date(m.timestamp).toLocaleString('ko-KR', {
                   hour: '2-digit',
                   minute: '2-digit',
@@ -155,7 +158,7 @@ const ChatRoomPage: React.FC = () => {
         )}
       </div>
 
-      <div className="message-form">
+      <div className={styles.messageForm}>
         <input
           type="text"
           value={input}

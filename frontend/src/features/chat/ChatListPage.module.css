@@ -1,0 +1,82 @@
+.chatListPage {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.chatListHeader {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.chatListHeader h1 {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #666;
+}
+
+.teamList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.teamCard {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  gap: 12px;
+}
+
+.teamCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.teamEmoji {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.teamName {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+@media (max-width: 600px) {
+  .chatListHeader h1 {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .teamList {
+    gap: 12px;
+  }
+
+  .teamCard {
+    padding: 14px;
+  }
+
+  .teamEmoji {
+    font-size: 1.3rem;
+  }
+
+  .teamName {
+    font-size: 1rem;
+  }
+} 

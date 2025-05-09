@@ -12,6 +12,14 @@ export const saveFcmToken = async (userId: string, token: string, fcmToken: stri
   });
 };
 
+export const getFcmToken = async (userId: string, token: string) => {
+  return fetch(`${API_URL}/${userId}/fcm-token`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export const deleteFcmToken = async (userId: string, token: string) => {
   return fetch(`${API_URL}/${userId}/fcm-token`, {
     method: 'DELETE',

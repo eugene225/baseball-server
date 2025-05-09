@@ -1,5 +1,6 @@
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { ChatNotificationTracker } from './utils/chat.notification.js';
 
 interface ChatMessage {
   room: string;
@@ -16,7 +17,10 @@ interface ChatMessage {
   transports: ['websocket'],
 })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  
+
+  constructor(
+    private readonly chatNotificationTracker: ChatNotificationTracker
+  ) {}
   private server: Server;
   
   afterInit(server: Server) {
@@ -32,6 +36,15 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     console.log(`Client disconnected: ${client.id}`);
   }
 
+  private emitUserList(room: string) {
+    const socketIds = this.server.sockets.adapter.rooms.get(room);
+    if (!socketIds) return;
+    const nicknames = Array.from(socketIds)
+      .map((socketId) => this.server.sockets.sockets.get(socketId)?.data.nickname)
+      .filter((nickname): nickname is string => !!nickname);
+    this.server.to(room).emit('userList', nicknames);
+  }
+
   @SubscribeMessage('join')
   handleJoin(
     @MessageBody() data: { room: string; nickname: string },
@@ -42,29 +55,19 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     if (client.rooms.has(room)) return;
 
     client.data.nickname = nickname;
-  
     client.join(room);
     console.log(`${nickname} (${client.id}) joined room ${room}`);
 
-    // 입장 메시지를 방 전체에 broadcast
+    const clientsInRoom = this.server.sockets.adapter.rooms.get(room);
+    const isFirstUser = clientsInRoom && clientsInRoom.size === 1;
+
     this.server.to(room).emit('system', `${nickname}님이 입장하셨습니다.`);
-  }
+    this.emitUserList(room);
 
-  @SubscribeMessage('getUsers')
-  handleGetUsers(
-    @MessageBody() data: { room: string },
-    @ConnectedSocket() client: Socket,
-  ) {
-    const { room } = data;
-
-    const socketIds = this.server.sockets.adapter.rooms.get(room);
-    if (!socketIds) return [];
-
-    const nicknames = Array.from(socketIds)
-      .map((socketId) => this.server.sockets.sockets.get(socketId)?.data.nickname)
-      .filter((nickname): nickname is string => !!nickname);
-
-    client.emit('userList', nicknames); 
+    if (isFirstUser) {
+      console.log('sendFirstUserNotification');
+      this.chatNotificationTracker.sendFirstUserNotification(room, nickname);
+    }
   }
 
   @SubscribeMessage('leave')
@@ -76,9 +79,23 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     client.leave(room);
     console.log(`${nickname} (${client.id}) left room ${room}`);
 
-    // 퇴장 메시지 broadcast
     this.server.to(room).emit('system', `${nickname}님이 퇴장하셨습니다.`);
-    return 'ok'; // ack 전용
+    this.emitUserList(room);
+    return 'ok';
+  }
+
+  @SubscribeMessage('getUsers')
+  handleGetUsers(
+    @MessageBody() data: { room: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const { room } = data;
+    const socketIds = this.server.sockets.adapter.rooms.get(room);
+    if (!socketIds) return [];
+    const nicknames = Array.from(socketIds)
+      .map((socketId) => this.server.sockets.sockets.get(socketId)?.data.nickname)
+      .filter((nickname): nickname is string => !!nickname);
+    client.emit('userList', nicknames);
   }
 
   @SubscribeMessage('message')

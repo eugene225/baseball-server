@@ -1,4 +1,4 @@
-.my-page {
+.myPage {
     text-align: center;
     padding: 40px 20px;
     background-color: var(--light-grey);
@@ -7,15 +7,14 @@
     margin: 0 auto;
 }
   
-h1 {
+.title {
     color: var(--primary);
     font-size: 2.2rem;
     margin-bottom: 30px;
     font-weight: 700;
 }
   
-/* User Info Form Styles */
-.user-info-form {
+.form {
     background-color: var(--white);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
@@ -28,40 +27,52 @@ h1 {
     border: 1px solid rgba(0, 0, 0, 0.05);
 }
   
-.user-info-form label {
+.formGroup {
     display: flex;
-    flex-direction: column;
-    text-align: left;
+    align-items: center;
+    gap: 8px;
     color: var(--text-dark);
+    background-color: var(--light-grey);
+    padding: 12px 16px;
+    border-radius: 8px;
 }
   
-.user-info-form label span {
+.formGroup span {
     font-weight: 600;
-    margin-bottom: 8px;
     color: var(--text-dark);
+    min-width: 38px;
+    text-align: left;
 }
   
-.user-info-form input,
-.user-info-form select {
-    width: 100%;
+.label {
+    font-weight: 600;
+    color: var(--text-dark);
+    min-width: 80px;
+    text-align: right;
+}
+  
+.input,
+.select {
+    flex: 1;
+    min-width: 0;
     padding: 12px 16px;
     font-size: 1rem;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     box-sizing: border-box;
     transition: var(--transition);
-    background-color: var(--light-grey);
+    background-color: var(--white);
 }
   
-.user-info-form input:focus,
-.user-info-form select:focus {
+.input:focus,
+.select:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 2px var(--primary-light);
     outline: none;
     background-color: var(--white);
 }
   
-.user-info-form button {
+.button {
     background-color: var(--primary);
     color: var(--white);
     border: none;
@@ -74,90 +85,86 @@ h1 {
     margin-top: 10px;
 }
   
-.user-info-form button:hover {
+.button:hover {
     background-color: var(--primary-dark);
     transform: translateY(-2px);
 }
 
-.user-info-form button.saving {
+.button.saving {
     background-color: var(--text-light);
     cursor: not-allowed;
 }
 
-.save-message {
+.saveMessage {
     margin-top: 16px;
     font-size: 1rem;
     color: var(--primary);
     font-weight: 500;
 }
 
-/* 알림 허용 토글 레이블 스타일 */
-.notification-toggle {
+.notificationToggle {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    color: var(--text-dark);
+    background-color: var(--light-grey);
+    padding: 12px 16px;
+    border-radius: 8px;
     margin-top: 10px;
-    font-size: 1rem;
+}
+
+.notificationToggle span {
+    font-weight: 600;
     color: var(--text-dark);
 }
 
-/* 스위치 컨테이너 스타일 */
 .switch {
     position: relative;
     display: inline-block;
-    width: 50px; /* 스위치 너비 */
-    height: 34px; /* 스위치 높이 */
-    margin-left: 10px;
+    width: 44px;
+    height: 24px;
 }
 
-/* 스위치 내부 input 스타일 */
 .switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-/* 슬라이더 디자인 */
 .slider {
     position: absolute;
     cursor: pointer;
-    background-color: #ccc; /* 기본 배경 색 */
+    background-color: #ccc;
     transition: background-color 0.4s, transform 0.4s;
-    border-radius: 50px; /* 동그란 모서리 */
+    border-radius: 24px;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
 }
 
-/* 슬라이더의 동그라미 */
 .slider:before {
     position: absolute;
     content: "";
-    height: 26px; /* 동그라미 크기 */
-    width: 26px; /* 동그라미 크기 */
-    background-color: #fff; /* 하얀색 동그라미 */
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #fff;
     transition: transform 0.4s;
     border-radius: 50%;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); /* 동그라미에 그림자 추가 */
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
 }
 
-/* 체크된 상태의 슬라이더 디자인 */
-input:checked + .slider {
-    background-color: #4CAF50; /* 체크된 상태에서의 색상 */
+.switch input:checked + .slider {
+    background-color: var(--primary);
 }
 
-input:checked + .slider:before {
-    transform: translateX(26px); /* 오른쪽으로 이동 */
+.switch input:checked + .slider:before {
+    transform: translateX(20px);
 }
 
-/* 슬라이더의 둥근 끝 모양 */
-.slider.round {
-    border-radius: 50px;
-}
-
-/* Private Diaries Block 스타일 */
-.private-diaries-block {
+.diariesBlock {
     background-color: var(--white);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
@@ -172,13 +179,13 @@ input:checked + .slider:before {
     border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.private-diaries-block:hover {
+.diariesBlock:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     border-color: var(--primary-light);
 }
 
-.private-diaries-block .block-content h2 {
+.diariesBlock h2 {
     margin: 0;
     font-size: 1.2rem;
     color: var(--text-dark);
@@ -187,59 +194,64 @@ input:checked + .slider:before {
     justify-content: center;
 }
 
-.private-diaries-block .block-content h2 span {
+.diariesBlock h2 span {
     margin-right: 12px;
     font-size: 1.4em;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
-    .user-info-form {
+    .form {
         max-width: 100%;
         padding: 24px;
     }
 
-    .private-diaries-block {
+    .diariesBlock {
         width: 90%;
         padding: 20px;
     }
 
-    h1 {
+    .title {
         font-size: 2rem;
     }
 
-    /* 버튼 스타일 수정 */
-    .user-info-form button {
-        width: 100%;  /* 버튼 너비를 100%로 설정 */
-        font-size: 1rem;  /* 폰트 크기 적절히 조정 */
-        padding: 12px;  /* 버튼 패딩 조정 */
+    .button {
+        width: 100%;
+        font-size: 1rem;
+        padding: 12px;
     }
 }
 
 @media (max-width: 480px) {
-    h1 {
+    .title {
         font-size: 1.8rem;
     }
 
-    .user-info-form input,
-    .user-info-form select,
-    .user-info-form button {
-        font-size: 0.95rem;
-        padding: 10px 14px;
+    .formGroup {
+        padding: 10px 12px;
+        gap: 6px;
     }
 
-    .user-info-form {
+    .formGroup span {
+        min-width: 40px;
+        font-size: 0.9rem;
+    }
+
+    .input,
+    .select {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+
+    .form {
         padding: 20px;
     }
 
-    .private-diaries-block .block-content h2 {
+    .diariesBlock h2 {
         font-size: 1.1rem;
     }
 
-    /* 모바일에서 버튼 크기 조정 */
-    .user-info-form button {
+    .button {
         padding: 10px 14px;
-        font-size: 1rem;  /* 작은 화면에서 폰트 크기 다시 설정 */
+        font-size: 1rem;
     }
-}
-
+} 

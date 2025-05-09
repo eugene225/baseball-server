@@ -15,6 +15,7 @@ export const TEAMS: Team[] = [
   { value: 'NC_DINOS', label: 'NC 다이노스', color: '#1D4E89' },
   { value: 'SSG_LANDERS', label: 'SSG 랜더스', color: '#E61A20' },
   { value: 'KIA_TIGERS', label: 'KIA 타이거즈', color: '#E60012' },
+  { value: 'LOTTE_GIANTS', label: '롯데 자이언츠', color: '#002955' },
 ];
 
 
@@ -41,4 +42,5 @@ export const TEAM_STADIUMS: { [key: string]: Stadium } = {
   NC_DINOS: Stadium.CHANGWON_NC_PARK,
   SSG_LANDERS: Stadium.INCHEON_SSG_LANDERS_FIELD,
   KIA_TIGERS: Stadium.GWANGJU_KIA_CHAMPIONS_FIELD,
+  LOTTE_GIANTS: Stadium.SASIK_YAGUJANG,
 };

@@ -58,6 +58,24 @@ export const onMessage = (
   return () => {};
 };
 
+/** 접속 중인 사용자 목록 요청 */
+export const requestUserList = (room: string) => {
+  socket?.emit('getUsers', { room });
+};
+
+/** 접속 중인 사용자 목록 수신 콜백 등록 */
+export const onUserList = (cb: (userList: string[]) => void) => {
+  if (socket) {
+    const listener = (userList: string[]) => cb(userList);
+    socket.on('userList', listener);
+
+    return () => {
+      socket?.off('userList', listener);
+    };
+  }
+  return () => {};
+};
+
 /** 소켓 연결 해제 */
 export const disconnectChat = () => {
   socket?.disconnect();
