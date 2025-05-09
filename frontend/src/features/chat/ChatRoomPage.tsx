@@ -11,6 +11,7 @@ import {
   sendMessage,
   disconnectChat,
 } from '../../api/chat';
+import UserList from './UserList';
 
 interface ChatMsg {
   sender: string;
@@ -131,6 +132,8 @@ const ChatRoomPage: React.FC = () => {
         <Link to="/chat">← 뒤로</Link>
         <h2>{label} 채팅</h2>
       </div>
+
+      <UserList />
 
       <div className="message-list" ref={listRef}>
         {msgs.map((m, i) =>
