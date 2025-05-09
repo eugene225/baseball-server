@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import './DiaryCreationPage.css';
+import styles from './DiaryCreationPage.module.css';
 import { Team, TEAMS } from '../../types/teams';
 import { fetchPlayersByTeam } from '../../api/player';
 import { CreateDiaryEntryRequestDto, PlayerDto } from '../../types/diary';
@@ -115,19 +115,20 @@ const DiaryCreationPage = () => {
   };
 
   return (
-    <div className="diary-creation-page">
-      <h1>일기 작성하기</h1>
-      <div className="input-group">
-        <div className="input-label">경기 날짜</div>
+    <div className={styles.diaryCreationPage}>
+      <h1 className={styles.title}>일기 작성하기</h1>
+      <div className={styles.inputGroup}>
+        <div className={styles.inputLabel}>경기 날짜</div>
         <input
+          className={styles.input}
           type="date"
           value={selectedDate}
           onChange={(e) => setSelectedDate(e.target.value)}
         />
       </div>
-      <div className="input-group">
-        <div className="input-label">우리 팀</div>
-        <select value={selectedTeam} onChange={handleTeamChange}>
+      <div className={styles.inputGroup}>
+        <div className={styles.inputLabel}>우리 팀</div>
+        <select className={styles.select} value={selectedTeam} onChange={handleTeamChange}>
           <option value="">팀 선택</option>
           {TEAMS.map((team: Team) => (
             <option key={team.value} value={team.value}>
@@ -136,9 +137,9 @@ const DiaryCreationPage = () => {
           ))}
         </select>
       </div>
-      <div className="input-group">
-        <div className="input-label">상대 팀</div>
-        <select value={opponentTeam} onChange={(e) => setOpponentTeam(e.target.value)}>
+      <div className={styles.inputGroup}>
+        <div className={styles.inputLabel}>상대 팀</div>
+        <select className={styles.select} value={opponentTeam} onChange={(e) => setOpponentTeam(e.target.value)}>
           <option value="">상대 팀 선택</option>
           {TEAMS.filter((team) => team.value !== selectedTeam).map((team) => (
             <option key={team.value} value={team.value}>
@@ -147,17 +148,19 @@ const DiaryCreationPage = () => {
           ))}
         </select>
       </div>
-      <div className="input-group">
-        <div className="input-label">최종 스코어</div>
-        <div className="score-group">
+      <div className={styles.inputGroup}>
+        <div className={styles.inputLabel}>최종 스코어</div>
+        <div className={styles.scoreGroup}>
           <input
+            className={styles.input}
             type="number"
             value={awayScore}
             onChange={(e) => setAwayScore(e.target.value)}
             placeholder="원정팀"
           />
-          <span className="score-separator">:</span>
+          <span className={styles.scoreSeparator}>:</span>
           <input
+            className={styles.input}
             type="number"
             value={homeScore}
             onChange={(e) => setHomeScore(e.target.value)}
@@ -165,9 +168,9 @@ const DiaryCreationPage = () => {
           />
         </div>
       </div>
-      <div className="input-group">
-        <div className="input-label">날씨</div>
-        <select value={weather} onChange={(e) => setWeather(e.target.value as Weather)}>
+      <div className={styles.inputGroup}>
+        <div className={styles.inputLabel}>날씨</div>
+        <select className={styles.select} value={weather} onChange={(e) => setWeather(e.target.value as Weather)}>
           <option value="">날씨 선택</option>
           {Object.keys(Weather).map((key) => (
             <option key={key} value={Weather[key as keyof typeof Weather]}>
@@ -176,21 +179,23 @@ const DiaryCreationPage = () => {
           ))}
         </select>
       </div>
-      <div className="input-group">
-        <div className="input-label">제목</div>
+      <div className={styles.inputGroup}>
+        <div className={styles.inputLabel}>제목</div>
         <input
+          className={styles.input}
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
-      <div className="lineup-group">
+      <div className={styles.lineupGroup}>
         {lineup.map((player, index) => (
-          <div key={index} className="lineup-item">
-            <div className="input-label">
+          <div key={index} className={styles.lineupItem}>
+            <div className={styles.inputLabel}>
               {index === 0 ? '선발 투수' : `${index}번 타자`}
             </div>
             <input
+              className={styles.input}
               type="text"
               value={player.name}
               placeholder="선수 이름을 입력하세요"
@@ -203,7 +208,7 @@ const DiaryCreationPage = () => {
               onFocus={() => setFocusedIndex(index)}
             />
             {focusedIndex === index && playerSearchResults[index.toString()]?.length > 0 && (
-              <ul className="autocomplete-list">
+              <ul className={styles.autocompleteList}>
                 {playerSearchResults[index.toString()].map((p) => (
                   <li key={p.id} onClick={() => handleSelectPlayer(p.name, index)}>
                     {p.name} ({p.position})
@@ -214,14 +219,15 @@ const DiaryCreationPage = () => {
           </div>
         ))}
       </div>
-      <div className="input-group">
-        <div className="input-label">일기 내용</div>
+      <div className={styles.inputGroup}>
+        <div className={styles.inputLabel}>일기 내용</div>
         <textarea
+          className={styles.textarea}
           value={entry}
           onChange={(e) => setEntry(e.target.value)}
         />
       </div>
-      <button onClick={handleSaveEntry}>저장</button>
+      <button className={styles.button} onClick={handleSaveEntry}>저장</button>
     </div>
   );
 };
