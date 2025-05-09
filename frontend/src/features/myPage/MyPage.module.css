@@ -30,7 +30,7 @@
 .formGroup {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 8px;
     color: var(--text-dark);
     background-color: var(--light-grey);
     padding: 12px 16px;
@@ -40,6 +40,8 @@
 .formGroup span {
     font-weight: 600;
     color: var(--text-dark);
+    min-width: 38px;
+    text-align: left;
 }
   
 .label {
@@ -52,7 +54,7 @@
 .input,
 .select {
     flex: 1;
-    max-width: 300px;
+    min-width: 0;
     padding: 12px 16px;
     font-size: 1rem;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -224,11 +226,20 @@
         font-size: 1.8rem;
     }
 
+    .formGroup {
+        padding: 10px 12px;
+        gap: 6px;
+    }
+
+    .formGroup span {
+        min-width: 40px;
+        font-size: 0.9rem;
+    }
+
     .input,
-    .select,
-    .button {
-        font-size: 0.95rem;
-        padding: 10px 14px;
+    .select {
+        padding: 10px 12px;
+        font-size: 0.9rem;
     }
 
     .form {

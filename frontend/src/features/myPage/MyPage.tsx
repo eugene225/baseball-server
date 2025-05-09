@@ -29,9 +29,9 @@ function MyPage(): JSX.Element {
           ]);
 
           if (isMounted) {
-            setUserInfo({ nickname: data.nickname, myTeam: data.myTeam });
-            setNewNickname(data.nickname);
-            setNewMyTeam(data.myTeam);
+            setUserInfo({ nickname: data.nickname || '', myTeam: data.myTeam || '' });
+            setNewNickname(data.nickname || '');
+            setNewMyTeam(data.myTeam || '');
             setIsNotificationEnabled(fcmToken ? true : false);
           }
         } catch (error) {
@@ -115,7 +115,7 @@ function MyPage(): JSX.Element {
           <span>마이팀</span>
           <select
             className={styles.select}
-            value={newMyTeam}
+            value={newMyTeam || ''}
             onChange={(e) => setNewMyTeam(e.target.value)}
           >
             <option value="">팀을 선택하세요</option>
