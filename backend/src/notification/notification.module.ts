@@ -13,6 +13,7 @@ import { UsersModule } from '../users/users.module.js';
     UsersModule
   ],
   controllers: [FcmController],
-  providers: [FcmService, FcmInfoRepository]
+  providers: [FcmService, FcmInfoRepository],
+  exports: [FcmService],
 })
 export class NotificationModule {}
