@@ -1,6 +1,6 @@
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { ChatNotificationTracker } from './utils/chat.notification';
+import { ChatNotificationTracker } from './utils/chat.notification.js';
 
 interface ChatMessage {
   room: string;
@@ -17,9 +17,11 @@ interface ChatMessage {
   transports: ['websocket'],
 })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  
+
+  constructor(
+    private readonly chatNotificationTracker: ChatNotificationTracker
+  ) {}
   private server: Server;
-  private readonly chatNotificationTracker: ChatNotificationTracker;
   
   afterInit(server: Server) {
     this.server = server;
@@ -56,8 +58,17 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     client.join(room);
     console.log(`${nickname} (${client.id}) joined room ${room}`);
 
+    const clientsInRoom = this.server.sockets.adapter.rooms.get(room);
+    const isFirstUser = clientsInRoom && clientsInRoom.size === 1;
+    console.log(isFirstUser);
+
     this.server.to(room).emit('system', `${nickname}님이 입장하셨습니다.`);
     this.emitUserList(room);
+
+    if (isFirstUser) {
+      console.log('sendFirstUserNotification');
+      this.chatNotificationTracker.sendFirstUserNotification(room, nickname);
+    }
   }
 
   @SubscribeMessage('leave')
