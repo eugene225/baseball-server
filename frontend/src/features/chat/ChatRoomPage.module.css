@@ -1,4 +1,4 @@
-.chat-container {
+.chatContainer {
   display: flex;
   flex-direction: column;
   height: 88vh;
@@ -7,9 +7,10 @@
   background-color: #f9f9f9;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
+  position: relative;
 }
 
-.chat-header {
+.chatHeader {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -21,18 +22,18 @@
   z-index: 1;
 }
 
-.chat-header h2 {
+.chatHeader h2 {
   font-size: 1.25rem;
   margin: 0;
 }
 
-.chat-header a {
+.chatHeader a {
   text-decoration: none;
   color: #007bff;
   font-weight: bold;
 }
 
-.message-list {
+.messageList {
   flex: 1;
   overflow-y: auto;
   padding: 12px;
@@ -51,16 +52,16 @@
   word-break: break-word;
 }
 
-.my-message {
+.myMessage {
   align-self: flex-end;
   background-color: #d1e7ff;
 }
 
-.other-message {
+.otherMessage {
   align-self: flex-start;
 }
 
-.system-message {
+.systemMessage {
   text-align: center;
   background-color: #f0f0f0;
   color: #666;
@@ -94,29 +95,35 @@
   color: #999;
 }
 
-.message-form {
+.messageForm {
   display: flex;
-  align-items: center; /* 수직 가운데 정렬 */
+  align-items: center;
   padding: 12px;
   border-top: 1px solid #ddd;
   background-color: #fff;
-  gap: 10px; /* input과 버튼 사이 간격 */
+  gap: 10px;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.message-form input {
+.messageForm input {
   flex: 1;
+  min-width: 0;
   margin-bottom: 0px;
   padding: 10px 14px;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 20px;
   outline: none;
+  box-sizing: border-box;
 }
 
-.message-form button {
-  width: 120px;
-  font-size: 1rem;
-  padding: 10px;
+.messageForm button {
+  width: 70px;
+  font-size: 0.95rem;
+  padding: 8px;
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -128,20 +135,17 @@
   transition: all 0.2s ease-in-out;
 }
 
-@media (min-width: 800px) {
-  .message-form button {
-    width: 90px;
-  }
-}
-
 @media (max-width: 600px) {
-  .message-form {
-    flex-direction: column;
+  .messageForm {
+    padding: 8px;
   }
 
-  .message-form input,
-  .message-form button {
-    width: 100%;
+  .messageForm input {
+    padding: 8px 12px;
   }
-}
 
+  .messageForm button {
+    width: 65px;
+    padding: 8px;
+  }
+} 

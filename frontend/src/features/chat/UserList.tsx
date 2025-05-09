@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { onUserList, requestUserList } from '../../api/chat';
 import { useAuth } from '../../contexts/AuthContext';
-import './UserList.css';
+import styles from './UserList.module.css';
 
 const getInitial = (name: string) => name ? name[0].toUpperCase() : '?';
 
@@ -26,16 +26,16 @@ const UserList: React.FC = () => {
   }, [team]);
 
   return (
-    <div className="user-list">
-      <div className="user-list-header">
+    <div className={styles.userList}>
+      <div className={styles.userListHeader}>
         <span>접속 중인 사용자</span>
-        <span className="user-count">{users.length}명</span>
+        <span className={styles.userCount}>{users.length}명</span>
       </div>
       <ul>
         {users.map((user, index) => (
-          <li key={index} className={user === userInfo?.nickname ? 'me' : ''}>
-            <span className="avatar">{getInitial(user)}</span>
-            <span className="username" title={user}>
+          <li key={index} className={user === userInfo?.nickname ? styles.me : ''}>
+            <span className={styles.avatar}>{getInitial(user)}</span>
+            <span className={styles.username} title={user}>
               {user === userInfo?.nickname ? <b>{user} (나)</b> : user}
             </span>
           </li>
