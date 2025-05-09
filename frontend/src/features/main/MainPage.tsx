@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from './MainPage.module.css';
 import { useAuth } from '../../contexts/AuthContext';
 import ReviewCard from '../review/ReviewCard';
+import { TEAMS } from '../../types/teams';
 
 interface UserInfoProps {
   nickname: string;
@@ -72,6 +73,16 @@ const MainPage: React.FC = () => {
           <div className={styles.loginPrompt}>
             <Link to="/login" className={styles.loginButton}>
               로그인/회원가입
+            </Link>
+          </div>
+        )}
+
+        {!userInfo?.myTeam && (
+          <div className={styles.setupGuide}>
+            <h2>마이팀을 설정해주세요!</h2>
+            <p>마이팀을 설정하면 해당 팀의 채팅방에 참여할 수 있습니다.</p>
+            <Link to="/mypage" className={styles.setupButton}>
+              마이팀 설정하기
             </Link>
           </div>
         )}

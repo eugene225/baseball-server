@@ -23,8 +23,7 @@
 }
 
 .userInfo {
-  background-color: var(--card-bg);
-  border-left: 5px solid var(--main-color);
+  background-color: #ffffff;
   border-radius: 1rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   padding: 1rem;
@@ -37,14 +36,15 @@
 }
 
 .userIcon {
-  background-color: #f2f2f2;
+  background-color: #e3f0ff;
   border-radius: 50%;
   padding: 0.75rem;
   margin-right: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--main-color);
+  color: #007bff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .userDetails {
@@ -147,4 +147,40 @@
   .reviewList > * {
     flex: 1 1 calc(33.333% - 1rem);
   }
+}
+
+.setupGuide {
+  background-color: #e3f0ff;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+  border: 1px solid #007bff;
+}
+
+.setupGuide h2 {
+  color: #007bff;
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+}
+
+.setupGuide p {
+  color: #174095;
+  margin: 0 0 15px 0;
+  font-size: 0.95rem;
+}
+
+.setupButton {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.setupButton:hover {
+  background-color: #0056b3;
 } 
