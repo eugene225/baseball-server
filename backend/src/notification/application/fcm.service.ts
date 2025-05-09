@@ -10,6 +10,10 @@ export class FcmService {
     private readonly fcmInfoRepository: FcmInfoRepository,
   ) {}
 
+  async getNotificationOnUsers() {
+    return await this.fcmInfoRepository.findAllFcmTokenIsNotNull();
+  }
+
   async updateFcmToken(userId: number, fcmToken: string) {
     const fcmInfo = await this.fcmInfoRepository.findByUserId(userId);
     await this.fcmInfoRepository.updateByUserId(userId, fcmToken);
