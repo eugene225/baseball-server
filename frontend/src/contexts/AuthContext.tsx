@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { fetchUserInfo } from '../api/user';
 import {AuthContextType} from '../types/auth';
+import { deleteFcmToken } from '../api/fcm';
 
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -47,7 +48,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user?.userId && user?.accessToken) {
+      try {
+        await deleteFcmToken(user.userId, user.accessToken);
+      } catch (error) {
+        console.error('Failed to delete FCM token:', error);
+      }
+    }
     localStorage.removeItem('user');
     setIsLoggedIn(false);
     setUserInfo(null);
