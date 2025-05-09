@@ -36,4 +36,12 @@ export class FcmInfoRepository extends Repository<FcmInfo> {
 
     return this.save(this.create({ user, fcmToken }));
   }
+
+  async deleteTokens(tokens: string[]) {
+    await this.createQueryBuilder()
+      .delete()
+      .from(FcmInfo)
+      .where('fcmToken IN (:...tokens)', { tokens })
+      .execute();
+  }
 }
