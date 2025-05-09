@@ -1,6 +1,7 @@
 import { DataSource, Repository } from 'typeorm';
 import { FcmInfo } from './fcmInfo.entity.js';
 import { CustomRepository } from '../../global/decorator/custom-repository.decorator.js';
+import { User } from '../../users/domain/user.entity.js';
 
 @CustomRepository(FcmInfo)
 export class FcmInfoRepository extends Repository<FcmInfo> {
@@ -9,7 +10,17 @@ export class FcmInfoRepository extends Repository<FcmInfo> {
   }
 
   async findByUserId(userId: number): Promise<FcmInfo | null> {
-    return this.findOneBy({ userId });
+    return this.findOne({
+      where: { user: { id: userId } },
+      relations: ['user'],
+    });
+  }
+
+  async findAllFcmTokenIsNotNull(): Promise<FcmInfo[]> {
+    return this.createQueryBuilder('fcmInfo')
+      .leftJoinAndSelect('fcmInfo.user', 'user')
+      .where('fcmInfo.fcmToken IS NOT NULL')
+      .getMany();
   }
 
   async updateByUserId(userId: number, fcmToken: string | null): Promise<FcmInfo> {
@@ -20,6 +31,9 @@ export class FcmInfoRepository extends Repository<FcmInfo> {
       return this.save(existing);
     }
 
-    return this.save(this.create({ userId, fcmToken }));
+    const user = new User();
+    user.id = userId;
+
+    return this.save(this.create({ user, fcmToken }));
   }
 }
