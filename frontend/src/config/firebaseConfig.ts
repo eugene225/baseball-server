@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken, onMessage, deleteToken } from 'firebase/messaging';
+import { getMessaging, getToken, onMessage, deleteToken, MessagePayload } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyC7BIbqMQz0VNsEcvZkHydMdPq68I3qpN4',
@@ -73,6 +73,6 @@ export const requestPermission = async () => {
   }
 };
 
-export const onForegroundMessage = (cb: (payload: any) => void) => {
+export const onForegroundMessage = (cb: (payload: MessagePayload) => void) => {
   onMessage(messaging, cb);
 };
