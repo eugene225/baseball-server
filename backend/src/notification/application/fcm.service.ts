@@ -76,7 +76,7 @@ export class FcmService {
       data: {
         title,
         body,
-        url: "https://haengbokza.site/target-page/chat",
+        url: "https://haengbokza.site/chat",
         icon: "/alarm-logo.png",
       },
       tokens,
