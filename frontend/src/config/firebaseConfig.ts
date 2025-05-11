@@ -106,12 +106,23 @@ export function getDeviceType(userAgent: string): 'mobile' | 'tablet' | 'desktop
 
 export const onForegroundMessage = (cb: (payload: MessagePayload) => void) => {
   const unsubscribe = onMessage(messaging, (payload) => {
-    if (payload.notification) {
-      new Notification(payload.notification.title || '알림', {
-        body: payload.notification.body,
-        icon: payload.notification.icon,
+    const { title, body, icon, url } = payload.data || {};
+
+    if (title && body) {
+      const notification = new Notification(title, {
+        body,
+        icon: icon || '/favicon.ico',
       });
+
+      notification.onclick = (event) => {
+        event.preventDefault();
+        if (url) {
+          window.location.href = url;
+        }
+        notification.close();
+      };
     }
+
     cb(payload);
   });
 

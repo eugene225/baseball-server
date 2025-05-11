@@ -12,9 +12,34 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function (payload) {
-  const { title, body } = payload.notification;
-  self.registration.showNotification(title, {
-    body,
-    icon: '/favicon-32x32.png', // 원하는 아이콘 경로로 변경
-  });
+  const { title, body, icon, url } = payload.data || {};
+
+  if (title && body) {
+    self.registration.showNotification(title, {
+      body,
+      icon: icon || '/favicon-32x32.png',
+      data: { url },
+    });
+  }
+});
+
+self.addEventListener('notificationclick', function (event) {
+  const targetUrl = event.notification.data?.url;
+
+  event.notification.close();
+
+  if (targetUrl) {
+    event.waitUntil(
+      clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+        for (const client of clientList) {
+          if (client.url === targetUrl && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        if (clients.openWindow) {
+          return clients.openWindow(targetUrl);
+        }
+      })
+    );
+  }
 });
