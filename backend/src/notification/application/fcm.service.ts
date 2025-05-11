@@ -73,9 +73,11 @@ export class FcmService {
     }
 
     const message = {
-      notification: {
+      data: {
         title,
         body,
+        url: "https://haengbokza.site/target-page/chat",
+        icon: "/alarm-logo.png",
       },
       tokens,
     };

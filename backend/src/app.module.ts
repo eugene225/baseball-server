@@ -12,12 +12,16 @@ import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './global/filter/httpException.filter.js';
 import { ChatModule } from './chat/chat.module.js';
 import { NotificationModule } from './notification/notification.module.js';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
     TypeOrmModule.forRoot(typeORMConfig),
     UsersModule,
     DiaryModule,
