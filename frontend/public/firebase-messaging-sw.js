@@ -12,7 +12,6 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function (payload) {
-  console.log('[firebase-messaging-sw.js] 백그라운드 메시지 수신:', payload);
   const { title, body } = payload.notification;
   self.registration.showNotification(title, {
     body,
