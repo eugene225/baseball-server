@@ -20,14 +20,9 @@ const ChatRoomPage: React.FC = () => {
 
   useEffect(() => {
     initChat();
-  }, []);
-
-  useEffect(() => {
-    onMessage((msg) => setMsgs((prev) => [...prev, msg]));
-  }, []);
-
-  useEffect(() => {
     if (team) joinRoom(team, userInfo?.nickname || '익명');
+
+    onMessage((msg) => setMsgs((prev) => [...prev, msg]));
 
     return () => {
       if (team) leaveRoom(team, userInfo?.nickname || '익명');

@@ -6,7 +6,7 @@ const API_URL = `${process.env.REACT_APP_SOCKET_URL}`;
 
 /** 소켓 연결 초기화 */
 export const initChat = () => {
-  if (!socket || !socket.connected) {
+  if (!socket) {
     socket = io(API_URL, {
       transports: ['websocket'],
     });
