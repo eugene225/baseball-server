@@ -105,7 +105,7 @@ export function getDeviceType(userAgent: string): 'mobile' | 'tablet' | 'desktop
 }
 
 export const onForegroundMessage = (cb: (payload: MessagePayload) => void) => {
-  onMessage(messaging, (payload) => {
+  const unsubscribe = onMessage(messaging, (payload) => {
     if (payload.notification) {
       new Notification(payload.notification.title || '알림', {
         body: payload.notification.body,
@@ -114,4 +114,6 @@ export const onForegroundMessage = (cb: (payload: MessagePayload) => void) => {
     }
     cb(payload);
   });
+
+  return unsubscribe;
 };

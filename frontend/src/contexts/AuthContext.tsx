@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { fetchUserInfo } from '../api/user';
 import {AuthContextType} from '../types/auth';
 import { deleteFcmToken } from '../api/fcm';
-import { getDeviceType } from '../config/firebaseConfig';
+import { getDeviceType, onForegroundMessage } from '../config/firebaseConfig';
 
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,6 +32,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     checkUserStatus();
+  }, []);
+
+  // 알림 핸들러 등록
+  useEffect(() => {
+    const unsubscribe = onForegroundMessage((payload) => {
+      console.log('알림');
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const login = async (userId: string, accessToken: string) => {
