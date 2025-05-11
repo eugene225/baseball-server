@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { fetchUserInfo } from '../api/user';
 import {AuthContextType} from '../types/auth';
 import { deleteFcmToken } from '../api/fcm';
+import { getDeviceType } from '../config/firebaseConfig';
 
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -52,7 +53,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     if (user?.userId && user?.accessToken) {
       try {
-        await deleteFcmToken(user.userId, user.accessToken);
+        const deviceType = getDeviceType(navigator.userAgent);
+        await deleteFcmToken(user.userId, user.accessToken, deviceType);
       } catch (error) {
         console.error('Failed to delete FCM token:', error);
       }
