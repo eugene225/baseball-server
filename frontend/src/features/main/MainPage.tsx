@@ -77,7 +77,7 @@ const MainPage: React.FC = () => {
           </div>
         )}
 
-        {!userInfo?.myTeam && (
+        {!userInfo?.myTeam && isLoggedIn && (
           <div className={styles.setupGuide}>
             <h2>마이팀을 설정해주세요!</h2>
             <p>마이팀을 설정하면 해당 팀의 채팅방에 참여할 수 있습니다.</p>

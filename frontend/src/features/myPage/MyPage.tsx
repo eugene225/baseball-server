@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import styles from './MyPage.module.css';
 import { fetchUserInfo, updateUserInfo } from '../../api/user';
 import { TEAMS } from '../../types/teams';
-import {deleteFcmToken, getFcmToken, saveFcmToken} from '../../api/fcm';
-import {requestPermission} from '../../config/firebaseConfig';
-import {UserInfo} from '../../types/auth';
+import { deleteFcmToken, getFcmToken, saveFcmToken } from '../../api/fcm';
+import { getDeviceType, requestPermission, messaging } from '../../config/firebaseConfig';
+import { UserInfo } from '../../types/auth';
+import { deleteToken } from 'firebase/messaging';
 
 function MyPage(): JSX.Element {
   const [userInfo, setUserInfo] = useState<UserInfo>({ nickname: '', myTeam: '' });
@@ -21,18 +22,21 @@ function MyPage(): JSX.Element {
 
     const fetchAndSetUserInfo = async () => {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const deviceType = getDeviceType(navigator.userAgent);
       if (user) {
         try {
-          const [data, fcmToken] = await Promise.all([
-            fetchUserInfo(user.userId, user.accessToken),
-            getFcmToken(user.userId, user.accessToken)
+          const [data, fcmResponse] = await Promise.all([
+            await fetchUserInfo(user.userId, user.accessToken),
+            await getFcmToken(user.userId, user.accessToken, deviceType)
+              .then(response => response.json())
+              .catch(() => null)
           ]);
 
           if (isMounted) {
             setUserInfo({ nickname: data.nickname || '', myTeam: data.myTeam || '' });
             setNewNickname(data.nickname || '');
             setNewMyTeam(data.myTeam || '');
-            setIsNotificationEnabled(fcmToken ? true : false);
+            setIsNotificationEnabled(fcmResponse?.fcmToken ? true : false);
           }
         } catch (error) {
           console.error('Failed to fetch user info:', error);
@@ -76,16 +80,24 @@ function MyPage(): JSX.Element {
 
     try {
       if (!isNotificationEnabled) {
-        const result = await requestPermission();
+        const result = await requestPermission(user.userId, user.accessToken);
         if (!result.success || !result.token) {
           alert(result.error);
           return;
         }
-        await saveFcmToken(user.userId, user.accessToken, result.token);
         setIsNotificationEnabled(true);
       } else {
-        await deleteFcmToken(user.userId, user.accessToken);
-        setIsNotificationEnabled(false);
+        // 알림 비활성화 시 토큰 삭제
+        const deviceType = getDeviceType(navigator.userAgent);
+        try {
+          await deleteToken(messaging);
+          await deleteFcmToken(user.userId, user.accessToken, deviceType);
+          console.log('FCM 토큰 삭제 완료');
+          setIsNotificationEnabled(false);
+        } catch (error) {
+          console.error('FCM 토큰 삭제 실패:', error);
+          alert('알림 설정 변경에 실패했습니다.');
+        }
       }
     } catch (error) {
       console.error('알림 설정 변경 실패:', error);
