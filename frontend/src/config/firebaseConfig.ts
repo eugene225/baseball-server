@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage, deleteToken, MessagePayload } from 'firebase/messaging';
+import { deleteFcmToken, saveFcmToken } from '../api/fcm';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyC7BIbqMQz0VNsEcvZkHydMdPq68I3qpN4',
@@ -10,27 +11,43 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
+export const messaging = getMessaging(app);
 
 // 알림 권한 요청하고 토큰 받기
-export const requestPermission = async () => {
+export const requestPermission = async (userId: string, token: string) => {
   try {
+    const sw = await navigator.serviceWorker.getRegistration();
     const permission = await Notification.requestPermission();
 
     switch (permission) {
     case 'granted':
       try {
+        const deviceType = getDeviceType(navigator.userAgent);
+
         // 기존 토큰 삭제
-        await deleteToken(messaging);
-        console.log('기존 FCM 토큰 삭제 완료');
+        try {
+          await deleteToken(messaging);
+          console.log('Firebase 토큰 삭제 완료');
+        } catch (error) {
+          console.log('Firebase 토큰 삭제 실패 (무시됨):', error);
+        }
+
+        try {
+          await deleteFcmToken(userId, token, deviceType);
+          console.log('서버 토큰 삭제 완료');
+        } catch (error) {
+          console.log('서버 토큰 삭제 실패 (무시됨):', error);
+        }
 
         // 새로운 토큰 생성
-        const token = await getToken(messaging, {
+        const fcmToken = await getToken(messaging, {
           vapidKey: process.env.REACT_APP_VAPID_KEY,
           serviceWorkerRegistration: await navigator.serviceWorker.getRegistration()
         });
-        console.log('새로운 FCM 토큰 생성 완료');
-        return { success: true, token };
+
+        // 새 토큰 저장
+        await saveFcmToken(userId, token, fcmToken, deviceType);
+        return { success: true, token: fcmToken };
       } catch (error) {
         console.error('FCM 토큰 생성 실패:', error);
         return {
@@ -73,6 +90,28 @@ export const requestPermission = async () => {
   }
 };
 
+export function getDeviceType(userAgent: string): 'mobile' | 'tablet' | 'desktop' {
+  const ua = userAgent.toLowerCase();
+
+  if (/mobile|iphone|ipod|android.*mobile|windows phone/.test(ua)) {
+    return 'mobile';
+  }
+
+  if (/ipad|android(?!.*mobile)|tablet/.test(ua)) {
+    return 'tablet';
+  }
+
+  return 'desktop';
+}
+
 export const onForegroundMessage = (cb: (payload: MessagePayload) => void) => {
-  onMessage(messaging, cb);
+  onMessage(messaging, (payload) => {
+    if (payload.notification) {
+      new Notification(payload.notification.title || '알림', {
+        body: payload.notification.body,
+        icon: payload.notification.icon,
+      });
+    }
+    cb(payload);
+  });
 };
