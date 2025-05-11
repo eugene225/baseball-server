@@ -1,28 +1,36 @@
 import { FcmService } from '../application/fcm.service.js';
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
+import { SaveFcmTokenDto, FcmTokenResponseDto } from '../dto/fcm-token.dto.js';
 
 @Controller('/v1/fcm')
 export class FcmController {
   constructor(private readonly fcmService: FcmService) {
   }
 
-  @Post('/:userId/fcm-token')
+  @Post('/token')
   async saveFcmToken(
-    @Param('userId') userId: number,
-    @Body('fcmToken') fcmToken: string,
-  ) {
-    await this.fcmService.updateFcmToken(userId, fcmToken);
+    @Body() saveFcmTokenDto: SaveFcmTokenDto,
+  ): Promise<FcmTokenResponseDto> {
+    return await this.fcmService.updateFcmToken(
+      saveFcmTokenDto.userId,
+      saveFcmTokenDto.fcmToken,
+      saveFcmTokenDto.deviceType
+    );
   }
 
-  @Get('/:userId/fcm-token')
-  async getFcmToken(@Param('userId') userId: number) {
-    return await this.fcmService.getFcmToken(userId);
+  @Get('/token')
+  async getFcmToken(
+    @Query('userId') userId: number,
+    @Query('deviceType') deviceType: string,
+  ): Promise<FcmTokenResponseDto> {
+    return await this.fcmService.getFcmToken(userId, deviceType);
   }
 
-  @Delete('/:userId/fcm-token')
+  @Delete('/token')
   async deleteFcmToken(
-    @Param('userId') userId: number,
-  ) {
-    await this.fcmService.deleteFcmToken(userId);
+    @Query('userId') userId: number,
+    @Query('deviceType') deviceType: string,
+  ): Promise<void> {
+    await this.fcmService.deleteFcmToken(userId, deviceType);
   }
 }
