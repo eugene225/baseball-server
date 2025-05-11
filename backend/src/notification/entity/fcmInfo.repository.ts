@@ -9,9 +9,9 @@ export class FcmInfoRepository extends Repository<FcmInfo> {
     super(FcmInfo, dataSource.createEntityManager());
   }
 
-  async findByUserId(userId: number): Promise<FcmInfo | null> {
+  async findByUserIdAndDeviceType(userId: number, deviceType: string): Promise<FcmInfo | null> {
     return this.findOne({
-      where: { user: { id: userId } },
+      where: { user: { id: userId }, deviceType },
       relations: ['user'],
     });
   }
@@ -23,18 +23,40 @@ export class FcmInfoRepository extends Repository<FcmInfo> {
       .getMany();
   }
 
-  async updateByUserId(userId: number, fcmToken: string | null): Promise<FcmInfo> {
-    const existing = await this.findByUserId(userId);
+  async updateByUserIdAndDeviceType(userId: number, fcmToken: string, deviceType: string): Promise<FcmInfo> {
+    const existing = await this.findOne({
+      where: { user: { id: userId } , deviceType},
+      relations: ['user'],
+    });
 
     if (existing) {
       existing.fcmToken = fcmToken;
+      existing.deviceType = deviceType || existing.deviceType;
       return this.save(existing);
     }
 
     const user = new User();
     user.id = userId;
 
-    return this.save(this.create({ user, fcmToken }));
+    const newFcmInfo = this.create({ 
+      user, 
+      fcmToken, 
+      deviceType: deviceType || 'mobile'
+    });
+    
+    const savedFcmInfo = await this.save(newFcmInfo);
+    return this.findOne({
+      where: { id: savedFcmInfo.id },
+      relations: ['user'],
+    });
+  }
+
+  async deleteByUserIdAndDeviceType(userId: number, deviceType: string): Promise<void> {
+    await this.createQueryBuilder()
+      .delete()
+      .from(FcmInfo)
+      .where('user.id = :userId AND deviceType = :deviceType', { userId, deviceType })
+      .execute();
   }
 
   async deleteTokens(tokens: string[]) {
