@@ -34,7 +34,6 @@ const ChatRoomPage: React.FC = () => {
     if (isConnectedRef.current || !team || !userInfo?.nickname) return;
 
     try {
-      await initChat();
       joinRoom(team, userInfo.nickname);
       isConnectedRef.current = true;
     } catch (e) {
