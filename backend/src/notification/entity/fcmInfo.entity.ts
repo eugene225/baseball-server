@@ -13,9 +13,6 @@ export class FcmInfo extends BaseEntity{
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  constructor(user: User, fcmToken: string) {
-    super();
-    this.user = user;
-    this.fcmToken = fcmToken;
-  }
+  @Column({ name: 'device_type', nullable: false })
+  deviceType: string; // mobile, desktop, tablet
 }
