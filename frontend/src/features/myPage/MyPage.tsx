@@ -7,6 +7,8 @@ import { deleteFcmToken, getFcmToken, saveFcmToken } from '../../api/fcm';
 import { getDeviceType, requestPermission, messaging } from '../../config/firebaseConfig';
 import { UserInfo } from '../../types/auth';
 import { deleteToken } from 'firebase/messaging';
+import { useLoading } from '../../hooks/useLoading';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 function MyPage(): JSX.Element {
   const [userInfo, setUserInfo] = useState<UserInfo>({ nickname: '', myTeam: '' });
@@ -15,6 +17,7 @@ function MyPage(): JSX.Element {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [saveMessage, setSaveMessage] = useState<string>('');
   const [isNotificationEnabled, setIsNotificationEnabled] = useState<boolean>(false);
+  const { isLoading, withLoading } = useLoading();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -80,7 +83,7 @@ function MyPage(): JSX.Element {
 
     try {
       if (!isNotificationEnabled) {
-        const result = await requestPermission(user.userId, user.accessToken);
+        const result = await withLoading(requestPermission(user.userId, user.accessToken));
         if (!result.success || !result.token) {
           alert(result.error);
           return;
@@ -90,8 +93,10 @@ function MyPage(): JSX.Element {
         // 알림 비활성화 시 토큰 삭제
         const deviceType = getDeviceType(navigator.userAgent);
         try {
-          await deleteToken(messaging);
-          await deleteFcmToken(user.userId, user.accessToken, deviceType);
+          await withLoading(Promise.all([
+            deleteToken(messaging),
+            deleteFcmToken(user.userId, user.accessToken, deviceType)
+          ]));
           console.log('FCM 토큰 삭제 완료');
           setIsNotificationEnabled(false);
         } catch (error) {
@@ -110,61 +115,66 @@ function MyPage(): JSX.Element {
   };
 
   return (
-    <div className={styles.myPage}>
-      <h1 className={styles.title}>마이페이지</h1>
-      <div className={styles.form}>
-        <div className={styles.formGroup}>
-          <span>닉네임</span>
-          <input
-            className={styles.input}
-            type="text"
-            value={newNickname}
-            onChange={(e) => setNewNickname(e.target.value)}
-            placeholder="닉네임을 입력하세요"
-          />
-        </div>
-        <div className={styles.formGroup}>
-          <span>마이팀</span>
-          <select
-            className={styles.select}
-            value={newMyTeam || ''}
-            onChange={(e) => setNewMyTeam(e.target.value)}
-          >
-            <option value="">팀을 선택하세요</option>
-            {TEAMS.map((team) => (
-              <option key={team.value} value={team.value}>
-                {team.value.replace('_', ' ')}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button
-          onClick={handleSaveChanges}
-          className={`${styles.button} ${isSaving ? styles.saving : ''}`}
-        >
-          {isSaving ? '저장 중...' : '변경사항 저장'}
-        </button>
-        {saveMessage && <p className={styles.saveMessage}>{saveMessage}</p>}
-        <div className={styles.notificationToggle}>
-          <span>알림 허용</span>
-          <label className={styles.switch}>
+    <>
+      {isLoading && <LoadingSpinner fullScreen />}
+      <div className={styles.myPage}>
+        <h1 className={styles.title}>마이페이지</h1>
+        <div className={styles.form}>
+          <div className={styles.formGroup}>
+            <span>닉네임</span>
             <input
-              type="checkbox"
-              checked={isNotificationEnabled}
-              onChange={handleNotificationToggle}
+              className={styles.input}
+              type="text"
+              value={newNickname}
+              onChange={(e) => setNewNickname(e.target.value)}
+              placeholder="닉네임을 입력하세요"
             />
-            <span className={styles.slider}></span>
-          </label>
+          </div>
+          <div className={styles.formGroup}>
+            <span>마이팀</span>
+            <select
+              className={styles.select}
+              value={newMyTeam || ''}
+              onChange={(e) => setNewMyTeam(e.target.value)}
+            >
+              <option value="">팀을 선택하세요</option>
+              {TEAMS.map((team) => (
+                <option key={team.value} value={team.value}>
+                  {team.value.replace('_', ' ')}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            onClick={handleSaveChanges}
+            className={`${styles.button} ${isSaving ? styles.saving : ''}`}
+            disabled={isSaving}
+          >
+            {isSaving ? '저장 중...' : '변경사항 저장'}
+          </button>
+          {saveMessage && <p className={styles.saveMessage}>{saveMessage}</p>}
+          <div className={styles.notificationToggle}>
+            <span>알림 허용</span>
+            <label className={styles.switch}>
+              <input
+                type="checkbox"
+                checked={isNotificationEnabled}
+                onChange={handleNotificationToggle}
+                disabled={isLoading}
+              />
+              <span className={styles.slider}></span>
+            </label>
+          </div>
+        </div>
+        <div className={styles.diariesBlock} onClick={handleDiaryBlockClick}>
+          <div>
+            <h2>
+              <span role="img" aria-label="lock">🔒</span> 비공개 일기장 목록
+            </h2>
+          </div>
         </div>
       </div>
-      <div className={styles.diariesBlock} onClick={handleDiaryBlockClick}>
-        <div>
-          <h2>
-            <span role="img" aria-label="lock">🔒</span> 비공개 일기장 목록
-          </h2>
-        </div>
-      </div>
-    </div>
+    </>
   );
 }
 

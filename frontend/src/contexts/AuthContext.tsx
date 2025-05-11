@@ -3,20 +3,22 @@ import { fetchUserInfo } from '../api/user';
 import {AuthContextType} from '../types/auth';
 import { deleteFcmToken } from '../api/fcm';
 import { getDeviceType, onForegroundMessage } from '../config/firebaseConfig';
-
+import { useLoading } from '../hooks/useLoading';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<{ nickname: string; myTeam: string } | null>(null);
+  const { isLoading, withLoading } = useLoading();
 
   useEffect(() => {
     const checkUserStatus = async () => {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
       if (user && user.accessToken) {
         try {
-          const userData = await fetchUserInfo(user.userId, user.accessToken);
+          const userData = await withLoading(fetchUserInfo(user.userId, user.accessToken));
           setIsLoggedIn(true);
           setUserInfo({
             nickname: userData.nickname,
@@ -32,9 +34,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     checkUserStatus();
-  }, []);
+  }, [withLoading]);
 
-  // 알림 핸들러 등록
   useEffect(() => {
     const unsubscribe = onForegroundMessage((payload) => {
       console.log('알림');
@@ -48,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (userId: string, accessToken: string) => {
     localStorage.setItem('user', JSON.stringify({ userId, accessToken }));
     try {
-      const userData = await fetchUserInfo(userId, accessToken);
+      const userData = await withLoading(fetchUserInfo(userId, accessToken));
       setIsLoggedIn(true);
       setUserInfo({
         nickname: userData.nickname,
@@ -65,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (user?.userId && user?.accessToken) {
       try {
         const deviceType = getDeviceType(navigator.userAgent);
-        await deleteFcmToken(user.userId, user.accessToken, deviceType);
+        await withLoading(deleteFcmToken(user.userId, user.accessToken, deviceType));
       } catch (error) {
         console.error('Failed to delete FCM token:', error);
       }
@@ -75,8 +76,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUserInfo(null);
   };
 
+  if (isLoading) {
+    return <LoadingSpinner fullScreen />;
+  }
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userInfo, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, userInfo, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

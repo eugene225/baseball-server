@@ -8,8 +8,9 @@ export interface UserInfo {
 export interface AuthContextType {
     isLoggedIn: boolean;
     userInfo: UserInfo | null;
-    login: (userId: string, accessToken: string) => void;
-    logout: () => void;
+    login: (userId: string, accessToken: string) => Promise<void>;
+    logout: () => Promise<void>;
+    isLoading: boolean;
 }
 
 // 회원가입 데이터 타입 정의
