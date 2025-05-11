@@ -37,9 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [withLoading]);
 
   useEffect(() => {
-    const unsubscribe = onForegroundMessage((payload) => {
-      console.log('알림');
-    });
+    const unsubscribe = onForegroundMessage((payload) => {});
 
     return () => {
       unsubscribe();

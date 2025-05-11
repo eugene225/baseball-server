@@ -27,14 +27,12 @@ export const requestPermission = async (userId: string, token: string) => {
         // 기존 토큰 삭제
         try {
           await deleteToken(messaging);
-          console.log('Firebase 토큰 삭제 완료');
         } catch (error) {
           console.log('Firebase 토큰 삭제 실패 (무시됨):', error);
         }
 
         try {
           await deleteFcmToken(userId, token, deviceType);
-          console.log('서버 토큰 삭제 완료');
         } catch (error) {
           console.log('서버 토큰 삭제 실패 (무시됨):', error);
         }
@@ -47,6 +45,7 @@ export const requestPermission = async (userId: string, token: string) => {
 
         // 새 토큰 저장
         await saveFcmToken(userId, token, fcmToken, deviceType);
+        console.log('새 토큰 저장 완료');
         return { success: true, token: fcmToken };
       } catch (error) {
         console.error('FCM 토큰 생성 실패:', error);
