@@ -28,12 +28,12 @@ function MyPage(): JSX.Element {
       const deviceType = getDeviceType(navigator.userAgent);
       if (user) {
         try {
-          const [data, fcmResponse] = await Promise.all([
+          const [data, fcmResponse] = await withLoading(Promise.all([
             await fetchUserInfo(user.userId, user.accessToken),
             await getFcmToken(user.userId, user.accessToken, deviceType)
               .then(response => response.json())
               .catch(() => null)
-          ]);
+          ]));
 
           if (isMounted) {
             setUserInfo({ nickname: data.nickname || '', myTeam: data.myTeam || '' });
