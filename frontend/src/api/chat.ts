@@ -9,8 +9,10 @@ export const initChat = () => {
   if (!socket) {
     socket = io(API_URL, {
       transports: ['websocket'],
+      autoConnect: false,
     });
   }
+  socket.connect();
 };
 
 /** 방에 입장 (닉네임 포함) */
