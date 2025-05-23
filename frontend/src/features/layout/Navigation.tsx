@@ -68,8 +68,8 @@ const Navigation: React.FC<NavigationProps> = ({ isLoggedIn, onLogout }) => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/log" className={`nav-link ${location.pathname === '/log' ? 'active' : ''}`}>
-                    기록
+                  <Link to="/schedule" className={`nav-link ${location.pathname === '/log' ? 'active' : ''}`}>
+                    오늘의 경기
                   </Link>
                 </li>
                 <li className="nav-item">
