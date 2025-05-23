@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { getSchedule } from '../../api/schedule';
 import styles from './SchedulePage.module.css';
 import { GameSchedule } from '../../types/data';
+import { getSchedule } from '../../api/data';
 
 const SchedulePage: React.FC = () => {
   const [schedules, setSchedules] = useState<GameSchedule[]>([]);
