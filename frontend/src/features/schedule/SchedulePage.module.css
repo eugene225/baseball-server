@@ -1,0 +1,172 @@
+.container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  min-height: 100vh;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.title {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #800020;
+  margin-bottom: 40px;
+  text-align: center;
+  letter-spacing: -1px;
+  position: relative;
+  padding-bottom: 16px;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: #800020;
+  border-radius: 2px;
+}
+
+.scheduleGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 0 10px;
+}
+
+.gameCard {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.2s ease;
+  border: 1px solid #f0f0f0;
+  cursor: pointer;
+}
+
+.gameCard:hover {
+  box-shadow: 0 2px 8px rgba(128, 0, 32, 0.08);
+  border-color: rgba(128, 0, 32, 0.1);
+  transform: translateY(-2px);
+}
+
+.teamInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  white-space: nowrap;
+}
+
+.team {
+  font-family: 'Black Han Sans', sans-serif;
+  color: #800020;
+  font-weight: 400;
+  font-size: 18px;
+  padding: 4px 8px;
+  background: #fff5f7;
+  border-radius: 6px;
+  min-width: 80px;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+.vs {
+  font-family: 'Black Han Sans', sans-serif;
+  color: #999;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 2px 8px;
+  background: #fafafa;
+  border-radius: 4px;
+  letter-spacing: -0.5px;
+}
+
+.gameInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.infoLabel {
+  color: #999;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: -0.3px;
+}
+
+.infoValue {
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: -0.3px;
+}
+
+.time {
+  color: #800020;
+  font-weight: 700;
+}
+
+.stadium {
+  color: #666;
+}
+
+.tv {
+  color: #999;
+  font-size: 13px;
+}
+
+.noGames {
+  text-align: center;
+  color: #666;
+  padding: 32px;
+  background: #fafafa;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  grid-column: 1 / -1;
+  letter-spacing: -0.3px;
+}
+
+.loading {
+  text-align: center;
+  padding: 32px;
+  color: #666;
+  font-size: 15px;
+  font-weight: 500;
+  grid-column: 1 / -1;
+  letter-spacing: -0.3px;
+}
+
+.error {
+  text-align: center;
+  padding: 32px;
+  color: #d32f2f;
+  background: #fff5f5;
+  border-radius: 12px;
+  margin: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  grid-column: 1 / -1;
+  letter-spacing: -0.3px;
+} 
