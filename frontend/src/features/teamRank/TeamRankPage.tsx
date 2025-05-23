@@ -1,18 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getKboRank } from '../../api/data';
 import './TeamRankPage.css';
-
-interface TeamRank {
-  rank: string;          // 순위
-  team: string;          // 팀명
-  games: string;         // 경기수
-  wins: string;          // 승
-  losses: string;        // 패
-  draws: string;         // 무
-  win_rate: string;      // 승률
-  games_behind: string;  // 게임차
-  streak: string;        // 연속
-}
+import { TeamRank } from '../../types/data';
 
 const TeamRankPage: React.FC = () => {
   const [rankings, setRankings] = useState<TeamRank[]>([]);
@@ -66,11 +55,7 @@ const TeamRankPage: React.FC = () => {
               <span className="team-name">{team.team}</span>
             </div>
             <div className="record-col">
-              <span className="wins">{team.wins}승</span>
-              <span className="separator">-</span>
-              <span className="losses">{team.losses}패</span>
-              <span className="separator">-</span>
-              <span className="draws">{team.draws}무</span>
+              <span className="wins">{team.wins}</span><span className="separator">-</span><span className="losses">{team.losses}</span><span className="separator">-</span><span className="draws">{team.draws}</span>
             </div>
             <div className="rate-col">
               <span className="win-rate">{parseFloat(team.win_rate).toFixed(3)}</span>
