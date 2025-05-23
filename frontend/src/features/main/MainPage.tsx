@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import styles from './MainPage.module.css';
 import { useAuth } from '../../contexts/AuthContext';
 import ReviewCard from '../review/ReviewCard';
-import { TEAMS } from '../../types/teams';
 
 interface UserInfoProps {
   nickname: string;
