@@ -2,8 +2,9 @@ import os
 import json
 import re
 import logging
-from datetime import datetime
-from sqlalchemy.ext.asyncio import AsyncSession
+from datetime import datetime, date
+from sqlalchemy import text
+from sqlalchemy.orm import Session
 from app.crawling.schedule import get_kbo_schedule
 from app.schedule.model.game_schedule import GameSchedule
 
@@ -11,13 +12,50 @@ class GameScheduleService:
     MATCH_WITH_SCORE_PATTERN = re.compile(r"([가-힣A-Z]+)(\d+)vs(\d+)([가-힣A-Z]+)")
     MATCH_NO_SCORE_PATTERN = re.compile(r"([가-힣A-Z]+)vs([가-힣A-Z]+)")
 
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Session):
         self.db = db
+
+    async def get_game_schedule(self, year: int, month: int, day: int = None) -> list:
+        try:
+            if day:
+                # 특정 날짜의 데이터만 조회
+                start_date = date(year, month, day)
+                end_date = date(year, month, day)
+                query = text("""
+                    SELECT * FROM game_schedules 
+                    WHERE date BETWEEN :start_date AND :end_date
+                    ORDER BY time
+                """)
+                result = await self.db.execute(
+                    query, 
+                    {"start_date": start_date, "end_date": end_date}
+                )
+                return result.mappings().all()
+            else:
+                # 월 전체 데이터 조회
+                start_date = date(year, month, 1)
+                end_month = month + 1 if month < 12 else 1
+                end_year = year if month < 12 else year + 1
+                end_date = date(end_year, end_month, 1)
+
+                query = text("""
+                    SELECT * FROM game_schedules 
+                    WHERE date BETWEEN :start_date AND :end_date
+                    ORDER BY date, time
+                """)
+                result = await self.db.execute(
+                    query,
+                    {"start_date": start_date, "end_date": end_date}
+                )
+                return result.mappings().all()
+        except Exception as e:
+            logging.error(f"Error getting game schedule: {e}")
+            return []
 
     async def save_game_schedule(self, year: int, month: int) -> dict:
         try:
-            # 1. 크롤링 정보 가져오기
-            schedule_data = get_kbo_schedule(year, month)
+            # 1. 크롤링 정보 가져오기 (비동기)
+            schedule_data = await get_kbo_schedule(year, month)
 
             # 2. yyyy-mm.json 파일 경로 설정
             file_name = f"{year}-{month:02d}.json"
@@ -35,7 +73,7 @@ class GameScheduleService:
                     json.dump(schedule_data, file)
                     await self.delete_game_schedule_in_db(year, month)
                     await self.save_game_schedule_in_db(year, month, schedule_data["data"])
-                    self.db.commit()
+                    await self.db.commit()
                     return {"success": True, "message": "Data updated successfully"}
 
             else:
@@ -43,27 +81,27 @@ class GameScheduleService:
                     json.dump(schedule_data, file)
                 print(f"Data Counts : {schedule_data['count']}")
                 await self.save_game_schedule_in_db(year, month, schedule_data["data"])
-                self.db.commit()
+                await self.db.commit()
                 return {"success": True, "message": "Data saved successfully"}
 
         except Exception as e:
             logging.error(f"Error saving game schedule: {e}")
             return {"success": False, "message": str(e)}
-
+        
     async def delete_game_schedule_in_db(self, year: int, month: int) -> bool:
         try:
-            start_date = datetime(year, month, 1)
+            start_date = date(year, month, 1)
             end_month = month + 1 if month < 12 else 1
             end_year = year if month < 12 else year + 1
-            end_date = datetime(end_year, end_month, 1)
+            end_date = date(end_year, end_month, 1)
 
-            deleted = await self.db.execute(
+            result = await self.db.execute(
                 GameSchedule.__table__.delete().where(
                     GameSchedule.date >= start_date,
                     GameSchedule.date < end_date
                 )
             )
-            return deleted.rowcount > 0
+            return result.rowcount > 0
         except Exception as e:
             logging.error(f"Error deleting game schedule: {e}")
             return False
@@ -77,7 +115,7 @@ class GameScheduleService:
                 home_team, home_score, away_score, away_team = self.parse_match_info(match_str)
 
                 game_schedule = GameSchedule(
-                    date=datetime.strptime(convertDate, "%Y-%m-%d"),
+                    date=datetime.strptime(convertDate, "%Y-%m-%d").date(),
                     time=schedule["시간"],
                     home_team=home_team,
                     away_team=away_team,
@@ -89,11 +127,11 @@ class GameScheduleService:
                 batch.append(game_schedule)
 
                 if len(batch) >= 70:
-                    self.db.bulk_save_objects(batch)
+                    self.db.add_all(batch)
                     batch = []
 
             if batch:
-                self.db.bulk_save_objects(batch)
+                self.db.add_all(batch)
         except Exception as e:
             logging.error(f"Error updating schedule in DB: {e}")
             raise
