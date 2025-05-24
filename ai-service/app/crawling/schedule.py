@@ -7,88 +7,59 @@ from selenium.webdriver.support.select import Select
 import pandas as pd
 import time
 from dotenv import load_dotenv
+import aiohttp
+from bs4 import BeautifulSoup
+import logging
+from datetime import datetime
 
 load_dotenv()
 
 # 연도를 포함한 KBO 일정 URL 템플릿
 KBO_URL_TEMPLATE = "https://www.koreabaseball.com/Schedule/Schedule.aspx?seriesId=0&seasonId={year}"
 
-def get_kbo_schedule(year: int, month: int):
-    options = Options()
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--disable-extensions")
-    options.add_argument("--disable-plugins")
-    options.add_argument("--disable-images")
-    options.add_argument("--disable-software-rasterizer")
-    options.add_argument("--remote-debugging-port=9222")
-    options.add_argument("--window-size=1920x1080")
-
-    # Selenium Hub에 연결하기 위한 Remote WebDriver 설정
-    hub_url = os.getenv("SELENIUM_HUB_URL")  # Selenium Hub 주소
-    driver = webdriver.Remote(
-        command_executor=hub_url,
-        options=options
-    )
-    driver.set_page_load_timeout(120)
-
-    # 연도를 URL에 반영
-    url = KBO_URL_TEMPLATE.format(year=year)
-    driver.get(url)
-
-    # 시즌 연도 수동 선택
-    season_select = Select(driver.find_element(By.ID, "ddlYear"))
-    season_select.select_by_value(str(year))
-
-    # 월 수동 선택
-    month_select = Select(driver.find_element(By.ID, "ddlMonth"))
-    month_select.select_by_value(f"{month:02d}")
-
-    # 페이지가 새로 로딩되므로 대기 (간단하게 sleep 사용)
-    time.sleep(5)
-
-    table = driver.find_element(By.CLASS_NAME, "tbl-type06")
-    thead = table.find_element(By.TAG_NAME, "thead")
-    header = [th.text for th in thead.find_elements(By.TAG_NAME, "th")]
-    tbody = table.find_element(By.TAG_NAME, "tbody")
-    rows = tbody.find_elements(By.TAG_NAME, "tr")
-
-    if len(rows) == 1:
-        driver.quit()
-        return {
-            "status": "empty",
-            "message": f"{year}년 {month:02d}월에 경기 일정이 없습니다.",
-            "data": []
-        }
-
-    lines = []
-    for row in rows:
-        cells = row.find_elements(By.TAG_NAME, "td")
-        line_data = [cell.text for cell in cells]
-        lines.append(line_data)
-
-    data = []
-    game_day = None
-
-    for line in lines:
-        if line[0].endswith(')'):
-            game_day = line[0]
-            data.append(line)
-        else:
-            line.insert(0, game_day)
-            data.append(line)
-
-    df = pd.DataFrame(data, columns=header)
-    df = df.replace('', '-')
-
-    driver.quit()
-
-    return {
-        "status": "success",
-        "year": year,
-        "month": f"{month:02d}",
-        "count": len(df),
-        "data": df.to_dict(orient='records')
-    }
+async def get_kbo_schedule(year: int, month: int) -> dict:
+    try:
+        url = f"https://www.koreabaseball.com/Schedule/Schedule.aspx?seriesId=0&month={month}&year={year}"
+        
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                if response.status != 200:
+                    raise Exception(f"Failed to fetch schedule: {response.status}")
+                
+                html = await response.text()
+                soup = BeautifulSoup(html, 'html.parser')
+                
+                schedule_data = []
+                schedule_table = soup.find('table', {'class': 'tData'})
+                
+                if not schedule_table:
+                    return {"count": 0, "data": []}
+                
+                rows = schedule_table.find_all('tr')
+                
+                for row in rows:
+                    cells = row.find_all('td')
+                    if len(cells) >= 4:
+                        date = cells[0].text.strip()
+                        time = cells[1].text.strip()
+                        match = cells[2].text.strip()
+                        stadium = cells[3].text.strip()
+                        tv = cells[4].text.strip() if len(cells) > 4 else ""
+                        
+                        if date and time and match:
+                            schedule_data.append({
+                                "날짜": date,
+                                "시간": time,
+                                "경기": match,
+                                "구장": stadium,
+                                "TV": tv
+                            })
+                
+                return {
+                    "count": len(schedule_data),
+                    "data": schedule_data
+                }
+                
+    except Exception as e:
+        logging.error(f"Error fetching KBO schedule: {e}")
+        return {"count": 0, "data": []}
