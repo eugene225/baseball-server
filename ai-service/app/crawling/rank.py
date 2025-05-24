@@ -1,81 +1,123 @@
 import os
 import json
-from datetime import datetime
-from bs4 import BeautifulSoup
-import requests
-from typing import List, Dict
+from datetime import datetime, timedelta
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import pandas as pd
+from dotenv import load_dotenv
+from typing import List, TypedDict
 
-KBO_RANK_URL = "https://sports.news.naver.com/kbaseball/record/index.nhn?category=kbo"
-CACHE_FILE_PATH = 'kbo_rank_cache.json'
+load_dotenv()
 
-def get_cached_data() -> Dict:
-    """캐시 파일에서 데이터를 읽어옵니다."""
-    if os.path.exists(CACHE_FILE_PATH):
-        with open(CACHE_FILE_PATH, 'r', encoding='utf-8') as file:
-            return json.load(file)
-    return {}
+# 한글 → 영문 키 매핑
+key_map = {
+    "순위": "rank",
+    "팀명": "team",
+    "경기": "games",
+    "승": "wins",
+    "패": "losses",
+    "무": "draws",
+    "승률": "win_rate",
+    "게임차": "games_behind",
+    "연속": "streak"
+}
 
-def save_to_cache(data: List[Dict]) -> None:
-    """새 데이터를 캐시 파일에 저장합니다."""
-    cache_data = {
-        "date": datetime.now().strftime("%Y-%m-%d"),  # 오늘 날짜
-        "rankings": data
-    }
-    with open(CACHE_FILE_PATH, 'w', encoding='utf-8') as file:
-        json.dump(cache_data, file, ensure_ascii=False, indent=4)
+class TeamRank(TypedDict):
+    rank: str
+    team: str
+    games: str
+    wins: str
+    losses: str
+    draws: str
+    win_rate: str
+    games_behind: str
+    streak: str
 
-def get_kbo_rank() -> List[Dict]:
-    """KBO 순위를 가져오는 함수"""
-    cached_data = get_cached_data()
+def get_kbo_rank():
+    today = datetime.today().strftime("%Y-%m-%d")
+    yesterday = (datetime.today() - timedelta(days=1)).strftime("%Y-%m-%d")
+    
+    base_dir = os.path.join(os.getcwd(), "data")
+    os.makedirs(base_dir, exist_ok=True)
+    file_path = os.path.join(base_dir, f"{today}_rank.json")
+    yesterday_file_path = os.path.join(base_dir, f"{yesterday}_rank.json")
+    
+    # 전날 파일 삭제
+    if os.path.exists(yesterday_file_path):
+        try:
+            os.remove(yesterday_file_path)
+        except Exception as e:
+            print(f"Error deleting yesterday's rank file: {e}")
 
-    # 캐시된 데이터가 있고, 오늘 날짜의 데이터가 있을 경우 캐시 사용
-    cached_date = cached_data.get("date")
-    if cached_date == datetime.now().strftime("%Y-%m-%d"):
-        print("캐시된 데이터 반환")
-        return cached_data.get("rankings", [])
-
-    # 캐시가 없거나 날짜가 다른 경우 새로 요청하여 캐시
-    try:
-        headers = {
-            "User-Agent": "Mozilla/5.0"
+    # 1. 이미 저장된 파일이 있으면
+    if os.path.exists(file_path):
+        with open(file_path, "r", encoding="utf-8") as f:
+            saved_data = json.load(f)
+        return {
+            "status": "success",
+            "date": today,
+            "count": len(saved_data),
+            "data": saved_data
         }
-        response = requests.get(KBO_RANK_URL, headers=headers)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'html.parser')
 
-        # 순위 테이블 tbody 선택
-        table_body = soup.find('tbody', {'id': 'regularTeamRecordList_table'})
-        if not table_body:
-            raise Exception("순위 테이블 tbody를 찾을 수 없습니다.")
-        
-        rankings = []
-        for row in table_body.find_all('tr'):
-            rank = row.find('th').text.strip() if row.find('th') else ""
-            cols = row.find_all('td')
-            if len(cols) >= 11:
-                team_name = cols[0].select_one("span[id^='team_']").text.strip()
-                team_info = {
-                    'rank': rank,
-                    'team': team_name,
-                    'games': cols[1].text.strip(),
-                    'wins': cols[2].text.strip(),
-                    'losses': cols[3].text.strip(),
-                    'draws': cols[4].text.strip(),
-                    'win_rate': cols[5].text.strip(),
-                    'games_behind': cols[6].text.strip(),
-                    'recent_10': cols[10].text.strip(),  # 9승-1패-0무
-                    'streak': cols[7].text.strip(),      # 예: 3승
-                }
-                rankings.append(team_info)
+    # 2. 아니면 크롤링으로 데이터 수집
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 
-        # 새 데이터를 캐시하고 반환
-        save_to_cache(rankings)
-        print("새 데이터 반환 및 캐시 저장")
-        return rankings
+    hub_url = os.getenv("SELENIUM_HUB_URL")
+    driver = webdriver.Remote(
+        command_executor=hub_url,
+        options=options
+    )
 
-    except requests.RequestException as e:
-        print(f"HTTP 요청 중 오류 발생: {e}")
-        return []
+    try:
+        url = "https://www.koreabaseball.com/Record/TeamRank/TeamRankDaily.aspx"
+        driver.get(url)
+
+        # 테이블 로딩 대기
+        table = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "tData"))
+        )
+        rows = table.find_elements(By.TAG_NAME, "tr")
+
+        header = [th.text for th in rows[0].find_elements(By.TAG_NAME, "th")]
+        data_rows = rows[1:]
+
+        raw_data = []
+        for row in data_rows:
+            cols = [td.text.strip() for td in row.find_elements(By.TAG_NAME, "td")]
+            if cols:
+                raw_data.append(cols)
+
+        df = pd.DataFrame(raw_data, columns=header)
+
+        # 키 매핑 처리
+        result_data: List[TeamRank] = [
+            {key_map[k]: v for k, v in item.items() if k in key_map}
+            for item in df.to_dict(orient="records")
+        ]
+
+        # JSON 파일로 저장
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(result_data, f, ensure_ascii=False, indent=2)
+
+        return {
+            "status": "success",
+            "date": today,
+            "count": len(result_data),
+            "data": result_data
+        }
+
     except Exception as e:
-        print(f"크롤링 중 오류 발생: {e}")
-        return []
+        return {
+            "status": "error",
+            "message": str(e),
+            "data": []
+        }
+    finally:
+        driver.quit()
