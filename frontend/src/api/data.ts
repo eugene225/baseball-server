@@ -1,4 +1,5 @@
-import { TeamRank } from '../types/data';
+import axios from 'axios';
+import { GameSchedule, TeamRank } from '../types/data';
 
 const API_URL = `${process.env.REACT_APP_AI_URL}`;
 
