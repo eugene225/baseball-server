@@ -7,8 +7,7 @@ from app.utils.logger import logger
 from app.batch.game_schedule_batch_scheduler import start_schedule_task
 from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
-
-SQLModel.metadata.create_all(bind=engine)
+import asyncio
 
 app = FastAPI(
     title="My Baseball API",
@@ -17,10 +16,7 @@ app = FastAPI(
     docs_url="/docs"
 )
 
-@app.on_event("startup")
-def start_scheduler():
-    start_schedule_task()
-
+# CORS 설정
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5001", "http://52.65.47.31:5000", "https://haengbokza.site"],
@@ -30,6 +26,10 @@ app.add_middleware(
     expose_headers=["*"],
     max_age=3600,
 )
+
+@app.on_event("startup")
+async def on_startup():
+    await init_db()
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
@@ -67,3 +67,8 @@ from app.routes import schedule, rank, review
 app.include_router(schedule.router)
 app.include_router(rank.router)
 app.include_router(review.router)
+
+# DB 테이블 생성
+async def init_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.create_all)
