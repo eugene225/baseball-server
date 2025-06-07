@@ -13,6 +13,7 @@ import ChatRoomPage from './features/chat/ChatRoomPage';
 import MainPage from './features/main/MainPage';
 import MyPage from './features/myPage/MyPage';
 import SchedulePage from './features/schedule/SchedulePage';
+import WriteReviewPage from './features/review/WriteReviewPage';
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -42,6 +43,7 @@ const App: React.FC = () => {
             <Route path="/chat" element={<ChatListPage />} />
             <Route path="/chat/:team" element={<ChatRoomPage />} />
             <Route path="/schedule" element={<SchedulePage />} />
+            <Route path="/review/write" element={<WriteReviewPage />} />
           </Routes>
         </Layout>
       </Router>
