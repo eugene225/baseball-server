@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './MainPage.module.css';
 import { useAuth } from '../../contexts/AuthContext';
 import ReviewCard from '../review/ReviewCard';
@@ -52,11 +52,34 @@ const dummyReviews = [
 const MainPage: React.FC = () => {
   const { isLoggedIn, userInfo } = useAuth();
   const [reviews, setReviews] = useState(dummyReviews);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const sortedReviews = [...reviews].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
     setReviews(sortedReviews);
   }, []);
+
+  const handleWriteClick = () => {
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+    navigate('/review/write');
+  };
+
+  const handleAIClick = () => {
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+    // TODO: AI 리뷰 도장 기능 구현
+    console.log('AI Review feature coming soon');
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <div className={styles.mainPage}>
@@ -96,9 +119,31 @@ const MainPage: React.FC = () => {
             ))}
           </div>
 
-          <button className={styles.floatingWriteButton} disabled>
-            +
-          </button>
+          <div className={styles.floatingButtonContainer}>
+            <button
+              className={`${styles.floatingButton} ${styles.mainButton} ${isMenuOpen ? styles.rotated : ''}`}
+              onClick={toggleMenu}
+              aria-label="메뉴 열기"
+            >
+              +
+            </button>
+            <button
+              className={`${styles.floatingButton} ${styles.actionButton} ${isMenuOpen ? styles.visible : ''}`}
+              onClick={handleAIClick}
+              aria-label="AI 리뷰 도장 찍기"
+            >
+              🤖
+              <span className={styles.actionButtonText}>AI 리뷰 도장</span>
+            </button>
+            <button
+              className={`${styles.floatingButton} ${styles.actionButton} ${isMenuOpen ? styles.visible : ''}`}
+              onClick={handleWriteClick}
+              aria-label="리뷰 작성하기"
+            >
+              ✏️
+              <span className={styles.actionButtonText}>리뷰 작성</span>
+            </button>
+          </div>
         </section>
       </main>
     </div>

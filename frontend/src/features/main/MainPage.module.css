@@ -100,31 +100,91 @@
   margin-bottom: 1rem;
 }
 
-.floatingWriteButton {
+.floatingButtonContainer {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 56px;
-  height: 56px;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.floatingButton {
+  min-width: 56px;
+  height: 48px;
+  border-radius: 24px;
+  border: none;
   background-color: #800020;
   color: white;
-  font-size: 32px;
-  border: none;
-  border-radius: 50%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  cursor: not-allowed;
+  font-size: 20px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  padding: 0 20px;
 }
 
-.floatingWriteButton:disabled {
-  opacity: 0.6;
-}
-
-.floatingWriteButton:not(:disabled):hover {
+.floatingButton:hover {
+  transform: scale(1.05);
   background-color: #a00030;
+}
+
+.floatingButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.floatingButtonLabel {
+  background-color: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-right: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: all 0.2s ease;
+}
+
+.floatingButton:hover .floatingButtonLabel {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.actionButton {
+  transform: translateY(100px);
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.actionButton.visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mainButton {
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+}
+
+.mainButton.rotated {
+  transform: rotate(45deg);
+}
+
+.actionButtonText {
+  font-size: 16px;
+  font-weight: 500;
 }
 
 @media screen and (min-width: 600px) {
