@@ -1,0 +1,295 @@
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: #ffffff;
+  min-height: 100vh;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+  position: relative;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.backButton {
+  position: absolute;
+  left: 0;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #800020;
+  padding: 8px;
+  transition: transform 0.2s;
+}
+
+.backButton:hover {
+  transform: translateX(-4px);
+}
+
+.header h1 {
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  margin: 0;
+  color: #333;
+  font-weight: 800;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ratingSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #fafafa;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.stars {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.star {
+  background: none;
+  border: none;
+  font-size: 36px;
+  cursor: pointer;
+  color: #ddd;
+  transition: all 0.2s;
+  padding: 4px;
+}
+
+.star:hover {
+  transform: scale(1.1);
+}
+
+.star.active {
+  color: #ffd700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.inputGroup label {
+  font-weight: 600;
+  color: #444;
+  font-size: 15px;
+}
+
+.inputGroup input,
+.inputGroup textarea {
+  padding: 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.2s;
+  background-color: #fafafa;
+}
+
+.inputGroup input:focus,
+.inputGroup textarea:focus {
+  outline: none;
+  border-color: #800020;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(128, 0, 32, 0.1);
+}
+
+.select {
+  padding: 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.2s;
+  background-color: #fafafa;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23800020' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #800020;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(128, 0, 32, 0.1);
+}
+
+.datePicker {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.2s;
+  background-color: #fafafa;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.datePicker:focus {
+  outline: none;
+  border-color: #800020;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(128, 0, 32, 0.1);
+}
+
+.readOnlyInput {
+  padding: 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: #f5f5f5;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  background-color: #800020;
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(128, 0, 32, 0.2);
+}
+
+.submitButton:hover {
+  background-color: #a00030;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(128, 0, 32, 0.3);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(128, 0, 32, 0.2);
+}
+
+.noGames {
+  padding: 16px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  color: #666;
+  text-align: center;
+  font-size: 15px;
+}
+
+.loading {
+  padding: 16px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  color: #666;
+  text-align: center;
+  font-size: 15px;
+}
+
+/* DatePicker 커스텀 스타일 */
+:global(.react-datepicker) {
+  font-family: inherit;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+:global(.react-datepicker__header) {
+  background-color: #fafafa;
+  border-bottom: 1px solid #e0e0e0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 12px;
+}
+
+:global(.react-datepicker__day) {
+  border-radius: 6px;
+  margin: 2px;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+}
+
+:global(.react-datepicker__day--selected) {
+  background-color: #800020 !important;
+  border-radius: 6px;
+}
+
+:global(.react-datepicker__day:hover) {
+  background-color: #f0f0f0;
+  border-radius: 6px;
+}
+
+:global(.react-datepicker__day--keyboard-selected) {
+  background-color: #800020 !important;
+  border-radius: 6px;
+}
+
+:global(.react-datepicker__navigation) {
+  top: 12px;
+}
+
+:global(.react-datepicker__navigation-icon::before) {
+  border-color: #800020;
+  border-width: 2px 2px 0 0;
+}
+
+:global(.react-datepicker__current-month) {
+  color: #333;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.matchInfo {
+  background-color: #fafafa;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 8px;
+}
+
+.matchInfoItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.matchInfoItem:last-child {
+  margin-bottom: 0;
+}
+
+.matchInfoItem .label {
+  font-weight: 600;
+  color: #666;
+  min-width: 70px;
+}
+
+.matchInfoItem .value {
+  color: #333;
+  font-size: 15px;
+} 
