@@ -26,5 +26,6 @@ async def save_kbo_schedule(
     db: Session = Depends(get_db)
 ):
     service = GameScheduleService(db)
-    result = await service.save_game_schedule(year, month)
+    schedule_data = await get_kbo_schedule(year, month)
+    result = await service.save_game_schedule_in_db(year, month, schedule_data["data"])
     return {"success": result}

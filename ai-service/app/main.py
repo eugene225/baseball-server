@@ -2,7 +2,7 @@ import time
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database.db import engine
-from sqlmodel import SQLModel
+from app.schedule.model.game_schedule import Base
 from app.utils.logger import logger
 from app.batch.game_schedule_batch_scheduler import start_schedule_task
 from fastapi import Request, HTTPException
@@ -19,7 +19,7 @@ app = FastAPI(
 # CORS 설정
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5001", "http://52.65.47.31:5000", "https://haengbokza.site"],
+    allow_origins=["http://localhost:5001", "https://haengbokza.site"],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
@@ -71,4 +71,4 @@ app.include_router(review.router)
 # DB 테이블 생성
 async def init_db():
     async with engine.begin() as conn:
-        await conn.run_sync(SQLModel.metadata.create_all)
+        await conn.run_sync(Base.metadata.create_all)
