@@ -15,7 +15,7 @@ async def save_schedule_task():
         with get_db() as db:
             today = datetime.today()
             service = GameScheduleService(db)
-            result = await service.save_game_schedule(today.year, today.month)
+            result = await service.save_game_schedule_in_db(today.year, today.month)
             logging.info(f"스케줄 저장 결과: {result}")
     except Exception as e:
         logging.error(f"스케줄 저장 중 오류 발생: {e}")
