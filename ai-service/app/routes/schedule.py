@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.database.db import get_db
 from app.crawling.schedule import get_kbo_schedule
 from app.schedule.service.game_schedule_service import GameScheduleService
+import logging
 
 router = APIRouter(prefix="/kbo/schedule", tags=["KBO Schedule"])
 
@@ -28,4 +29,4 @@ async def save_kbo_schedule(
     service = GameScheduleService(db)
     schedule_data = await get_kbo_schedule(year, month)
     result = await service.save_game_schedule_in_db(year, month, schedule_data["data"])
-    return {"success": result}
+    return result
