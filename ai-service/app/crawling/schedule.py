@@ -4,33 +4,50 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import Select
 from bs4 import BeautifulSoup
 import logging
 
 async def get_kbo_schedule(year: int, month: int) -> dict:
+    logging.info(f"Starting get_kbo_schedule with year={year}, month={month}")
     try:
-        url = f"https://www.koreabaseball.com/Schedule/Schedule.aspx?seriesId=0&seasonId={year}&teamCode=&month={month}"
+        url = "https://www.koreabaseball.com/Schedule/Schedule.aspx"
+        logging.info(f"Target URL: {url}")
 
-        # Selenium Hub URL 가져오기
         selenium_url = os.getenv("SELENIUM_HUB_URL", "http://localhost:4444/wd/hub")
+        logging.info(f"Selenium URL: {selenium_url}")
 
         chrome_options = Options()
-        chrome_options.add_argument("--headless")  # 헤드리스 모드
+        chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+        logging.info("Chrome options configured")
 
-        # 원격 WebDriver 설정
+        logging.info("Creating webdriver...")
         driver = webdriver.Remote(
             command_executor=selenium_url,
             options=chrome_options
         )
+        logging.info("Webdriver created successfully")
 
         try:
             driver.get(url)
 
-            # 테이블 로딩을 기다림
+            # 연도 선택
+            year_select = Select(WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, "ddlYear"))
+            ))
+            year_select.select_by_value(str(year))
+
+            # 월 선택
+            month_select = Select(WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, "ddlMonth"))
+            ))
+            month_select.select_by_value(f"{month:02d}")
+
+            # 페이지 새로고침 대기
             WebDriverWait(driver, 20).until(
                 EC.presence_of_element_located((By.ID, "tblScheduleList"))
             )
@@ -38,11 +55,9 @@ async def get_kbo_schedule(year: int, month: int) -> dict:
             soup = BeautifulSoup(driver.page_source, 'html.parser')
             table = soup.find("table", {"id": "tblScheduleList"})
             if not table:
-                logging.error("테이블을 찾을 수 없습니다.")
                 return {"success": False, "count": 0, "data": []}
 
             rows = table.find("tbody").find_all("tr")
-            logging.info(f"총 {len(rows)}개의 행이 있습니다.")
 
             schedule_data = []
             current_date = ""
